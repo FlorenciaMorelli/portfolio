@@ -1,0 +1,21 @@
+:root{
+    --marine-blue: #000033;
+    --light-gray: #E3E3E3;
+    --bluish-green: #007788;
+    --light-purple: #E6E6FA;
+}
+
+#switch{
+    cursor: pointer;
+    font-size: 30px;
+    user-select: none;
+}
+
+body {
+    background-color: var(--light-gray);
+    color: var(--marine-blue);
+}
+.dark-mode {
+    background-color: var(--marine-blue);
+    color: var(--light-gray);
+}

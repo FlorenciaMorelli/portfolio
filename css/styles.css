@@ -117,13 +117,24 @@ body {
         color: lightskyblue;
     }
 
-    nav ol li{
-        color: var(--light-purple);
-        
+    nav {
         a{
-            &:hover{
-                transition: all .3s ease-in-out;
-                color: var(--light-purple);
+            .iconImage{
+                background-image: url("/assets/img/logo100x100DM.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        }
+        
+        ol li{
+            color: var(--light-purple);
+            
+            a{
+                &:hover{
+                    transition: all .3s ease-in-out;
+                    color: var(--light-purple);
+                }
             }
         }
     }
@@ -193,6 +204,23 @@ header{
         align-items: center;
 
         border-radius: 0 0 10px 10px;
+
+        a{
+            .iconImage{
+                background-image: url("/assets/img/logo100x100LM.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                
+                width: 40px;
+                height: 40px;
+                
+                &:hover{
+                    transition:  all .3s ease;
+                    transform: translateY(-10%);
+                }
+            }
+        }
         
         ol {
             display: inline-flex;

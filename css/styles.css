@@ -132,6 +132,7 @@ body {
             color: var(--light-purple);
             
             a{
+                color: var(--light-gray);
                 &:hover{
                     transition: all .3s ease-in-out;
                     color: var(--light-purple);
@@ -184,6 +185,32 @@ body {
                 }
             }
         }
+
+        .about{
+            .aboutme{
+                ul{
+                    li{
+                        color: var(--marine-blue);
+                        background-color: var(--light-purple);
+                        
+                        &:hover{
+                            scale:  1.05;
+                            background-color: var(--light-gray);
+                            transition: all .3s ease;
+                        }
+                    }
+                }
+    
+                .myPicture{
+                    img{
+                        width: 80%;
+                        border: 1px solid var(--light-purple);
+                        border-radius: 8px;
+                        box-shadow: 10px 10px var(--light-purple);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -204,12 +231,11 @@ header{
         max-width: 80%;
         margin: auto;
         padding: 0 3%;
+        position: sticky;
 
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        border-radius: 0 0 10px 10px;
 
         a{
             .iconImage{

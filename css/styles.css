@@ -333,6 +333,8 @@ main{
                     padding: 0.5rem 1rem;
                     border-radius: 8px;
 
+                    cursor: default;
+
                     &:hover{
                         scale:  1.05;
                         background-color: var(--bluish-green);

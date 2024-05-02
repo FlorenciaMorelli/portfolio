@@ -146,9 +146,14 @@ body {
         filter: blur(2px);
     }
 
-    #switch{
+    span#switch{
         color: var(--light-gray);
         padding: 0.2rem;
+        border: 0.2px solid var(--light-gray);
+    }
+
+    span#scrollUp{
+        color: var(--light-gray);
         border: 0.2px solid var(--light-gray);
     }
 
@@ -361,11 +366,11 @@ footer{
     bottom: 0;
     width: 100%;
     height: 2.5rem;
-    span{
-        float: right;
+    span#switch{
+        float: left;
         position: relative;
         bottom: 1rem;
-        margin-right: 3%;
+        margin-left: 3%;
         padding: 0.2rem;
 
         font-size: 30px;
@@ -379,6 +384,34 @@ footer{
         &:hover{
             transition:  all .3s ease;
             transform: translateY(-10%);
+        }
+    }
+
+    a{
+        cursor: pointer;
+        user-select: none;
+        color: var(--marine-blue);
+        text-decoration: none;
+        
+        span#scrollUp{
+            float: right;
+            position: relative;
+            bottom: 1rem;
+            margin-right: 3%;
+            padding: 0.2rem;
+    
+            font-size: 30px;
+            color: var(--marine-blue);
+            border: 0.2px solid var(--marine-blue);
+            border-radius: 50%;
+            
+            cursor: pointer;
+            user-select: none;
+    
+            &:hover{
+                transition:  all .3s ease;
+                transform: translateY(-10%);
+            }
         }
     }
 }

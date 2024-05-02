@@ -10,41 +10,63 @@
     <title>Portfolio</title>
 </head>
 <body>
-    <nav>
+    <header>
+
+        <nav>
+            <span>
+                <a href="/">    
+                    <img class="icon" src="..." alt="Florencia Morelli icon"/>
+                </a>
+                </span>
+            <ol>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ol>
+        </nav>
+    </header>
+
+    <main>
+        <section class="principal">
+            <h4>Hi, my name is</h4>
+            <h1>Florencia Morelli</h1>
+            <p>
+                I'm a developer from Buenos Aires, Argentina.<br/>I love learning new programming languages and creating innovative projects.
+            </p>
+            <a href="#about" id="nextSection" class="nextSection">
+                <span class="material-symbols-outlined">
+                    arrow_downward
+                </span>
+                <p class="actionP">Get to know me!</p>
+            </a>
+        </section>
+        
+        <section id="about">
+            <h2>About me</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus tenetur obcaecati eius sed odio, provident reiciendis temporibus ipsam id, totam adipisci omnis quae dolore nesciunt voluptatem, autem facilis veniam hic. Harum incidunt dolores, omnis veniam vero provident quisquam qui, a, quibusdam perferendis vitae perspiciatis sit. Adipisci ratione cupiditate, aliquid aspernatur hic recusandae in iste vitae accusantium placeat, nulla minima maxime iure mollitia quo distinctio qui itaque. Ad sapiente suscipit, et rerum provident sit labore eveniet pariatur, amet possimus veniam earum perspiciatis sed, mollitia doloribus aliquid non? Perspiciatis sit nihil rem! Repellendus maxime at hic tempora laborum consequatur, cupiditate sed consectetur.
+            </p>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <section id="projects">
+            <h2>Projects</h2>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <section id="Contact">
+            <h2>Get in touch!</h2>
+            <p class="contact-text">Feel free to contact me for any questions or collaboration opportunities. I'm always open
+            <br>
+            <button>Contact</button>
+        </section>
+    </main>
+    <footer>
         <span id="switch" class="material-symbols-outlined" onclick="darkMode()">
             dark_mode
         </span>
-        <ol>
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ol>
-    </nav>
-
-    <h4>Hi, my name is</h4>
-    <h1>Florencia Morelli</h1>
-    
-    <div id="about">
-        <h2>About me</h2>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus tenetur obcaecati eius sed odio, provident reiciendis temporibus ipsam id, totam adipisci omnis quae dolore nesciunt voluptatem, autem facilis veniam hic. Harum incidunt dolores, omnis veniam vero provident quisquam qui, a, quibusdam perferendis vitae perspiciatis sit. Adipisci ratione cupiditate, aliquid aspernatur hic recusandae in iste vitae accusantium placeat, nulla minima maxime iure mollitia quo distinctio qui itaque. Ad sapiente suscipit, et rerum provident sit labore eveniet pariatur, amet possimus veniam earum perspiciatis sed, mollitia doloribus aliquid non? Perspiciatis sit nihil rem! Repellendus maxime at hic tempora laborum consequatur, cupiditate sed consectetur.
-        </p>
-    </div>
-    
-    <div class="divider"></div>
-
-    <div id="projects">
-        <h2>Projects</h2>
-    </div>
-
-    <div class="divider"></div>
-
-    <div id="Contact">
-        <h2>Get in touch!</h2>
-        <p class="contact-text">Feel free to contact me for any questions or collaboration opportunities. I'm always open
-        <br>
-        <button>Contact</button>
-    </div>
-
+    </footer>
 </body>
 </html>

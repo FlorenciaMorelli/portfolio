@@ -15,6 +15,7 @@
 html {
     scrollbar-width: thin;
     scrollbar-color: var(--bluish-green-soft) var(--light-gray);
+    scroll-behavior: smooth;
 }
 
 /* Titles and texts */
@@ -290,6 +291,17 @@ main{
             }
             &:hover{
                 color: var(--bluish-green);
+            }
+        }
+
+        .websOfInterest{
+            align-self: flex-end;
+            margin-top: 20vh;
+            
+            .appLogo{
+                height: 25px;
+                width: auto;
+                
             }
         }
     }

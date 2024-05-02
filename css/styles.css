@@ -5,6 +5,7 @@
 /* General Styles */
 :root{
     --marine-blue: #000033;
+    --marine-blue-soft: #0000332d;
     --light-gray: #E3E3E3;
     --bluish-green: #007788;
     --bluish-green-soft: #0076882d;
@@ -387,6 +388,123 @@ main{
 
     .projects{
         margin: 5vh auto;
+
+        text-align: center;
+
+        h2{
+            margin: 5vh auto;
+        }
+
+        .projectContainer{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 2rem;
+
+            .projectCard{
+                padding: 1rem;
+                height: max-content;
+                min-width: 25vw;
+                min-height: 45vh;
+                text-align: left;
+                
+                border: 1px solid var(--marine-blue);
+                border-radius: 8px;
+                box-shadow: 4px 6px var(--marine-blue-soft);
+
+                .projectCardTop{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .projectTechnologies{
+                        display: inline-flex;
+                        gap: 1ch;
+                        margin-bottom: 0;
+    
+                        span.projectTechnology{
+                            font-family: 'Poppins', sans-serif;
+                            font-size: 14px;
+                            font-weight: normal;
+                            
+                            padding: 0.5rem;
+                            border: 0.5px solid var(--bluish-green);
+                            border-radius: 8px;
+
+                            cursor: default;
+
+                            &:hover{
+                                transition: all .3s ease;
+                                background-color: var(--bluish-green);
+                                color: white;
+                            }
+                        }
+                    }
+    
+                    .projectLinks{
+                        margin: 1rem 0 0 0;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                        border: none;
+    
+                        .projectLink{
+                            a{
+                                text-decoration: none;
+                                img{
+                                    width: 4vh;
+                                    height: 4vh;
+
+                                    &:hover{
+                                        transition: all .3s ease;
+                                        transform: scale(1.2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .projectInfo{
+                    max-height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+
+                    .projectTitle{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: flex-start;
+                        gap: 0.2rem;
+
+                        margin: 0.5rem 0 0.3rem 0;
+
+                        h3{
+                            margin: 0;
+                        }
+
+                        h5{
+                            margin: 0;
+                        }
+                    }
+
+
+                    p{
+                        margin-top: 0.2rem;
+                    }
+
+                    img.projectImg{
+                        align-self: center;
+                        height: 25vh;
+                        width: auto;
+                        border: 0.2px solid var(--bluish-green-soft);
+                    }
+                }
+            }
+        }
     }
 
     .contact{

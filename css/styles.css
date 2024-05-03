@@ -106,6 +106,42 @@ body {
 
     background-color: var(--light-gray);
     color: var(--marine-blue);
+
+    #infoToggle{
+        float: right;
+        position: relative;
+        top: 1rem;
+        margin-right: 3%;
+        padding: 0.2rem;
+
+        width: 48px;
+        height: 48px;
+        
+        cursor: pointer;
+        user-select: none;
+
+        &:hover{
+            transition:  all .3s ease;
+            scale: 1.1;
+        }
+    }
+
+    div.infoMessage{
+        display: none;
+        position: fixed;
+        top: 4rem;
+        right: 5rem;
+        max-width: 20vw;
+        z-index: 999;
+        background-color: var(--light-gray);
+        padding: 1rem;
+
+        text-align: center;
+        
+        border-radius: .3rem;
+        box-shadow: 0 0 6px var(--marine-blue);
+        overflow: hidden;
+    }
 }
 
 /* Dark mode settings */
@@ -119,6 +155,17 @@ body {
 
     a{
         color: lightskyblue;
+    }
+
+    div.infoMessage{
+        background-color: var(--marine-blue);
+        padding: 1rem;
+
+        text-align: center;
+        
+        border-radius: .3rem;
+        box-shadow: 0 0 6px var(--light-gray);
+        overflow: hidden;
     }
 
     nav {

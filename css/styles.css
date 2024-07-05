@@ -168,7 +168,7 @@ body {
     nav {
         a{
             .iconImage{
-                background-image: url("/assets/img/logo100x100DM.png");
+                background-image: url("../assets/img/logo100x100DM.png");
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
@@ -331,7 +331,7 @@ header{
 
         a{
             .iconImage{
-                background-image: url("/assets/img/logo100x100LM.png");
+                background-image: url("../assets/img/logo100x100LM.png");
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;

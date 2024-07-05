@@ -109,14 +109,15 @@ body {
 
     #infoToggle{
         float: right;
-        position: relative;
+        position: absolute;
         top: 1rem;
-        margin-right: 3%;
+        right: 1rem;
         padding: 0.2rem;
 
         width: 48px;
         height: 48px;
         
+        z-index: 100;
         cursor: pointer;
         user-select: none;
 
@@ -158,11 +159,7 @@ body {
     }
 
     div.infoMessage{
-        background-color: var(--marine-blue);
-        padding: 1rem;
-
-        text-align: center;
-        
+        background-color: var(--marine-blue);        
         border-radius: .3rem;
         box-shadow: 0 0 6px var(--light-gray);
         overflow: hidden;
@@ -518,9 +515,8 @@ main{
 
             .projectCard{
                 padding: 1rem;
-                height: max-content;
-                min-width: 25vw;
-                min-height: 45vh;
+                max-width: 40%;
+                height: 60%;
                 text-align: left;
                 
                 border: 1px solid var(--marine-blue);
@@ -528,6 +524,7 @@ main{
                 box-shadow: 4px 6px var(--marine-blue-soft);
 
                 .projectCardTop{
+                    width: 100%;
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
@@ -535,6 +532,8 @@ main{
 
                     .projectTechnologies{
                         display: inline-flex;
+                        overflow-x: scroll;
+                        scrollbar-width:none;
                         gap: 1ch;
                         margin-bottom: 0;
     
@@ -558,24 +557,59 @@ main{
                     }
     
                     .projectLinks{
-                        margin: 1rem 0 0 0;
                         display: flex;
+                        flex-direction: row;
                         justify-content: space-between;
-                        align-items: flex-start;
+                        align-items: center;
+                        gap: 0.5rem;
                         border: none;
     
-                        .projectLink{
-                            a{
-                                text-decoration: none;
+                        a{
+                            text-decoration: none;
+                            .tooltip {
+                                position: relative;
+                                display: inline-block;
+                                
                                 img{
                                     width: 4vh;
                                     height: 4vh;
-
+    
                                     &:hover{
                                         transition: all .3s ease;
                                         transform: scale(1.2);
                                     }
                                 }
+                            }
+
+                            /* Tooltip text */
+                            .tooltip .tooltiptext {
+                                visibility: hidden;
+                                width: 120px;
+                                bottom: 100%;
+                                left: 50%;
+                                margin-left: -65px; 
+                                margin-bottom: 0.8rem;
+                                background-color: black;
+                                color: #fff;
+                                text-align: center;
+                                padding: 0.4rem;
+                                border-radius: 6px;
+                                font-size: 0.8rem;
+                                position: absolute;
+                                z-index: 1;
+                            }
+                            .tooltip .tooltiptext::after {
+                                content: " ";
+                                position: absolute;
+                                top: 100%; /* At the bottom of the tooltip */
+                                left: 50%;
+                                margin-left: -5px;
+                                border-width: 5px;
+                                border-style: solid;
+                                border-color: black transparent transparent transparent;
+                            }
+                            .tooltip:hover .tooltiptext {
+                                visibility: visible;
                             }
                         }
                     }
@@ -612,8 +646,7 @@ main{
 
                     img.projectImg{
                         align-self: center;
-                        height: 25vh;
-                        width: auto;
+                        max-width: 100%;
                         border: 0.5px solid var(--bluish-green-soft);
                     }
                 }
@@ -678,6 +711,234 @@ footer{
             &:hover{
                 transition:  all .3s ease;
                 transform: translateY(-10%);
+            }
+        }
+    }
+}
+
+/* Responsive Design */
+/* Styles for tablets and smaller screens */
+@media screen and (max-width: 1023px) {
+    h1{
+        font-size: 34px;
+    }
+
+    h2{
+        font-size: 28px;
+    }
+
+    body{
+        #infoToggle{
+            width: 40px;
+            height: 40px;
+        }
+
+        div.infoMessage{
+            top: 3rem;
+            right: 2rem;
+            max-width: 40vw;
+            padding: 0.5rem;
+        }
+
+        main{
+            max-width: 90%;
+
+            .principal{
+                margin-left: 2rem;
+            }
+
+            .about{
+                .aboutme{
+                    gap: 2rem;
+
+                    ul{
+                        width: 155%;
+                    }
+                    
+                    .myPicture{
+                        img{
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+    
+            .projects {
+                .projectContainer {
+                    gap: 1rem;
+                }
+            
+                .projectCard {
+                    width: 40%;
+
+                    .projectCardTop{
+                        .projectTechnologies{
+                            overflow: scroll;
+                
+                            span.projectTechnology{
+                                font-size: 0.5rem;
+                            }
+                        }
+
+                        .projectLinks{
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: nowrap;
+                            width: max-content;
+
+                            .projectLink {
+                                a{
+                                    .tooltip{
+                                        img {
+                                            width: 3vw;
+                                            height: 3vh;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Styles for mobile phones */
+@media screen and (max-width: 767px) {
+    h1{
+        font-size: 30px;
+    }
+
+    h2{
+        font-size: 24px;
+    }
+
+    p{
+        font-size: 14px;
+    }
+
+    body{
+        margin: 0;
+        div.infoMessage{
+            max-width: 60vw;
+        }
+
+        header{
+            nav{
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+                
+                a{
+                    margin-top: 1rem;
+                }
+
+                ol{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1rem;
+                    padding: 0;
+
+                    list-style-type: none;
+
+                    li.resume{
+                        list-style-type:none;
+                        a{
+                            padding: 0;
+                            border: none;
+                            box-shadow: none;
+                            color: var(--bluish-green) !important;
+
+                            &:hover{
+                                transition: all .3s ease-in-out;
+                                background-color: transparent;
+                                color: var(--bluish-green-soft) !important;
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        main{
+            margin: auto;
+
+            .principal{
+                margin: auto;
+                padding-top: 0;
+
+                h1{
+                    font-size: 4rem;
+                }
+
+                h4{
+                    font-size: 1.5rem;
+                }
+
+                p{
+                    font-size: 1rem;
+                }
+            }
+
+            .about{
+                .aboutme{
+                    flex-direction: column-reverse;
+
+                    .myPicture{
+                        text-align: center;
+                        img{
+                            width: 50%;
+                        }
+                    }
+
+                    ul{
+                        width: 100%;
+                    }
+                }
+            }
+
+            .projects{
+                .projectContainer{
+                    display: flex;
+                    flex-wrap: nowrap;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto;
+
+                    .projectCard{
+                        max-width: 90%;
+                        width: 90%;
+                    }
+                }
+            }
+        }
+    }
+
+    .dark-mode{
+        header{
+            nav{
+                ol{
+                    li.resume{
+                        a{
+                            color: var(--light-purple) !important;
+                            border: none;
+                            box-shadow: none;
+
+                            &:hover{
+                                transition: all .3s ease-in-out;
+                                background-color: transparent;
+                                color: var(--light-gray) !important;
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

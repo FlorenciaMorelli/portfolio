@@ -88,6 +88,11 @@ a{
     text-decoration: underline;
 }
 
+a.no-link{
+    text-decoration: none;
+    color: var(--light-gray);
+}
+
 p{
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
@@ -156,6 +161,9 @@ body {
 
     a{
         color: lightskyblue;
+    }
+    a.no-link{
+        color: var(--marine-blue);
     }
 
     div.infoMessage{
@@ -300,14 +308,6 @@ body {
                             border: 0.5px solid var(--light-purple-soft);
                         }
                     }
-                }
-            }
-        }
-
-        .contact{
-            button{
-                a{
-                    color: var(--marine-blue);
                 }
             }
         }
@@ -667,13 +667,6 @@ main{
     .contact{
         margin: 5vh auto;
         text-align: center;
-
-        button{
-            a{
-                text-decoration: none;
-                color: var(--light-gray);
-            }
-        }
     }
 }
 

@@ -303,6 +303,14 @@ body {
                 }
             }
         }
+
+        .contact{
+            button{
+                a{
+                    color: var(--marine-blue);
+                }
+            }
+        }
     }
 }
 
@@ -659,6 +667,13 @@ main{
     .contact{
         margin: 5vh auto;
         text-align: center;
+
+        button{
+            a{
+                text-decoration: none;
+                color: var(--light-gray);
+            }
+        }
     }
 }
 

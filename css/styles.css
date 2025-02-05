@@ -302,12 +302,6 @@ body {
                             }
                         }
                     }
-    
-                    .projectInfo{
-                        img.projectImg{
-                            border: 0.5px solid var(--light-purple-soft);
-                        }
-                    }
                 }
             }
         }

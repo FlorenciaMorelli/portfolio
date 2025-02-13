@@ -411,12 +411,23 @@
                 <br>
                 I'm always open to new challenges.
             </p>
-            <br>
-            <button>
-                <a href="mailto:florenciamorelliIT@gmail.com" target="_blank" class="no-link">
-                    Contact
-                </a>
-            </button>
+            <form class="contact-form" action="https://formsubmit.co/florenciamorelliIT@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://florenciamorelli.github.io/portfolio/">
+                <label for="name" class="contact-text">Name
+                    <br>
+                    <input type="text" name="name" required>
+                </label>
+                <label for="email">Email
+                    <br>
+                    <input type="email" name="email" required>
+                </label>
+                <label for="message">Message
+                    <br>
+                    <textarea name="message" required ></textarea>
+                </label>
+                <button type="submit">Send</button>
+            </form>
         </section>
     </main>
     <footer>

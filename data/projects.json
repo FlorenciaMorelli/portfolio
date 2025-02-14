@@ -19,7 +19,25 @@
                 "Kotlin"
             ],
             "category": "Mobile",
-            "year": "2024"
+            "date": "2024-11-21"
+        },
+        {
+            "name": "CruzARG in Godot",
+            "institution": "UCES",
+            "description": "CruzARG game, now made in Godot.",
+            "image": "assets/projects/cruzarg.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/cruzARG-on-godot/releases"
+                }
+            ],
+            "technologies": [
+                "Godot Engine",
+                "GDScript"
+            ],
+            "category": "Games",
+            "date": "2024-12-18"
         },
         {
             "name": "Bookvault App",
@@ -29,14 +47,14 @@
             "links": [
                 {
                     "type": "repo",
-                    "url": "https://github.com/FlorenciaMorelli/Bookvault-App"
+                    "url": "https://github.com/FlorenciaMorelli/bookvault/releases"
                 }
             ],
             "technologies": [
                 "Kotlin"
             ],
             "category": "Mobile",
-            "year": "2024"
+            "date": "2024-07-22"
         },
         {
             "name": "UCExchangeS",
@@ -53,17 +71,17 @@
                 "Kotlin"
             ],
             "category": "Mobile",
-            "year": "2024"
+            "date": "2024-05-13"
         },
         {
             "name": "CruzARG",
-            "institution": "Self-learning",
+            "institution": "UCES",
             "description": "First contact with Game Development, using SFML library and C++ to create a crossing road game.",
             "image": "assets/projects/cruzarg.png",
             "links": [
                 {
                     "type": "repo",
-                    "url": "https://github.com/FlorenciaMorelli/CruzARG"
+                    "url": "https://github.com/FlorenciaMorelli/cruzARG/releases"
                 }
             ],
             "technologies": [
@@ -71,12 +89,101 @@
                 "SFML"
             ],
             "category": "Games",
-            "year": "2023"
+            "date": "2024-02-20"
+        },
+        {
+            "name": "Ford Pinasco",
+            "institution": "Nivel7",
+            "description": "Frontend developement for a car dealership company.",
+            "image": "assets/projects/fordpinasco.png",
+            "links": [
+                {
+                    "type": "website",
+                    "url": "https://www.maximopinasco.com.ar/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2023-09-07"
+        },
+        {
+            "name": "SugarMax",
+            "institution": "UCES",
+            "description": "Frontend for an e-commerce platform developed for Interface Design subject at UCES.",
+            "image": "assets/projects/sugarmax.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/uces-di-grupo3"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/uces-di-grupo3/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3",
+                "Bootstrap"
+            ],
+            "category": "Web",
+            "date": "2023-07-10"
+        },
+        {
+            "name": "Adidike",
+            "institution": "CoderHouse",
+            "description": "An e-commerce platform showcasing a variety of footwear products with a minimalist design.",
+            "image": "assets/projects/adidike.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/React34785/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/category/Tenis"
+                }
+            ],
+            "technologies": [
+                "React",
+                "JavaScript",
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2024-07-08"
+        },
+        {
+            "name": "WWWapas",
+            "institution": "Educacion IT",
+            "description": "Responsive website created using HTML5 and CSS3, showcasing modern web design principles and techniques.",
+            "image": "assets/projects/wwwapas.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/WWWapas/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/WWWapas/"
+                }
+            ],
+            "technologies": [
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2024-07-04"
         },
         {
             "name": "Veggie Buddy",
-            "institution": "Self-learning",
-            "description": "Mobile app to help users plan vegetarian meals.",
+            "institution": "Codo a Codo 4.0",
+            "description": "An iOS-based mobile app designed to help users find vegetarian food items and restaurants. It provides easy-to-understand search categories and simple logging.",
             "image": "assets/projects/veggiebuddy.jpg",
             "links": [
                 {
@@ -85,28 +192,29 @@
                 },
                 {
                     "type": "figma",
-                    "url": "https://florenciamorelli.github.io/veggie-buddy/"
+                    "url": "https://www.figma.com/design/Uxqd5KspnaSLbjC0xZXHIL/Veggie-Buddy-Project?node-id=417-21683&p=f&t=bLMzOs3xX0Oop1Yk-0"
                 }
             ],
             "technologies": [
-                "UX/UI Design"
+                "UX/UI Design",
+                "Figma"
             ],
             "category": "Mobile",
-            "year": "2021"
+            "date": "2023-04-04"
         },
         {
-            "name": "Cotizar ED-IT",
-            "institution": "Self-learning",
-            "description": "Web app to generate IT service quotes.",
+            "name": "Cotizador ED-IT",
+            "institution": "Educacion It",
+            "description": "Web application for generating quotes, built with HTML5, CSS3, and JavaScript. It provides a user-friendly interface for estimating project costs.",
             "image": "assets/projects/cotizadoredit.png",
             "links": [
                 {
                     "type": "repo",
-                    "url": "https://github.com/FlorenciaMorelli/cotizar-ed-it"
+                    "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT/releases"
                 },
                 {
-                    "type": "page",
-                    "url": "https://florenciamorelli.github.io/cotizar-ed-it/"
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/cotizadorEDIT/"
                 }
             ],
             "technologies": [
@@ -114,12 +222,12 @@
                 "HTML5",
                 "CSS3"
             ],
-            "category": "",
-            "year": ""
+            "category": "Web",
+            "date": "2024-07-08"
         },
         {
             "name": "Diagon Alley",
-            "institution": "Self-learning",
+            "institution": "Codo a Codo 4.0",
             "description": "E-commerce platform inspired by the Harry Potter universe.",
             "image": "assets/projects/diagonalley.png",
             "links": [
@@ -128,8 +236,8 @@
                     "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
                 },
                 {
-                    "type": "page",
-                    "url": "https://florenciamorelli.github.io/diagon-alley-frontend/"
+                    "type": "website",
+                    "url": "https://taupe-souffle-e8d78a.netlify.app/"
                 }
             ],
             "technologies": [
@@ -140,7 +248,7 @@
                 "Bootstrap"
             ],
             "category": "Web",
-            "year": ""
+            "date": "2023-07-05"
         }
     ]
 }

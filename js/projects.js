@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     icon = "assets/img/github.svg";
                 } else if (link.type === "download") {
                     icon = "assets/img/download.svg";
-                } else if (link.type === "page") {
+                } else if (link.type === "website") {
                     icon = "assets/img/browser.svg";
                 } else if (link.type === "presentation") {
                     icon = "assets/img/presentation.png";
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     text = "View repository on GitHub";
                 } else if (link.type === "download") {
                     text = "Download";
-                } else if (link.type === "page") {
+                } else if (link.type === "website") {
                     text = "Visit site";
                 } else if (link.type === "presentation") {
                     text = "View presentation";
@@ -95,7 +95,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const projects = await fetchProjects();
-    renderProjects(projects.sort((a, b) => (b.year || 0) - (a.year || 0)));
+    renderProjects(projects.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+    }));
 
     filterButtons.forEach(button => {
         button.addEventListener("click", function () {

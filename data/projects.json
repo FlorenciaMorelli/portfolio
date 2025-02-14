@@ -4,10 +4,20 @@
             "name": "WhatToWatch App",
             "institution": "UCES",
             "description": "Android mobile app with API consumption developed for Mobile Development I subject.",
-            "image": "../assets/img/projectImageExmple.png",
-            "repo": "https://github.com/FlorenciaMorelli/whatToWatch/releases",
-            "download": "downloadables/what_to_watch.apk",
-            "technologies": ["Kotlin"],
+            "image": "assets/img/projectImageExmple.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/whatToWatch/releases"
+                },
+                {
+                    "type": "download",
+                    "url": "downloadables/what_to_watch.apk"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
             "category": "Mobile",
             "year": "2024"
         },
@@ -16,9 +26,15 @@
             "institution": "UCES",
             "description": "Mobile app for managing books: add, edit, and delete them.",
             "image": "assets/projects/bookvault.png",
-            "repo": "https://github.com/FlorenciaMorelli/Bookvault-App",
-            "download": null,
-            "technologies": ["Kotlin"],
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/Bookvault-App"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
             "category": "Mobile",
             "year": "2024"
         },
@@ -27,9 +43,15 @@
             "institution": "UCES",
             "description": "First Android app. Easy-to-use currency converter developed for Mobile Development I subject at UCES.",
             "image": "assets/projects/ucexchanges.png",
-            "repo": "https://github.com/FlorenciaMorelli/UCExchangeS",
-            "download": null,
-            "technologies": ["Kotlin"],
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/UCExchangeS"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
             "category": "Mobile",
             "year": "2024"
         },
@@ -38,9 +60,16 @@
             "institution": "Self-learning",
             "description": "First contact with Game Development, using SFML library and C++ to create a crossing road game.",
             "image": "assets/projects/cruzarg.png",
-            "repo": "https://github.com/FlorenciaMorelli/CruzARG",
-            "download": null,
-            "technologies": ["C++", "SFML"],
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/CruzARG"
+                }
+            ],
+            "technologies": [
+                "C++",
+                "SFML"
+            ],
             "category": "Games",
             "year": "2023"
         },
@@ -49,9 +78,19 @@
             "institution": "Self-learning",
             "description": "Mobile app to help users plan vegetarian meals.",
             "image": "assets/projects/veggiebuddy.jpg",
-            "repo": "https://github.com/FlorenciaMorelli/veggie-buddy",
-            "download": "https://florenciamorelli.github.io/veggie-buddy/",
-            "technologies": ["UX/UI Design"],
+            "links": [
+                {
+                    "type": "presentation",
+                    "url": "https://drive.google.com/file/d/1Yl1RJ_XFVtov0o2dMtDSN9KGO49-qTGO/view"
+                },
+                {
+                    "type": "figma",
+                    "url": "https://florenciamorelli.github.io/veggie-buddy/"
+                }
+            ],
+            "technologies": [
+                "UX/UI Design"
+            ],
             "category": "Mobile",
             "year": "2021"
         },
@@ -60,9 +99,21 @@
             "institution": "Self-learning",
             "description": "Web app to generate IT service quotes.",
             "image": "assets/projects/cotizadoredit.png",
-            "repo": "https://github.com/FlorenciaMorelli/cotizar-ed-it",
-            "download": "https://florenciamorelli.github.io/cotizar-ed-it/",
-            "technologies": ["JavaScript", "HTML5", "CSS3"],
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/cotizar-ed-it"
+                },
+                {
+                    "type": "page",
+                    "url": "https://florenciamorelli.github.io/cotizar-ed-it/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3"
+            ],
             "category": "",
             "year": ""
         },
@@ -71,10 +122,24 @@
             "institution": "Self-learning",
             "description": "E-commerce platform inspired by the Harry Potter universe.",
             "image": "assets/projects/diagonalley.png",
-            "repo": "https://github.com/FlorenciaMorelli/diagon-alley-frontend",
-            "download": "https://florenciamorelli.github.io/diagon-alley-frontend/",
-            "technologies": ["Python", "JavaScript", "HTML5", "CSS3", "Bootstrap"],
-            "category": "",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
+                },
+                {
+                    "type": "page",
+                    "url": "https://florenciamorelli.github.io/diagon-alley-frontend/"
+                }
+            ],
+            "technologies": [
+                "Python",
+                "JavaScript",
+                "HTML5",
+                "CSS3",
+                "Bootstrap"
+            ],
+            "category": "Web",
             "year": ""
         }
     ]

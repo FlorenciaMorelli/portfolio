@@ -1,0 +1,81 @@
+{
+    "projects": [
+        {
+            "name": "WhatToWatch App",
+            "institution": "UCES",
+            "description": "Android mobile app with API consumption developed for Mobile Development I subject.",
+            "image": "../assets/img/projectImageExmple.png",
+            "repo": "https://github.com/FlorenciaMorelli/whatToWatch/releases",
+            "download": "downloadables/what_to_watch.apk",
+            "technologies": ["Kotlin"],
+            "category": "Mobile",
+            "year": "2024"
+        },
+        {
+            "name": "Bookvault App",
+            "institution": "UCES",
+            "description": "Mobile app for managing books: add, edit, and delete them.",
+            "image": "assets/projects/bookvault.png",
+            "repo": "https://github.com/FlorenciaMorelli/Bookvault-App",
+            "download": null,
+            "technologies": ["Kotlin"],
+            "category": "Mobile",
+            "year": "2024"
+        },
+        {
+            "name": "UCExchangeS",
+            "institution": "UCES",
+            "description": "First Android app. Easy-to-use currency converter developed for Mobile Development I subject at UCES.",
+            "image": "assets/projects/ucexchanges.png",
+            "repo": "https://github.com/FlorenciaMorelli/UCExchangeS",
+            "download": null,
+            "technologies": ["Kotlin"],
+            "category": "Mobile",
+            "year": "2024"
+        },
+        {
+            "name": "CruzARG",
+            "institution": "Self-learning",
+            "description": "First contact with Game Development, using SFML library and C++ to create a crossing road game.",
+            "image": "assets/projects/cruzarg.png",
+            "repo": "https://github.com/FlorenciaMorelli/CruzARG",
+            "download": null,
+            "technologies": ["C++", "SFML"],
+            "category": "Games",
+            "year": "2023"
+        },
+        {
+            "name": "Veggie Buddy",
+            "institution": "Self-learning",
+            "description": "Mobile app to help users plan vegetarian meals.",
+            "image": "assets/projects/veggiebuddy.jpg",
+            "repo": "https://github.com/FlorenciaMorelli/veggie-buddy",
+            "download": "https://florenciamorelli.github.io/veggie-buddy/",
+            "technologies": ["UX/UI Design"],
+            "category": "Mobile",
+            "year": "2021"
+        },
+        {
+            "name": "Cotizar ED-IT",
+            "institution": "Self-learning",
+            "description": "Web app to generate IT service quotes.",
+            "image": "assets/projects/cotizadoredit.png",
+            "repo": "https://github.com/FlorenciaMorelli/cotizar-ed-it",
+            "download": "https://florenciamorelli.github.io/cotizar-ed-it/",
+            "technologies": ["JavaScript", "HTML5", "CSS3"],
+            "category": "",
+            "year": ""
+        },
+        {
+            "name": "Diagon Alley",
+            "institution": "Self-learning",
+            "description": "E-commerce platform inspired by the Harry Potter universe.",
+            "image": "assets/projects/diagonalley.png",
+            "repo": "https://github.com/FlorenciaMorelli/diagon-alley-frontend",
+            "download": "https://florenciamorelli.github.io/diagon-alley-frontend/",
+            "technologies": ["Python", "JavaScript", "HTML5", "CSS3", "Bootstrap"],
+            "category": "",
+            "year": ""
+        }
+    ]
+}

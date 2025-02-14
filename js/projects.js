@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const projectContainer = document.getElementById("projectContainer");
-    const filterSelect = document.getElementById("filters");
+    const filterButtons = document.querySelectorAll("#filters button");
 
     async function fetchProjects() {
         try {
@@ -21,43 +21,86 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const techList = project.technologies.map(tech => `<span class="projectTechnology">${tech}</span>`).join(" ");
 
+            const linksDiv = document.createElement("div");
+            linksDiv.classList.add("projectLinks");
+
+            project.links.forEach(link => {
+                const linkElement = document.createElement("a");
+                linkElement.href = link.url;
+                linkElement.target = "_blank";
+
+                let icon;
+                if (link.type === "repo") {
+                    icon = "assets/img/github.svg";
+                } else if (link.type === "download") {
+                    icon = "assets/img/download.svg";
+                } else if (link.type === "page") {
+                    icon = "assets/img/browser.svg";
+                } else if (link.type === "presentation") {
+                    icon = "assets/img/presentation.png";
+                } else if (link.type === "figma") {
+                    icon = "assets/img/figma.svg";
+                }
+
+                let text;
+                if (link.type === "repo") {
+                    text = "View repository on GitHub";
+                } else if (link.type === "download") {
+                    text = "Download";
+                } else if (link.type === "page") {
+                    text = "Visit site";
+                } else if (link.type === "presentation") {
+                    text = "View presentation";
+                } else if (link.type === "figma") {
+                    text = "View on Figma";
+                }
+
+                const img = document.createElement("img");
+                img.src = icon;
+                img.alt = link.type;
+
+                const tooltip = document.createElement("div");
+                tooltip.classList.add("tooltip");
+                tooltip.appendChild(img);
+                const tooltipText = document.createElement("span");
+                tooltipText.classList.add("tooltiptext");
+                tooltipText.innerText = text;
+                tooltip.appendChild(tooltipText);
+                linkElement.appendChild(tooltip);
+
+                linksDiv.appendChild(linkElement);
+            });
+
             projectCard.innerHTML = `
                 <div class="projectCardTop">
-                        <div class="projectTechnologies">
-                            ${techList}
-                        </div>
-                        <div class="projectLinks">
-                            <a href="${project.repo}" target="_blank">
-                                <div class="tooltip">
-                                    <img src="assets/img/github.svg" alt="Github Logo">
-                                    <span class="tooltiptext">View repository on GitHub</span>
-                                </div>
-                            </a>
-                            ${project.download ? `<a href="${project.download}" target="_blank">
-                                <div class="tooltip">
-                                    <img src="assets/img/download.svg" alt="Download">
-                                    <span class="tooltiptext">Download</span>
-                                </div>
-                            </a>` : ""}
-                        </div>
+                    <div class="projectTechnologies">${techList}</div>
+                    <div class="projectLinks">${linksDiv.outerHTML}</div>
+                </div>
+                <div class="projectInfo">
+                    <div class="projectTitle">
+                        <h3>${project.name}</h3>
+                        <h5>${project.institution}</h5>
                     </div>
-                    <div class="projectInfo">
-                        <div class="projectTitle">
-                            <h3>${project.name}</h3>
-                            <h5>${project.institution}</h5>
-                        </div>
-                            <p>${project.description}</p>
-                        <img class="projectImg" src="${project.image}" alt="${project.name}">
-                    </div>
+                    <p>${project.description}</p>
+                    <img class="projectImg" src="${project.image}" alt="${project.name}">
+                </div>
             `;
             projectContainer.appendChild(projectCard);
         });
     }
 
-    function filterProjects(projects, category) {
-        return category ? projects.filter(p => p.category === category) : projects;
+    function filterProjects(category) {
+        const filteredProjects = category === 'All' ? projects : projects.filter(p => p.category === category);
+        renderProjects(filteredProjects);
     }
 
     const projects = await fetchProjects();
     renderProjects(projects.sort((a, b) => (b.year || 0) - (a.year || 0)));
+
+    filterButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const category = button.textContent;
+            filterProjects(category);
+        });
+    });
 });

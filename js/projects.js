@@ -99,6 +99,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     filterButtons.forEach(button => {
         button.addEventListener("click", function () {
+            filterButtons.forEach(btn => btn.classList.remove("selected"));
+
+            button.classList.add("selected");
+
             const category = button.textContent;
             filterProjects(category);
         });

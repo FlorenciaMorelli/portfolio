@@ -505,7 +505,28 @@ main{
         text-align: center;
 
         h2{
-            margin: 5vh auto;
+            margin: 5vh auto 0 auto;
+        }
+
+        #filters button{
+            margin: 2vh .3rem;
+            padding: .3rem 1rem;
+            
+            background-color: transparent;
+            color: var(--bluish-green);
+            border: none;
+
+            font-weight: 400;
+            text-decoration: underline var(--bluish-green);
+
+            &:hover{
+                transform: scale(1,1);
+                font-weight: bold;
+            }
+
+            &.selected{
+                font-weight: bold;
+            }
         }
 
         .projectContainer{

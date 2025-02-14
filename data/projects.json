@@ -152,8 +152,7 @@
             "technologies": [
                 "React",
                 "JavaScript",
-                "HTML5",
-                "CSS3"
+                "HTML5"
             ],
             "category": "Web",
             "date": "2024-07-08"
@@ -243,12 +242,51 @@
             "technologies": [
                 "Python",
                 "JavaScript",
-                "HTML5",
-                "CSS3",
-                "Bootstrap"
+                "HTML5"
             ],
             "category": "Web",
             "date": "2023-07-05"
+        },
+        {
+            "name": "TuTutor.com",
+            "institution": "UCES",
+            "description": "Web platform for online tutoring.",
+            "image": "assets/img/projectImageExmple.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/tututor/releases"
+                }
+            ],
+            "technologies": [
+                "Angular",
+                "PHP"
+            ],
+            "category": "Web",
+            "date": "2024-02-21"
+        },
+        {
+            "name": "formula1debrief",
+            "institution": "UCES",
+            "description": "ReactJs, Express.js and MySQL project for Web Development II final assignment.",
+            "image": "assets/projects/formula1debrief.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/tututor/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://formula1debrief.netlify.app/"
+                }
+            ],
+            "technologies": [
+                "React",
+                "Express.js",
+                "Sequelize"
+            ],
+            "category": "Web",
+            "date": "2024-07-22"
         }
     ]
 }

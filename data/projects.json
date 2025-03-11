@@ -4,7 +4,7 @@
             "name": "WhatToWatch App",
             "institution": "UCES",
             "description": "Android mobile app with API consumption developed for Mobile Development I subject.",
-            "image": "assets/img/projectImageExmple.png",
+            "image": "assets/projects/whattowatch.png",
             "links": [
                 {
                     "type": "repo",
@@ -251,7 +251,7 @@
             "name": "TuTutor.com",
             "institution": "UCES",
             "description": "Web platform for online tutoring.",
-            "image": "assets/img/projectImageExmple.png",
+            "image": "assets/projects/tututor.png",
             "links": [
                 {
                     "type": "repo",

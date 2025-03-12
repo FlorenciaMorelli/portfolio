@@ -20,6 +20,7 @@ The project currently uses:
 - Google Fonts (Fira Mono, Poppins)
 
 ## 📋 Project Structure
+```
 portfolio/
 ├── index.html          # Main page
 ├── favicon.ico         # Favicon
@@ -36,6 +37,7 @@ portfolio/
 │   └── documents/      # Documents (resume)
 │   └── projects/       # Project images
 └── downloadables/      # Downloadable demos
+```
 
 ## ✨ Features
 
@@ -60,7 +62,7 @@ portfolio/
 
 ## 📬 Contact
 
-- **Email**: [florenciamorelli69@gmail.com](mailto:florenciamorelliIT@gmail.com)
+- **Email**: [florenciamorelliIT@gmail.com](mailto:florenciamorelliIT@gmail.com)
 - **GitHub**: [FlorenciaMorelli](https://github.com/FlorenciaMorelli)
 
 ---
@@ -81,6 +83,7 @@ El proyecto actualmente utiliza:
 - Google Fonts (Fira Mono, Poppins)
 
 ## 📋 Estructura del Proyecto
+```
 portfolio/
 ├── index.html          # Página principal
 ├── favicon.ico         # Favicon
@@ -97,6 +100,7 @@ portfolio/
 │   └── documents/      # Documentos (currículum vitae)
 │   └── projects/       # Imágenes de los proyectos
 └── downloadables/      # Descargas (demos)
+```
 
 ## ✨ Características
 
@@ -121,7 +125,7 @@ portfolio/
 
 ## 📬 Contacto
 
-- **Email**: [florenciamorelli69@gmail.com](mailto:florenciamorelliIT@gmail.com)
+- **Email**: [florenciamorelliIT@gmail.com](mailto:florenciamorelliIT@gmail.com)
 - **GitHub**: [FlorenciaMorelli](https://github.com/FlorenciaMorelli)
 
 ---

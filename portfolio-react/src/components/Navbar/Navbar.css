@@ -1,0 +1,73 @@
+nav{
+    height: fit-content;
+    min-height: 10vh;
+    max-width: 80%;
+    margin: auto;
+    padding: 0 3%;
+    position: sticky;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a{
+        .iconImage{
+            background-image: url("../../../public/logo100x100LM.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+            width: 40px;
+            height: 40px;
+            
+            &:hover{
+                transition:  all .3s ease;
+                transform: translateY(-10%);
+            }
+        }
+    }
+    
+    ol {
+        display: inline-flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20%;
+        
+        li{
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            color: var(--bluish-green);
+    
+            a{
+                color: var(--marine-blue);
+                font-weight: normal;
+                text-decoration: none;
+            
+                &:hover{
+                    transition: all .3s ease-in-out;
+                    color: var(--bluish-green);
+                }
+            }
+        }
+
+        li.resume{
+            list-style-type: none;
+
+            a{
+                padding: 0.75rem;
+                border: 1px solid var(--bluish-green);
+                border-radius: 8px;
+                box-shadow: 5px 5px var(--bluish-green);
+                color: var(--marine-blue) !important;
+                
+                &:hover{
+                    transition: all .3s ease-in-out;
+                    background-color: var(--bluish-green);
+                    color: var(--light-gray) !important;
+                    box-shadow: 5px 5px var(--bluish-green-soft);
+                }
+            }
+        }
+    }
+}

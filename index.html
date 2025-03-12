@@ -3,10 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <script src="js/darkmode.js"></script>
+    <script src="js/showInfo.js"></script>
+    <script src="js/projects.js"></script>
+    
     <title>Portfolio</title>
 </head>
 <body>
-    
+    <a name="top"></a>
+    <span class="material-symbols-outlined" id="infoToggle" onclick="showInfo()">
+        info
+    </span>
+    <div class="infoMessage" id="infoMessage">
+        <p>
+            This web was designed on Figma and developed with HTML5, CSS3 and JavaScript.
+        </p>
+    </div>
+    <header>
+        <nav>
+            <a href="/">
+                <div class="iconImage">
+                </div>
+            </a>
+            <ol>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="resume"><a href="assets/documents/resume.pdf" download="FlorenciaMorelli">Resume</a></li>
+            </ol>
+        </nav>
+    </header>
+
+    <main>
+        <section class="principal">
+            <h4>Hi, my name is</h4>
+            <h1>Florencia Morelli</h1>
+            <p>
+                I'm a developer from Buenos Aires, Argentina.<br/>I love learning new programming languages and creating innovative projects.
+            </p>
+            <a href="#about" id="nextSection" class="nextSection">
+                <span class="material-symbols-outlined">
+                    arrow_downward
+                </span>
+                <p class="actionP">Get to know me!</p>
+            </a>
+
+            <div class="websOfInterest">
+                <a href="https://github.com/FlorenciaMorelli" target="_blank"><img src="assets/img/github.svg" alt="GitHub logo" class="appLogo"></a>
+                <a href="https://www.linkedin.com/in/florenciamorelli/" target="_blank"><img src="assets/img/linkedin.png" alt="LinkedIn logo" class="appLogo"></a>
+            </div>
+        </section>
+        
+        <section id="about" class="about">
+            <h2>About me</h2>
+            <div class="aboutme">
+
+                <div class="myInfo">
+                    <p>
+                        My name is Florencia Morelli, and I'm a Software Development Technician student at the University of Business and Social Sciences (UCES). 
+                        <br>
+                        My journey into programming began in 2021. Fueled by a desire for new knowledge, I started learning UX/UI Design. Immersing myself in the world of design ignited a curiosity about the "how" behind creating these interfaces.
+                        <br>
+                        After completing courses at various institutions, I honed my focus and decided to pursue a career in software development at UCES.
+                        <br>
+                        I'm particularly passionate about <b>software development</b> and <b>game development</b>.
+                        <br>
+                        This portfolio showcases a selection of projects I've undertaken during my studies, alongside some personal endeavors. Feel free to explore and discover my work!
+                    </p>
+                    <br>
+                    <h3>My skills</h3>
+                    <ul class="skillList">
+                        <li class="skillItem">UX/UI Design</li>
+                        <li class="skillItem">HTML</li>
+                        <li class="skillItem">CSS</li>
+                        <li class="skillItem">JavaScript</li>
+                        <li class="skillItem">ReactJS</li>
+                        <li class="skillItem">Angular</li>
+                        <li class="skillItem">Express.js</li>
+                        <li class="skillItem">PHP</li>
+                        <li class="skillItem">C++</li>
+                        <li class="skillItem">Java</li>
+                        <li class="skillItem">Kotlin</li>
+                    </ul>
+                </div>
+                <div class="myPicture">
+                    <img src="assets/img/me.jpg" alt="Me"/>
+                </div>
+            </div>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <section id="projects" class="projects">
+            <h2>Projects</h2>
+            <div id="filters">
+                <button class="selected">All</button>
+                <button>Web</button>
+                <button>Mobile</button>
+                <button>Games</button>
+            </div>
+            <br>
+            <div id="projectContainer" class="projectContainer"></div>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <section id="contact" class="contact">
+            <h2>Get in touch!</h2>
+            <p class="contact-text">Feel free to contact me for any questions or collaboration opportunities. 
+                <br>
+                I'm always open to new challenges.
+            </p>
+            <form class="contact-form" action="https://formsubmit.co/florenciamorelliIT@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://florenciamorelli.github.io/portfolio/">
+                <label for="name" class="contact-text">Name
+                    <br>
+                    <input type="text" name="name" required>
+                </label>
+                <label for="email">Email
+                    <br>
+                    <input type="email" name="email" required>
+                </label>
+                <label for="message">Message
+                    <br>
+                    <textarea name="message" required ></textarea>
+                </label>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <span id="switch" class="material-symbols-outlined" onclick="darkMode()">
+            dark_mode
+        </span>
+        <a href="#top">
+            <span class="material-symbols-outlined" id="scrollUp">
+                arrow_upward
+            </span>
+        </a>
+    </footer>
 </body>
 </html>

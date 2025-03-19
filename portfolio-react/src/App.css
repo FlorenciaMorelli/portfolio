@@ -670,27 +670,6 @@ footer{
         user-select: none;
         color: var(--marine-blue);
         text-decoration: none;
-        
-        span#scrollUp{
-            float: right;
-            position: relative;
-            bottom: 1rem;
-            margin-right: 3%;
-            padding: 0.2rem;
-    
-            font-size: 30px;
-            color: var(--marine-blue);
-            border: 0.2px solid var(--marine-blue);
-            border-radius: 50%;
-            
-            cursor: pointer;
-            user-select: none;
-    
-            &:hover{
-                transition:  all .3s ease;
-                transform: translateY(-10%);
-            }
-        }
     }
 }
 

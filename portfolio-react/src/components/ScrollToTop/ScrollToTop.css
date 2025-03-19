@@ -1,0 +1,25 @@
+.scrollToTop {
+    position: fixed;
+    right: 0;
+    bottom: 1rem;
+    margin-right: 3%;
+    padding: 0.2rem;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    align-content: center;
+
+    size: 30px !important;
+    color: var(--marine-blue);
+    border: 0.2px solid var(--marine-blue);
+    border-radius: 50%;
+
+    cursor: pointer;
+    user-select: none;
+
+
+    &:hover {
+        transition: all .3s ease;
+        transform: translateY(-10%);
+    }
+}

@@ -131,23 +131,6 @@ body {
             scale: 1.1;
         }
     }
-
-    div.infoMessage{
-        display: none;
-        position: fixed;
-        top: 4rem;
-        right: 5rem;
-        max-width: 20vw;
-        z-index: 999;
-        background-color: var(--light-gray);
-        padding: 1rem;
-
-        text-align: center;
-        
-        border-radius: .3rem;
-        box-shadow: 0 0 6px var(--marine-blue);
-        overflow: hidden;
-    }
 }
 
 /* Dark mode settings */
@@ -728,12 +711,6 @@ footer{
             height: 40px;
         }
 
-        div.infoMessage{
-            top: 3rem;
-            right: 2rem;
-            max-width: 40vw;
-            padding: 0.5rem;
-        }
 
         main{
             max-width: 90%;
@@ -815,9 +792,6 @@ footer{
 
     body{
         margin: 0;
-        div.infoMessage{
-            max-width: 60vw;
-        }
 
         header{
             nav{

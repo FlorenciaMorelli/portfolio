@@ -1,0 +1,55 @@
+#infoToggle{
+    float: right;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.2rem;
+
+    width: 48px;
+    height: 48px;
+    
+    z-index: 100;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover{
+        transition:  all .3s ease;
+        scale: 1.1;
+    }
+}
+
+div.infoMessage {
+    position: fixed;
+    top: 3rem;
+    right: 5rem;
+    max-width: 20vw;
+    z-index: 999;
+    background-color: var(--light-gray);
+    padding: 1rem;
+
+    text-align: center;
+
+    border-radius: .3rem;
+    box-shadow: 0 0 6px var(--marine-blue);
+    overflow: hidden;
+}
+
+@media screen and (max-width: 1023px) {
+    #infoToggle{
+        width: 40px;
+        height: 40px;
+    }
+    
+    div.infoMessage {
+        top: 3rem;
+        right: 2rem;
+        max-width: 40vw;
+        padding: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    div.infoMessage {
+        max-width: 60vw;
+    }
+}

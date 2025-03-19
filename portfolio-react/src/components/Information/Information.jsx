@@ -34,7 +34,7 @@ function Information() {
             {show &&
                 <div className="infoMessage" id="infoMessage" ref={messageRef}>
                     <p>
-                        This web was designed on Figma and developed with HTML5, CSS3 and JavaScript.
+                        This web was designed on Figma and developed with HTML5, CSS3 and React.
                     </p>
                 </div>
             }

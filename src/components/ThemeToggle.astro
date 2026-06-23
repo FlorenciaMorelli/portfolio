@@ -1,0 +1,73 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label={t.theme.toDark}
+  title={t.theme.toDark}
+>
+  <span class="theme-toggle__icon theme-toggle__icon--moon"><Icon name="moon" size={20} /></span>
+  <span class="theme-toggle__icon theme-toggle__icon--sun"><Icon name="sun" size={20} /></span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .theme-toggle__icon {
+    grid-area: 1 / 1;
+    display: inline-grid;
+    place-items: center;
+  }
+  :global([data-theme='light']) .theme-toggle__icon--sun,
+  :global([data-theme='dark']) .theme-toggle__icon--moon {
+    display: none;
+  }
+</style>
+
+<script>
+  const labels = {
+    es: { toLight: 'Cambiar a tema claro', toDark: 'Cambiar a tema oscuro' },
+    en: { toLight: 'Switch to light theme', toDark: 'Switch to dark theme' },
+  };
+  const lang = document.documentElement.lang.startsWith('es') ? 'es' : 'en';
+
+  function syncLabel(btn: HTMLElement) {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    const text = isDark ? labels[lang].toLight : labels[lang].toDark;
+    btn.setAttribute('aria-label', text);
+    btn.setAttribute('title', text);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((btn) => {
+    syncLabel(btn);
+    btn.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('theme', next);
+      document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(syncLabel);
+    });
+  });
+</script>

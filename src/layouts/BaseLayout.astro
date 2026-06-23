@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+import { useTranslations, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+}
+
+const { locale, title, description } = Astro.props;
+const t = useTranslations(locale);
+
+const pageTitle = title ?? t.meta.title;
+const pageDescription = description ?? t.meta.description;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const site = Astro.site ?? new URL('https://florenciamorelli.github.io');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(`${base}/assets/img/og-cover.png`, site).href;
+
+const alternates = [
+  { hreflang: 'es', href: new URL(`${base}/`, site).href },
+  { hreflang: 'en', href: new URL(`${base}/en/`, site).href },
+  { hreflang: 'x-default', href: new URL(`${base}/`, site).href },
+];
+---
+
+<!doctype html>
+<html lang={locale === 'es' ? 'es-AR' : 'en'} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+
+    <meta name="author" content="Florencia Morelli" />
+    <meta name="theme-color" content="#000033" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'es' ? 'es_AR' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/x-icon" href={`${base}/favicon.ico`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Florencia Morelli',
+        jobTitle: t.hero.role,
+        url: canonical,
+        sameAs: [
+          'https://github.com/FlorenciaMorelli',
+          'https://www.linkedin.com/in/florenciamorelli/',
+        ],
+      })}
+    />
+
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored ?? (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.a11y.skip}</a>
+    <slot />
+  </body>
+</html>

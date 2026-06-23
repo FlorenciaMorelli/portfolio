@@ -1,0 +1,138 @@
+{
+  "wc_match_predictor_frontend": {
+    "name": "World Cup 2026 Predictor",
+    "category": "Web",
+    "featured": true,
+    "order": 1,
+    "technologies": ["TypeScript", "React"],
+    "image": "assets/projects/wc-predictor.png",
+    "description": {
+      "es": "App para predecir los resultados de los partidos del Mundial 2026 y seguir cómo te va.",
+      "en": "App to predict the results of the 2026 World Cup matches and track how you do."
+    }
+  },
+  "formula1debrief": {
+    "name": "Formula 1 Debrief",
+    "category": "Web",
+    "featured": true,
+    "order": 2,
+    "technologies": ["React", "Express.js", "MySQL"],
+    "image": "assets/projects/formula1debrief.png",
+    "description": {
+      "es": "Aplicación fullstack para seguir resultados y datos de la Fórmula 1. Trabajo final de Desarrollo Web II.",
+      "en": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II."
+    }
+  },
+  "whatToWatch": {
+    "name": "WhatToWatch",
+    "category": "Mobile",
+    "featured": true,
+    "order": 3,
+    "technologies": ["Kotlin"],
+    "image": "assets/projects/whattowatch.png",
+    "description": {
+      "es": "App Android para decidir qué ver: busca películas y series consumiendo una API. Incluye APK descargable.",
+      "en": "Android app to decide what to watch: search movies and shows through an API. Includes a downloadable APK."
+    }
+  },
+  "cruzARG-on-godot": {
+    "name": "CruzARG (Godot)",
+    "category": "Games",
+    "technologies": ["Godot", "GDScript"],
+    "image": "assets/projects/cruzarg.png",
+    "description": {
+      "es": "Remake del juego CruzARG en el motor Godot.",
+      "en": "Remake of the CruzARG game in the Godot engine."
+    }
+  },
+  "cruzARG": {
+    "name": "CruzARG",
+    "category": "Games",
+    "technologies": ["C++", "SFML"],
+    "image": "assets/projects/cruzarg.png",
+    "description": {
+      "es": "Mi primer videojuego: cruzar la calle esquivando autos, hecho en C++ con la librería SFML.",
+      "en": "My first video game: crossing the road while dodging cars, made in C++ with the SFML library."
+    }
+  },
+  "bookvault": {
+    "name": "BookVault",
+    "category": "Mobile",
+    "technologies": ["Kotlin"],
+    "image": "assets/projects/bookvault.png",
+    "description": {
+      "es": "App Android para llevar tu biblioteca personal: agregar, editar y eliminar libros.",
+      "en": "Android app to keep your personal library: add, edit and delete books."
+    }
+  },
+  "UCExchangeS": {
+    "name": "UCExchangeS",
+    "category": "Mobile",
+    "technologies": ["Kotlin"],
+    "image": "assets/projects/ucexchanges.png",
+    "description": {
+      "es": "Mi primera app Android: un conversor de monedas simple y directo.",
+      "en": "My first Android app: a simple, no-frills currency converter."
+    }
+  },
+  "uces-di-grupo3": {
+    "name": "SugarMax",
+    "category": "Web",
+    "technologies": ["HTML", "CSS", "Bootstrap"],
+    "image": "assets/projects/sugarmax.png",
+    "description": {
+      "es": "Frontend de un e-commerce, hecho para la materia Diseño de Interfaces en UCES.",
+      "en": "E-commerce frontend, built for the Interface Design course at UCES."
+    }
+  },
+  "React34785": {
+    "name": "Adidike",
+    "category": "Web",
+    "technologies": ["React", "JavaScript"],
+    "image": "assets/projects/adidike.png",
+    "description": {
+      "es": "E-commerce de zapatillas con un diseño minimalista, hecho en React.",
+      "en": "Sneaker e-commerce with a minimalist design, built in React."
+    }
+  },
+  "diagon-alley-frontend": {
+    "name": "Diagon Alley",
+    "category": "Web",
+    "technologies": ["Python", "JavaScript"],
+    "image": "assets/projects/diagonalley.png",
+    "description": {
+      "es": "E-commerce inspirado en el Callejón Diagon de Harry Potter. Frontend en Vue para el curso FullStack de Codo a Codo.",
+      "en": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend for the Codo a Codo FullStack course."
+    }
+  },
+  "cotizadorEDIT": {
+    "name": "Cotizador ED-IT",
+    "category": "Web",
+    "technologies": ["JavaScript", "HTML", "CSS"],
+    "image": "assets/projects/cotizadoredit.png",
+    "description": {
+      "es": "Cotizador web que estima costos de proyectos, hecho con JavaScript.",
+      "en": "Web quote tool that estimates project costs, built with JavaScript."
+    }
+  },
+  "tututor": {
+    "name": "TuTutor",
+    "category": "Web",
+    "technologies": ["Angular", "PHP"],
+    "image": "assets/projects/tututor.png",
+    "description": {
+      "es": "Plataforma web para conectar alumnos con tutores particulares.",
+      "en": "Web platform to connect students with private tutors."
+    }
+  },
+  "WWWapas": {
+    "name": "WWWapas",
+    "category": "Web",
+    "technologies": ["HTML", "CSS"],
+    "image": "assets/projects/wwwapas.png",
+    "description": {
+      "es": "Sitio responsive en HTML y CSS. Mi primer proyecto en Educación IT.",
+      "en": "Responsive site in HTML and CSS. My first project at Educación IT."
+    }
+  }
+}

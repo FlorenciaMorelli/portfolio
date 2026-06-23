@@ -1,0 +1,321 @@
+[
+  {
+    "slug": "tututor",
+    "name": "Tututor",
+    "description": {
+      "es": "Web platform to connect students with private tutors.",
+      "en": "Web platform to connect students with private tutors."
+    },
+    "technologies": [
+      "TypeScript"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/tututor"
+      }
+    ],
+    "date": "2024-02-21T23:10:48Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "react34785",
+    "name": "React34785",
+    "description": {
+      "es": "Sneaker e-commerce (Adidike) with a minimalist design, built in React.",
+      "en": "Sneaker e-commerce (Adidike) with a minimalist design, built in React."
+    },
+    "technologies": [
+      "JavaScript"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/React34785"
+      },
+      {
+        "type": "website",
+        "url": "https://florenciamorelli.github.io/React34785/"
+      }
+    ],
+    "date": "2024-07-09T01:17:08Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "uces-di-grupo3",
+    "name": "Uces Di Grupo3",
+    "description": {
+      "es": "E-commerce frontend (SugarMax), for the Interface Design course at UCES.",
+      "en": "E-commerce frontend (SugarMax), for the Interface Design course at UCES."
+    },
+    "technologies": [
+      "bootstrap",
+      "css",
+      "uces",
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/uces-di-grupo3"
+      },
+      {
+        "type": "website",
+        "url": "https://chic-torte-b81f84.netlify.app/"
+      }
+    ],
+    "date": "2023-07-10T22:43:51Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "bookvault",
+    "name": "Bookvault",
+    "description": {
+      "es": "Android app to manage your personal library: add, edit and delete books.",
+      "en": "Android app to manage your personal library: add, edit and delete books."
+    },
+    "technologies": [
+      "Kotlin"
+    ],
+    "category": "Mobile",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/bookvault"
+      }
+    ],
+    "date": "2024-07-23T01:54:37Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "wwwapas",
+    "name": "WWWapas",
+    "description": {
+      "es": "Responsive site in HTML and CSS. First project at Educación IT.",
+      "en": "Responsive site in HTML and CSS. First project at Educación IT."
+    },
+    "technologies": [
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/WWWapas"
+      },
+      {
+        "type": "website",
+        "url": "https://florenciamorelli.github.io/WWWapas/"
+      }
+    ],
+    "date": "2024-07-08T20:56:35Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "cotizadoredit",
+    "name": "CotizadorEDIT",
+    "description": {
+      "es": "Web quote tool that estimates project costs, built with JavaScript.",
+      "en": "Web quote tool that estimates project costs, built with JavaScript."
+    },
+    "technologies": [
+      "CSS"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT"
+      }
+    ],
+    "date": "2024-07-08T20:29:09Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "diagon-alley-frontend",
+    "name": "Diagon Alley Frontend",
+    "description": {
+      "es": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo.",
+      "en": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo."
+    },
+    "technologies": [
+      "codoacodo",
+      "css",
+      "fullstack",
+      "javascript",
+      "python",
+      "vue",
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
+      },
+      {
+        "type": "website",
+        "url": "https://taupe-souffle-e8d78a.netlify.app/"
+      }
+    ],
+    "date": "2024-07-09T03:46:35Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "whattowatch",
+    "name": "WhatToWatch",
+    "description": {
+      "es": "Android app to find what to watch by consuming a movie/series API.",
+      "en": "Android app to find what to watch by consuming a movie/series API."
+    },
+    "technologies": [
+      "Kotlin"
+    ],
+    "category": "Mobile",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/whatToWatch"
+      }
+    ],
+    "date": "2025-03-11T18:08:51Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "ucexchanges",
+    "name": "UCExchangeS",
+    "description": {
+      "es": "My first Android app: a simple currency converter.",
+      "en": "My first Android app: a simple currency converter."
+    },
+    "technologies": [
+      "Kotlin"
+    ],
+    "category": "Mobile",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/UCExchangeS"
+      }
+    ],
+    "date": "2024-05-13T17:26:47Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "formula1debrief",
+    "name": "Formula1debrief",
+    "description": {
+      "es": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II.",
+      "en": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II."
+    },
+    "technologies": [
+      "JavaScript"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/formula1debrief"
+      },
+      {
+        "type": "website",
+        "url": "https://formula1debrief.netlify.app/"
+      }
+    ],
+    "date": "2024-07-22T15:55:59Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "cruzarg-on-godot",
+    "name": "CruzARG On Godot",
+    "description": {
+      "es": "Remake of the CruzARG game in the Godot engine.",
+      "en": "Remake of the CruzARG game in the Godot engine."
+    },
+    "technologies": [
+      "GDScript"
+    ],
+    "category": "Games",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cruzARG-on-godot"
+      }
+    ],
+    "date": "2024-12-18T20:33:56Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "cruzarg",
+    "name": "CruzARG",
+    "description": {
+      "es": "My first game: crossing the road dodging cars, made in C++ with SFML.",
+      "en": "My first game: crossing the road dodging cars, made in C++ with SFML."
+    },
+    "technologies": [
+      "C++"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cruzARG"
+      }
+    ],
+    "date": "2024-02-20T20:09:32Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "wc-match-predictor-frontend",
+    "name": "Wc Match Predictor Frontend",
+    "description": {
+      "es": "",
+      "en": ""
+    },
+    "technologies": [
+      "TypeScript"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/wc_match_predictor_frontend"
+      },
+      {
+        "type": "website",
+        "url": "https://florenciamorelli.github.io/wc_match_predictor_frontend/"
+      }
+    ],
+    "date": "2026-06-19T18:44:20Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  }
+]

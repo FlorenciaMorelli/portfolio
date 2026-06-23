@@ -1,0 +1,193 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import Icon from './Icon.astro';
+import { useTranslations, localizedPath, type Locale } from '../i18n/utils';
+import { assetUrl } from '../lib/url';
+import profile from '../data/profile.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const home = localizedPath(locale, '');
+const resume = assetUrl(profile.resume[locale]);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href={home}>
+      <span class="brand__mark">FM</span>
+      <span class="brand__name">Florencia Morelli</span>
+    </a>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="primary-nav"
+      aria-label="Menu"
+    >
+      <Icon name="menu" />
+    </button>
+
+    <nav id="primary-nav" class="site-nav" data-nav>
+      <ul class="site-nav__list">
+        <li><a href="#about">{t.nav.about}</a></li>
+        <li><a href="#projects">{t.nav.projects}</a></li>
+        <li><a href="#contact">{t.nav.contact}</a></li>
+        <li>
+          <a class="site-nav__resume" href={resume} download>
+            <Icon name="download" size={18} />{t.nav.resume}
+          </a>
+        </li>
+      </ul>
+      <div class="site-nav__tools">
+        <LangSwitcher locale={locale} />
+        <ThemeToggle locale={locale} />
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 4.25rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: var(--text-sm);
+    letter-spacing: 0.05em;
+  }
+  .brand__name {
+    font-size: var(--text-md);
+  }
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .site-nav__list a {
+    color: var(--text-muted);
+  }
+  .site-nav__list a:hover {
+    color: var(--accent);
+  }
+  .site-nav__resume {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-pill);
+    color: var(--accent) !important;
+  }
+  .site-nav__resume:hover {
+    background: var(--accent);
+    color: var(--accent-contrast) !important;
+  }
+  .site-nav__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .nav-toggle {
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  @media (max-width: 860px) {
+    .brand__name {
+      display: none;
+    }
+    .nav-toggle {
+      display: grid;
+    }
+    .site-nav {
+      position: fixed;
+      inset: 4.25rem 0 auto 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-5);
+      padding: var(--space-5) var(--container-pad) var(--space-6);
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-130%);
+      transition: transform var(--dur) var(--ease);
+    }
+    .site-nav[data-open='true'] {
+      transform: translateY(0);
+    }
+    .site-nav__list {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-4);
+      font-size: var(--text-md);
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+
+  function closeNav() {
+    nav?.removeAttribute('data-open');
+    toggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle?.addEventListener('click', () => {
+    const open = nav?.getAttribute('data-open') === 'true';
+    if (open) {
+      closeNav();
+    } else {
+      nav?.setAttribute('data-open', 'true');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
+  window.addEventListener('keydown', (e) => e.key === 'Escape' && closeNav());
+</script>

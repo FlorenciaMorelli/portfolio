@@ -1,0 +1,150 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+import { assetUrl } from '../lib/url';
+import type { Project, ProjectLinkType, IconName } from '../lib/types';
+
+interface Props {
+  project: Project;
+  locale: Locale;
+}
+const { project, locale } = Astro.props;
+const t = useTranslations(locale);
+
+const iconFor: Record<ProjectLinkType, IconName> = {
+  repo: 'github',
+  download: 'download',
+  website: 'globe',
+  demo: 'external',
+  presentation: 'presentation',
+  figma: 'figma',
+};
+
+const image = assetUrl(project.image);
+const description = project.description[locale] || project.description.en || project.description.es;
+---
+
+<article class="card" data-category={project.category}>
+  {image && (
+    <div class="card__media">
+      <img src={image} alt={project.name} loading="lazy" decoding="async" width="640" height="400" />
+    </div>
+  )}
+  <div class="card__body">
+    <div class="card__head">
+      <div>
+        <h3 class="card__title">{project.name}</h3>
+        {project.institution && <p class="card__institution">{project.institution}</p>}
+      </div>
+      <div class="card__links">
+        {project.links.map((link) => (
+          <a
+            href={assetUrl(link.url)}
+            target="_blank"
+            rel="noopener"
+            class="card__link"
+            aria-label={t.projects.links[link.type]}
+            title={t.projects.links[link.type]}
+          >
+            <Icon name={iconFor[link.type]} size={18} />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {description && <p class="card__desc">{description}</p>}
+
+    <ul class="card__tech">
+      {project.technologies.map((tech) => <li>{tech}</li>)}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+  .card__media {
+    aspect-ratio: 16 / 10;
+    background: var(--surface-alt);
+    overflow: hidden;
+  }
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+  .card:hover .card__media img {
+    transform: scale(1.04);
+  }
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    flex: 1;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: var(--space-3);
+  }
+  .card__title {
+    font-size: var(--text-md);
+  }
+  .card__institution {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    margin-top: var(--space-1);
+  }
+  .card__links {
+    display: flex;
+    gap: var(--space-1);
+    flex-shrink: 0;
+  }
+  .card__link {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+  }
+  .card__link:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .card__desc {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+  .card__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .card__tech li {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+</style>

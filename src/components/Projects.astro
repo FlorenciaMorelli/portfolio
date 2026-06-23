@@ -1,0 +1,119 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+import { getProjects, getUsedCategories } from '../lib/projects';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const projects = getProjects();
+const categories = ['All', ...getUsedCategories(projects)];
+const fromGithub = projects.some((p) => p.source === 'github');
+---
+
+<section id="projects" class="section projects">
+  <div class="container">
+    <h2 class="section-title">{t.projects.title}</h2>
+    <p class="projects__intro">{t.projects.intro}</p>
+
+    <div class="projects__filters" role="tablist" aria-label={t.projects.title} data-filters>
+      {categories.map((category, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="filter"
+          data-filter={category}
+          aria-selected={i === 0 ? 'true' : 'false'}
+        >
+          {t.projects.filters[category] ?? category}
+        </button>
+      ))}
+    </div>
+
+    <div class="projects__grid" data-grid>
+      {projects.map((project) => <ProjectCard project={project} locale={locale} />)}
+    </div>
+
+    <p class="projects__empty" data-empty hidden>{t.projects.empty}</p>
+
+    {fromGithub && <p class="projects__note">{t.projects.sourcedNote}</p>}
+  </div>
+</section>
+
+<style>
+  .projects__intro {
+    color: var(--text-muted);
+    margin-top: calc(var(--space-6) * -1 + var(--space-2));
+    margin-bottom: var(--space-6);
+  }
+  .projects__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .filter {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .filter:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .filter[aria-selected='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: var(--space-5);
+  }
+  .projects__empty {
+    margin-top: var(--space-6);
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .projects__note {
+    margin-top: var(--space-6);
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+</style>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('[data-filters]');
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+
+  filters?.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!btn || !grid) return;
+
+    filters.querySelectorAll('[data-filter]').forEach((b) =>
+      b.setAttribute('aria-selected', String(b === btn)),
+    );
+
+    const category = btn.dataset.filter;
+    let visible = 0;
+    grid.querySelectorAll<HTMLElement>('[data-category]').forEach((card) => {
+      const show = category === 'All' || card.dataset.category === category;
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+
+    if (empty) empty.hidden = visible !== 0;
+  });
+</script>

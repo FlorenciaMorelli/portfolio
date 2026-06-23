@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { localizedPath } from '../i18n/utils';
+const home = localizedPath('es', '');
+---
+
+<BaseLayout locale="es" title="404 — Florencia Morelli">
+  <main id="main" class="notfound">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Esta página no existe</h1>
+      <p>El enlace que seguiste no lleva a ninguna parte. / This page could not be found.</p>
+      <a class="btn btn--primary" href={home}>Volver al inicio · Back home</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .notfound {
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .notfound h1 {
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .notfound p {
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import { useTranslations, type Locale } from '../i18n/utils';
+import profile from '../data/profile.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const action = `https://formsubmit.co/${profile.email}`;
+const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+---
+
+<section id="contact" class="section contact">
+  <div class="container contact__inner">
+    <h2 class="section-title">{t.contact.title}</h2>
+    <p class="contact__intro">{t.contact.intro}</p>
+
+    <form class="contact__form" action={action} method="POST">
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value={redirect} />
+      <input type="hidden" name="_subject" value="Portfolio — nuevo mensaje" />
+      <input type="text" name="_honey" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+      <label class="field">
+        <span>{t.contact.name}</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="field">
+        <span>{t.contact.email}</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label class="field">
+        <span>{t.contact.message}</span>
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+
+      <button type="submit" class="btn btn--primary">{t.contact.send}</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact__inner {
+    max-width: 38rem;
+  }
+  .contact__intro {
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .field span {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font: inherit;
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+  }
+  .field textarea {
+    resize: vertical;
+  }
+  .contact__form .btn {
+    align-self: flex-start;
+  }
+</style>

@@ -24,7 +24,7 @@ const image = assetUrl(project.image);
 const description = project.description[locale] || project.description.en || project.description.es;
 ---
 
-<article class="card" data-category={project.category}>
+<article class="card reveal" data-category={project.category}>
   {image && (
     <div class="card__media">
       <img src={image} alt={project.name} loading="lazy" decoding="async" width="640" height="400" />

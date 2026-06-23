@@ -17,7 +17,7 @@ const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     <h2 class="section-title">{t.contact.title}</h2>
     <p class="contact__intro">{t.contact.intro}</p>
 
-    <form class="contact__form" action={action} method="POST">
+    <form class="contact__form reveal" action={action} method="POST">
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value={redirect} />
       <input type="hidden" name="_subject" value="Portfolio — nuevo mensaje" />

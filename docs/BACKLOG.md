@@ -49,12 +49,13 @@ varios PR de `feature/*` hacia `main`.
 
 ## Fase 6 — Pulido · Could
 
-- Datos estructurados ampliados y portada Open Graph.
-- Animaciones de entrada sutiles.
-- Documentación y README.
+- [x] Datos estructurados ampliados (`Person` con ubicación, formación y skills).
+- [x] Animaciones de entrada sutiles (reveal con respeto por `prefers-reduced-motion`).
+- [x] Documentación y README.
+- [ ] Portada Open Graph propia.
 
 ## Pendientes conocidos
 
-- Reemplazar la portada Open Graph (`public/assets/img/og-cover.png`).
-- CV en inglés separado del de español.
-- Migrar el resto de los repos al criterio del topic `portfolio`.
+- Crear la portada Open Graph (`public/assets/img/og-cover.png`, 1200×630). Tarea de diseño.
+- CV en inglés separado del de español (`public/assets/documents/`).
+- Etiquetar el resto de los repos con el topic `portfolio` a medida que se quieran sumar.

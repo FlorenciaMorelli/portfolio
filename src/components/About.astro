@@ -14,14 +14,21 @@ const photo = assetUrl(profile.photo);
 <section id="about" class="section about">
   <div class="container">
     <h2 class="section-title">{t.about.title}</h2>
-    <div class="about__grid">
+    <div class="about__grid reveal">
       <div class="about__text">
         {t.about.body.map((paragraph) => <p>{paragraph}</p>)}
 
         <h3 class="about__skills-title">{t.about.skillsTitle}</h3>
-        <ul class="about__skills">
-          {profile.skills.map((skill) => <li>{skill}</li>)}
-        </ul>
+        <div class="about__skill-groups">
+          {profile.skillGroups.map((group) => (
+            <div class="about__skill-group">
+              <h4 class="about__skill-cat">{t.about.skillsCategories[group.key] ?? group.key}</h4>
+              <ul class="about__skills">
+                {group.items.map((skill) => <li>{skill}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
       <div class="about__photo">
         <img src={photo} alt={t.about.photoAlt} width="420" height="520" loading="lazy" />
@@ -48,6 +55,17 @@ const photo = assetUrl(profile.photo);
   .about__skills-title {
     margin-top: var(--space-6);
     margin-bottom: var(--space-4);
+  }
+  .about__skill-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .about__skill-cat {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-faint);
+    margin-bottom: var(--space-2);
   }
   .about__skills {
     display: flex;

@@ -1,17 +1,12 @@
 {
   "name": "Florencia Morelli",
-  "skills": [
-    "UX/UI Design",
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "React",
-    "Angular",
-    "Express.js",
-    "PHP",
-    "C++",
-    "Java",
-    "Kotlin"
+  "skillGroups": [
+    { "key": "web", "items": ["HTML", "CSS", "JavaScript", "React", "Redux", "Angular"] },
+    { "key": "mobile", "items": ["Kotlin"] },
+    { "key": "games", "items": ["C++", "C#", "GDScript", "Unity", "Godot"] },
+    { "key": "backend", "items": ["Node.js", "Express.js", "PHP", "Java", "Python"] },
+    { "key": "data", "items": ["SQL", "MySQL"] },
+    { "key": "tools", "items": ["Git", "Figma", "Postman", "Newman"] }
   ],
   "socials": {
     "github": "https://github.com/FlorenciaMorelli",

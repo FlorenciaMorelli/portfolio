@@ -98,7 +98,7 @@
   "diagon-alley-frontend": {
     "name": "Diagon Alley",
     "category": "Web",
-    "technologies": ["Vue", "JavaScript"],
+    "technologies": ["Python", "JavaScript"],
     "image": "assets/projects/diagonalley.png",
     "description": {
       "es": "E-commerce inspirado en el Callejón Diagon de Harry Potter. Frontend en Vue para el curso FullStack de Codo a Codo.",

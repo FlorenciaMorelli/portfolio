@@ -1,0 +1,111 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+import profile from '../data/profile.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <p class="eyebrow">{t.hero.greeting}</p>
+    <h1 class="hero__name">Florencia Morelli</h1>
+    <p class="hero__role">{t.hero.role}</p>
+    <p class="hero__intro">{t.hero.intro}</p>
+
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#projects">{t.hero.viewProjects}</a>
+      <div class="hero__socials">
+        <a href={profile.socials.github} target="_blank" rel="noopener" aria-label="GitHub">
+          <Icon name="github" size={22} />
+        </a>
+        <a href={profile.socials.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
+          <Icon name="linkedin" size={22} />
+        </a>
+      </div>
+    </div>
+
+    <a class="hero__scroll" href="#about">
+      <Icon name="arrow-down" size={20} />
+      <span>{t.hero.cta}</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(4rem, 12vh, 8rem) var(--space-8);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 38rem;
+    height: 38rem;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hero__inner {
+    max-width: 46rem;
+  }
+  .hero__name {
+    margin-top: var(--space-2);
+    font-size: clamp(2.5rem, 8vw, var(--text-4xl));
+    color: var(--accent);
+  }
+  .hero__role {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+    margin-top: var(--space-2);
+  }
+  .hero__intro {
+    margin-top: var(--space-5);
+    font-size: var(--text-md);
+    max-width: 38rem;
+    color: var(--text-muted);
+  }
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+  .hero__socials {
+    display: flex;
+    gap: var(--space-4);
+  }
+  .hero__socials a {
+    color: var(--text-muted);
+  }
+  .hero__socials a:hover {
+    color: var(--accent);
+  }
+  .hero__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .hero__scroll :global(svg) {
+    animation: nudge 1.8s var(--ease) infinite;
+  }
+  .hero__scroll:hover {
+    color: var(--accent);
+  }
+  @keyframes nudge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+</style>

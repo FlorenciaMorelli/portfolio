@@ -1,0 +1,27 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# testing
+test-results/
+playwright-report/
+.playwright/
+coverage/
+
+# environment
+.env
+.env.production
+.env.local
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json

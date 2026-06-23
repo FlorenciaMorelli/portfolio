@@ -1,0 +1,26 @@
+{
+  "name": "Florencia Morelli",
+  "skills": [
+    "UX/UI Design",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React",
+    "Angular",
+    "Express.js",
+    "PHP",
+    "C++",
+    "Java",
+    "Kotlin"
+  ],
+  "socials": {
+    "github": "https://github.com/FlorenciaMorelli",
+    "linkedin": "https://www.linkedin.com/in/florenciamorelli/"
+  },
+  "email": "florenciamorelliIT@gmail.com",
+  "resume": {
+    "es": "assets/documents/resume.pdf",
+    "en": "assets/documents/resume.pdf"
+  },
+  "photo": "assets/img/me.jpg"
+}

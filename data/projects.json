@@ -1,0 +1,292 @@
+{
+    "projects": [
+        {
+            "name": "WhatToWatch App",
+            "institution": "UCES",
+            "description": "Android mobile app with API consumption developed for Mobile Development I subject.",
+            "image": "assets/projects/whattowatch.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/whatToWatch/releases"
+                },
+                {
+                    "type": "download",
+                    "url": "downloadables/what_to_watch.apk"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
+            "category": "Mobile",
+            "date": "2024-11-21"
+        },
+        {
+            "name": "CruzARG in Godot",
+            "institution": "UCES",
+            "description": "CruzARG game, now made in Godot.",
+            "image": "assets/projects/cruzarg.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/cruzARG-on-godot/releases"
+                }
+            ],
+            "technologies": [
+                "Godot Engine",
+                "GDScript"
+            ],
+            "category": "Games",
+            "date": "2024-12-18"
+        },
+        {
+            "name": "Bookvault App",
+            "institution": "UCES",
+            "description": "Mobile app for managing books: add, edit, and delete them.",
+            "image": "assets/projects/bookvault.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/bookvault/releases"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
+            "category": "Mobile",
+            "date": "2024-07-22"
+        },
+        {
+            "name": "UCExchangeS",
+            "institution": "UCES",
+            "description": "First Android app. Easy-to-use currency converter developed for Mobile Development I subject at UCES.",
+            "image": "assets/projects/ucexchanges.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/UCExchangeS"
+                }
+            ],
+            "technologies": [
+                "Kotlin"
+            ],
+            "category": "Mobile",
+            "date": "2024-05-13"
+        },
+        {
+            "name": "CruzARG",
+            "institution": "UCES",
+            "description": "First contact with Game Development, using SFML library and C++ to create a crossing road game.",
+            "image": "assets/projects/cruzarg.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/cruzARG/releases"
+                }
+            ],
+            "technologies": [
+                "C++",
+                "SFML"
+            ],
+            "category": "Games",
+            "date": "2024-02-20"
+        },
+        {
+            "name": "Ford Pinasco",
+            "institution": "Nivel7",
+            "description": "Frontend developement for a car dealership company.",
+            "image": "assets/projects/fordpinasco.png",
+            "links": [
+                {
+                    "type": "website",
+                    "url": "https://www.maximopinasco.com.ar/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2023-09-07"
+        },
+        {
+            "name": "SugarMax",
+            "institution": "UCES",
+            "description": "Frontend for an e-commerce platform developed for Interface Design subject at UCES.",
+            "image": "assets/projects/sugarmax.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/uces-di-grupo3"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/uces-di-grupo3/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3",
+                "Bootstrap"
+            ],
+            "category": "Web",
+            "date": "2023-07-10"
+        },
+        {
+            "name": "Adidike",
+            "institution": "CoderHouse",
+            "description": "An e-commerce platform showcasing a variety of footwear products with a minimalist design.",
+            "image": "assets/projects/adidike.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/React34785/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/category/Tenis"
+                }
+            ],
+            "technologies": [
+                "React",
+                "JavaScript",
+                "HTML5"
+            ],
+            "category": "Web",
+            "date": "2024-07-08"
+        },
+        {
+            "name": "WWWapas",
+            "institution": "Educacion IT",
+            "description": "Responsive website created using HTML5 and CSS3, showcasing modern web design principles and techniques.",
+            "image": "assets/projects/wwwapas.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/WWWapas/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/WWWapas/"
+                }
+            ],
+            "technologies": [
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2024-07-04"
+        },
+        {
+            "name": "Veggie Buddy",
+            "institution": "Codo a Codo 4.0",
+            "description": "An iOS-based mobile app designed to help users find vegetarian food items and restaurants. It provides easy-to-understand search categories and simple logging.",
+            "image": "assets/projects/veggiebuddy.jpg",
+            "links": [
+                {
+                    "type": "presentation",
+                    "url": "https://drive.google.com/file/d/1Yl1RJ_XFVtov0o2dMtDSN9KGO49-qTGO/view"
+                },
+                {
+                    "type": "figma",
+                    "url": "https://www.figma.com/design/Uxqd5KspnaSLbjC0xZXHIL/Veggie-Buddy-Project?node-id=417-21683&p=f&t=bLMzOs3xX0Oop1Yk-0"
+                }
+            ],
+            "technologies": [
+                "UX/UI Design",
+                "Figma"
+            ],
+            "category": "Mobile",
+            "date": "2023-04-04"
+        },
+        {
+            "name": "Cotizador ED-IT",
+            "institution": "Educacion It",
+            "description": "Web application for generating quotes, built with HTML5, CSS3, and JavaScript. It provides a user-friendly interface for estimating project costs.",
+            "image": "assets/projects/cotizadoredit.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://florenciamorelli.github.io/cotizadorEDIT/"
+                }
+            ],
+            "technologies": [
+                "JavaScript",
+                "HTML5",
+                "CSS3"
+            ],
+            "category": "Web",
+            "date": "2024-07-08"
+        },
+        {
+            "name": "Diagon Alley",
+            "institution": "Codo a Codo 4.0",
+            "description": "E-commerce platform inspired by the Harry Potter universe.",
+            "image": "assets/projects/diagonalley.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
+                },
+                {
+                    "type": "website",
+                    "url": "https://taupe-souffle-e8d78a.netlify.app/"
+                }
+            ],
+            "technologies": [
+                "Python",
+                "JavaScript",
+                "HTML5"
+            ],
+            "category": "Web",
+            "date": "2023-07-05"
+        },
+        {
+            "name": "TuTutor.com",
+            "institution": "UCES",
+            "description": "Web platform for online tutoring.",
+            "image": "assets/projects/tututor.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/tututor/releases"
+                }
+            ],
+            "technologies": [
+                "Angular",
+                "PHP"
+            ],
+            "category": "Web",
+            "date": "2024-02-21"
+        },
+        {
+            "name": "formula1debrief",
+            "institution": "UCES",
+            "description": "ReactJs, Express.js and MySQL project for Web Development II final assignment.",
+            "image": "assets/projects/formula1debrief.png",
+            "links": [
+                {
+                    "type": "repo",
+                    "url": "https://github.com/FlorenciaMorelli/tututor/releases"
+                },
+                {
+                    "type": "website",
+                    "url": "https://formula1debrief.netlify.app/"
+                }
+            ],
+            "technologies": [
+                "React",
+                "Express.js",
+                "Sequelize"
+            ],
+            "category": "Web",
+            "date": "2024-07-22"
+        }
+    ]
+}

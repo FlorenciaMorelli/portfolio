@@ -1,0 +1,14 @@
+{
+  "name": "Nombre a mostrar (opcional, por defecto el nombre del repo)",
+  "category": "Web | Mobile | Games | Design",
+  "featured": false,
+  "order": 10,
+  "institution": "UCES",
+  "image": "https://.../portada.png",
+  "technologies": ["React", "TypeScript"],
+  "description": {
+    "es": "Descripción en español.",
+    "en": "Description in English."
+  },
+  "links": [{ "type": "demo", "url": "https://..." }]
+}

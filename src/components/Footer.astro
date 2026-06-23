@@ -1,0 +1,73 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+import profile from '../data/profile.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__meta">
+      <p class="site-footer__name">Florencia Morelli</p>
+      <p class="site-footer__rights">© {year} · {t.footer.rights}</p>
+    </div>
+
+    <div class="site-footer__socials">
+      <a href={profile.socials.github} target="_blank" rel="noopener" aria-label="GitHub">
+        <Icon name="github" size={20} />
+      </a>
+      <a href={profile.socials.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
+        <Icon name="linkedin" size={20} />
+      </a>
+      <a href="#top" class="site-footer__top" aria-label={t.a11y.toTop}>
+        <Icon name="arrow-up" size={20} />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding-block: var(--space-6);
+    margin-top: var(--space-8);
+  }
+  .site-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .site-footer__name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .site-footer__rights {
+    color: var(--text-faint);
+    font-size: var(--text-sm);
+  }
+  .site-footer__socials {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .site-footer__socials a {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+  }
+  .site-footer__socials a:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+</style>

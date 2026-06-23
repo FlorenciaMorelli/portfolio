@@ -1,0 +1,45 @@
+[
+  {
+    "slug": "ford-pinasco",
+    "name": "Ford Pinasco",
+    "institution": "Nivel7",
+    "description": {
+      "es": "Desarrollo frontend del sitio para una concesionaria de autos.",
+      "en": "Frontend development for a car dealership website."
+    },
+    "image": "assets/projects/fordpinasco.png",
+    "technologies": ["JavaScript", "HTML5", "CSS3"],
+    "category": "Web",
+    "links": [{ "type": "website", "url": "https://www.maximopinasco.com.ar/" }],
+    "date": "2023-09-07",
+    "featured": false,
+    "order": 50,
+    "source": "manual"
+  },
+  {
+    "slug": "veggie-buddy",
+    "name": "Veggie Buddy",
+    "institution": "Codo a Codo 4.0",
+    "description": {
+      "es": "App móvil para encontrar comida y restaurantes vegetarianos, con categorías de búsqueda claras y registro simple. Proyecto de diseño UX/UI.",
+      "en": "Mobile app to find vegetarian food and restaurants, with clear search categories and simple logging. A UX/UI design project."
+    },
+    "image": "assets/projects/veggiebuddy.jpg",
+    "technologies": ["UX/UI Design", "Figma"],
+    "category": "Design",
+    "links": [
+      {
+        "type": "presentation",
+        "url": "https://drive.google.com/file/d/1Yl1RJ_XFVtov0o2dMtDSN9KGO49-qTGO/view"
+      },
+      {
+        "type": "figma",
+        "url": "https://www.figma.com/design/Uxqd5KspnaSLbjC0xZXHIL/Veggie-Buddy-Project?node-id=417-21683&p=f&t=bLMzOs3xX0Oop1Yk-0"
+      }
+    ],
+    "date": "2023-04-04",
+    "featured": false,
+    "order": 51,
+    "source": "manual"
+  }
+]

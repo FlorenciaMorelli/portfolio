@@ -1,0 +1,82 @@
+---
+import { useTranslations, type Locale } from '../i18n/utils';
+import { assetUrl } from '../lib/url';
+import profile from '../data/profile.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const photo = assetUrl(profile.photo);
+---
+
+<section id="about" class="section about">
+  <div class="container">
+    <h2 class="section-title">{t.about.title}</h2>
+    <div class="about__grid">
+      <div class="about__text">
+        {t.about.body.map((paragraph) => <p>{paragraph}</p>)}
+
+        <h3 class="about__skills-title">{t.about.skillsTitle}</h3>
+        <ul class="about__skills">
+          {profile.skills.map((skill) => <li>{skill}</li>)}
+        </ul>
+      </div>
+      <div class="about__photo">
+        <img src={photo} alt={t.about.photoAlt} width="420" height="520" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .about__text p + p {
+    margin-top: var(--space-4);
+    color: var(--text-muted);
+  }
+  .about__text p:first-child {
+    color: var(--text);
+    font-size: var(--text-md);
+  }
+  .about__skills-title {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+  .about__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .about__skills li {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .about__photo img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (max-width: 768px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .about__photo {
+      order: -1;
+      max-width: 18rem;
+    }
+  }
+</style>

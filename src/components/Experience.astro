@@ -1,0 +1,101 @@
+---
+import { useTranslations, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section id="experience" class="section experience">
+  <div class="container">
+    <h2 class="section-title">{t.experience.title}</h2>
+    <ol class="timeline">
+      {t.experience.jobs.map((job) => (
+        <li class="timeline__item reveal">
+          <div class="timeline__head">
+            <h3 class="timeline__role">{job.role}</h3>
+            <span class="timeline__period">{job.period}</span>
+          </div>
+          <p class="timeline__org">{job.org}</p>
+          {job.tech && <p class="timeline__tech">{job.tech}</p>}
+          <ul class="timeline__points">
+            {job.points.map((point) => <li>{point}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    border-left: 2px solid var(--border);
+    padding-left: var(--space-6);
+  }
+  .timeline__item {
+    position: relative;
+  }
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--space-6) * -1 - 6px);
+    top: 0.4em;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .timeline__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .timeline__role {
+    font-size: var(--text-md);
+  }
+  .timeline__period {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+  .timeline__org {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    margin-top: var(--space-1);
+  }
+  .timeline__tech {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent);
+    margin-top: var(--space-2);
+  }
+  .timeline__points {
+    margin-top: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .timeline__points li {
+    position: relative;
+    padding-left: var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+  .timeline__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 6px;
+    height: 2px;
+    background: var(--accent);
+  }
+</style>

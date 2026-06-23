@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { useTranslations, type Locale } from '../i18n/utils';
+import profile from '../data/profile.json';
 
 interface Props {
   locale: Locale;
@@ -59,11 +60,21 @@ const alternates = [
         '@type': 'Person',
         name: 'Florencia Morelli',
         jobTitle: t.hero.role,
+        description: pageDescription,
         url: canonical,
-        sameAs: [
-          'https://github.com/FlorenciaMorelli',
-          'https://www.linkedin.com/in/florenciamorelli/',
-        ],
+        image: ogImage,
+        email: `mailto:${profile.email}`,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Buenos Aires',
+          addressCountry: 'AR',
+        },
+        alumniOf: {
+          '@type': 'CollegeOrUniversity',
+          name: 'Universidad de Ciencias Empresariales y Sociales (UCES)',
+        },
+        knowsAbout: profile.skillGroups.flatMap((g) => g.items),
+        sameAs: [profile.socials.github, profile.socials.linkedin],
       })}
     />
 
@@ -73,11 +84,30 @@ const alternates = [
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = stored ?? (prefersDark ? 'dark' : 'light');
         document.documentElement.dataset.theme = theme;
+        document.documentElement.classList.add('js');
       })();
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{t.a11y.skip}</a>
     <slot />
+
+    <script>
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if (items.length) {
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+        items.forEach((el) => observer.observe(el));
+      }
+    </script>
   </body>
 </html>

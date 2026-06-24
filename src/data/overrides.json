@@ -13,6 +13,7 @@
   },
   "formula1debrief": {
     "name": "Formula 1 Debrief",
+    "institution": "UCES",
     "category": "Web",
     "featured": true,
     "order": 2,
@@ -25,6 +26,7 @@
   },
   "whatToWatch": {
     "name": "WhatToWatch",
+    "institution": "UCES",
     "category": "Mobile",
     "featured": true,
     "order": 3,
@@ -37,6 +39,7 @@
   },
   "cruzARG-on-godot": {
     "name": "CruzARG (Godot)",
+    "institution": "UCES",
     "category": "Games",
     "technologies": ["Godot", "GDScript"],
     "image": "assets/projects/cruzarg.png",
@@ -47,6 +50,7 @@
   },
   "cruzARG": {
     "name": "CruzARG",
+    "institution": "UCES",
     "category": "Games",
     "technologies": ["C++", "SFML"],
     "image": "assets/projects/cruzarg.png",
@@ -57,6 +61,7 @@
   },
   "bookvault": {
     "name": "BookVault",
+    "institution": "UCES",
     "category": "Mobile",
     "technologies": ["Kotlin"],
     "image": "assets/projects/bookvault.png",
@@ -67,6 +72,7 @@
   },
   "UCExchangeS": {
     "name": "UCExchangeS",
+    "institution": "UCES",
     "category": "Mobile",
     "technologies": ["Kotlin"],
     "image": "assets/projects/ucexchanges.png",
@@ -77,6 +83,7 @@
   },
   "uces-di-grupo3": {
     "name": "SugarMax",
+    "institution": "UCES",
     "category": "Web",
     "technologies": ["HTML", "CSS", "Bootstrap"],
     "image": "assets/projects/sugarmax.png",
@@ -87,6 +94,7 @@
   },
   "React34785": {
     "name": "Adidike",
+    "institution": "Coderhouse",
     "category": "Web",
     "technologies": ["React", "JavaScript"],
     "image": "assets/projects/adidike.png",
@@ -97,16 +105,18 @@
   },
   "diagon-alley-frontend": {
     "name": "Diagon Alley",
+    "institution": "Codo a Codo 4.0",
     "category": "Web",
     "technologies": ["Python", "JavaScript"],
     "image": "assets/projects/diagonalley.png",
     "description": {
-      "es": "E-commerce inspirado en el Callejón Diagon de Harry Potter. Frontend en Vue para el curso FullStack de Codo a Codo.",
-      "en": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend for the Codo a Codo FullStack course."
+      "es": "E-commerce inspirado en el Callejón Diagon de Harry Potter, para el curso FullStack de Codo a Codo.",
+      "en": "E-commerce inspired by Harry Potter's Diagon Alley, for the Codo a Codo FullStack course."
     }
   },
   "cotizadorEDIT": {
     "name": "Cotizador ED-IT",
+    "institution": "Educación IT",
     "category": "Web",
     "technologies": ["JavaScript", "HTML", "CSS"],
     "image": "assets/projects/cotizadoredit.png",
@@ -117,6 +127,7 @@
   },
   "tututor": {
     "name": "TuTutor",
+    "institution": "UCES",
     "category": "Web",
     "technologies": ["Angular", "PHP"],
     "image": "assets/projects/tututor.png",
@@ -127,6 +138,7 @@
   },
   "WWWapas": {
     "name": "WWWapas",
+    "institution": "Educación IT",
     "category": "Web",
     "technologies": ["HTML", "CSS"],
     "image": "assets/projects/wwwapas.png",

@@ -1,0 +1,175 @@
+{
+  "name": "Florencia Morelli",
+  "title": {
+    "es": "Desarrolladora | Analista Técnico Funcional",
+    "en": "Developer | Technical Functional Analyst"
+  },
+  "contact": {
+    "phone": "+54 9 11 33292257",
+    "email": "florenciamorelliIT@gmail.com",
+    "linkedin": "linkedin.com/in/florenciamorelli",
+    "github": "github.com/FlorenciaMorelli",
+    "portfolio": "florenciamorelli.github.io/portfolio",
+    "location": "Buenos Aires, Argentina"
+  },
+  "sections": {
+    "es": {
+      "summary": "Perfil",
+      "skills": "Habilidades técnicas",
+      "experience": "Experiencia",
+      "education": "Educación",
+      "projects": "Proyectos destacados",
+      "languages": "Idiomas"
+    },
+    "en": {
+      "summary": "Summary",
+      "skills": "Technical Skills",
+      "experience": "Experience",
+      "education": "Education",
+      "projects": "Featured Projects",
+      "languages": "Languages"
+    }
+  },
+  "summary": {
+    "es": "Desarrolladora y analista técnico-funcional con experiencia en desarrollo web y frontend (React, JavaScript), integración de sistemas, APIs REST/SOAP, testing y análisis de requerimientos bajo metodologías Agile/Scrum. Oriento mi carrera a un puesto de desarrollo, donde aportar mi perfil técnico y mi capacidad de resolución de problemas.",
+    "en": "Developer and technical-functional analyst with experience in web and frontend development (React, JavaScript), systems integration, REST/SOAP APIs, testing and requirements analysis under Agile/Scrum. Focused on a development role where I can contribute my technical profile and problem-solving skills."
+  },
+  "languages": {
+    "es": ["Español — Nativo", "Inglés — Intermedio-alto (B2+)"],
+    "en": ["Spanish — Native", "English — Upper-intermediate (B2+)"]
+  },
+  "skills": {
+    "es": [
+      { "cat": "Desarrollo web", "items": ["HTML", "CSS", "JavaScript", "React.js", "Redux", "Angular"] },
+      { "cat": "Mobile", "items": ["Kotlin", "Android"] },
+      { "cat": "Videojuegos", "items": ["C++", "C#", "GDScript", "Unity", "Godot Engine"] },
+      { "cat": "Backend", "items": ["Node.js", "Express.js", "PHP", "Java", "Python"] },
+      { "cat": "Bases de datos", "items": ["SQL", "MySQL"] },
+      { "cat": "Herramientas", "items": ["Git/GitHub", "Figma", "Postman", "Newman"] },
+      { "cat": "Metodologías", "items": ["Agile", "Scrum"] }
+    ],
+    "en": [
+      { "cat": "Web Development", "items": ["HTML", "CSS", "JavaScript", "React.js", "Redux", "Angular"] },
+      { "cat": "Mobile", "items": ["Kotlin", "Android"] },
+      { "cat": "Game Development", "items": ["C++", "C#", "GDScript", "Unity", "Godot Engine"] },
+      { "cat": "Backend", "items": ["Node.js", "Express.js", "PHP", "Java", "Python"] },
+      { "cat": "Databases", "items": ["SQL", "MySQL"] },
+      { "cat": "Tools", "items": ["Git/GitHub", "Figma", "Postman", "Newman"] },
+      { "cat": "Methodologies", "items": ["Agile", "Scrum"] }
+    ]
+  },
+  "experience": {
+    "es": [
+      {
+        "role": "Analista Técnico Funcional",
+        "org": "Diagnóstico Maipú (SMG) — Laboratory Information Systems (LIS)",
+        "period": "Dic 2024 – Actualidad",
+        "note": "Promovida internamente desde el área administrativa.",
+        "tech": "JSON, XML, APIs REST/SOAP, Postman, Agile",
+        "points": [
+          "Análisis funcional y técnico de requerimientos para módulos críticos del sistema.",
+          "Implementación y soporte de integraciones entre sistemas (LIS, ERP) mediante APIs y servicios web.",
+          "Diseño y ejecución de pruebas funcionales y técnicas; automatización de validaciones con Postman y Newman.",
+          "Análisis de logs, trazas y tráfico entre sistemas para identificar, depurar y corregir errores.",
+          "Documentación técnica, historias de usuario y criterios de aceptación para equipos de desarrollo.",
+          "Interacción continua con equipos de backend, frontend y QA para priorizar y resolver incidencias."
+        ]
+      },
+      {
+        "role": "Desarrolladora web front-end (freelance)",
+        "org": "Enivel7 — Máximo Pinasco / Ford",
+        "period": "Ago 2023 – Sep 2023",
+        "tech": "HTML5, CSS3, JavaScript, Responsive Design",
+        "points": [
+          "Desarrollo de la interfaz web con HTML5, CSS3 y JavaScript.",
+          "Implementación de diseño responsive para dispositivos móviles y de escritorio.",
+          "Integración de elementos interactivos para mejorar la usabilidad del sitio."
+        ]
+      },
+      {
+        "role": "Recepcionista y administrativa",
+        "org": "Diagnóstico Maipú (SMG)",
+        "period": "Jul 2021 – Dic 2024",
+        "points": [
+          "Optimización de procesos administrativos y documentación operativa.",
+          "Manejo de reclamos, coordinación interáreas y gestión de datos.",
+          "Capacitación a personal y estandarización de flujos de trabajo."
+        ]
+      }
+    ],
+    "en": [
+      {
+        "role": "Technical Functional Analyst",
+        "org": "Diagnóstico Maipú (SMG) — Laboratory Information Systems (LIS)",
+        "period": "Dec 2024 – Present",
+        "note": "Promoted internally from the administrative team.",
+        "tech": "JSON, XML, REST/SOAP APIs, Postman, Agile",
+        "points": [
+          "Functional and technical analysis of requirements for critical system modules.",
+          "Implemented and supported integrations between systems (LIS, ERP) via APIs and web services.",
+          "Designed and ran functional and technical tests; automated validations with Postman and Newman.",
+          "Analyzed logs, traces and traffic across systems to identify, debug and fix errors.",
+          "Wrote technical documentation, user stories and acceptance criteria for development teams.",
+          "Worked continuously with backend, frontend and QA teams to prioritize and resolve issues."
+        ]
+      },
+      {
+        "role": "Front-end Web Developer (freelance)",
+        "org": "Enivel7 — Máximo Pinasco / Ford",
+        "period": "Aug 2023 – Sep 2023",
+        "tech": "HTML5, CSS3, JavaScript, Responsive Design",
+        "points": [
+          "Built the web interface using HTML5, CSS3 and JavaScript.",
+          "Implemented responsive design for mobile and desktop devices.",
+          "Integrated interactive elements to improve site usability."
+        ]
+      },
+      {
+        "role": "Receptionist and Administrative Assistant",
+        "org": "Diagnóstico Maipú (SMG)",
+        "period": "Jul 2021 – Dec 2024",
+        "points": [
+          "Streamlined administrative processes and operational documentation.",
+          "Claims handling, cross-area coordination and data management.",
+          "Staff training and workflow standardization."
+        ]
+      }
+    ]
+  },
+  "education": {
+    "es": [
+      "Tecnicatura Universitaria en Programación de Sistemas (2024) — UCES",
+      "Product Owner (2025) — Educación IT",
+      "API Testing (2025) — Educación IT",
+      "Desarrollador FullStack PHP (2024) — Codo a Codo 4.0",
+      "Desarrollador FullStack Python (2023) — Codo a Codo 4.0",
+      "React.js (2022) — Coderhouse",
+      "JavaScript (2022) — Educación IT",
+      "Desarrollo web con HTML5 y CSS (2022) — Educación IT",
+      "Diseño UX/UI (2022) — Codo a Codo 4.0"
+    ],
+    "en": [
+      "University Technical Degree in Systems Programming (2024) — UCES",
+      "Product Owner (2025) — Educación IT",
+      "API Testing (2025) — Educación IT",
+      "FullStack PHP Developer (2024) — Codo a Codo 4.0",
+      "FullStack Python Developer (2023) — Codo a Codo 4.0",
+      "React.js (2022) — Coderhouse",
+      "JavaScript (2022) — Educación IT",
+      "Web Development with HTML5 and CSS (2022) — Educación IT",
+      "UX/UI Design (2022) — Codo a Codo 4.0"
+    ]
+  },
+  "projects": {
+    "es": [
+      { "name": "Formula 1 Debrief", "desc": "Plataforma web fullstack para seguir resultados y datos de Fórmula 1. React, Express y MySQL." },
+      { "name": "World Cup 2026 Predictor", "desc": "App para predecir resultados de los partidos del Mundial 2026. React y TypeScript." },
+      { "name": "WhatToWatch", "desc": "App Android que consume una API de películas y series. Kotlin." }
+    ],
+    "en": [
+      { "name": "Formula 1 Debrief", "desc": "Fullstack web platform to follow Formula 1 results and data. React, Express and MySQL." },
+      { "name": "World Cup 2026 Predictor", "desc": "App to predict the results of the 2026 World Cup matches. React and TypeScript." },
+      { "name": "WhatToWatch", "desc": "Android app that consumes a movie and series API. Kotlin." }
+    ]
+  }
+}

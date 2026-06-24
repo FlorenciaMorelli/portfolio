@@ -48,6 +48,86 @@
     "source": "github"
   },
   {
+    "slug": "diagon-alley-frontend",
+    "name": "Diagon Alley Frontend",
+    "description": {
+      "es": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo.",
+      "en": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo."
+    },
+    "technologies": [
+      "codoacodo",
+      "css",
+      "fullstack",
+      "javascript",
+      "python",
+      "vue",
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
+      },
+      {
+        "type": "website",
+        "url": "https://taupe-souffle-e8d78a.netlify.app/"
+      }
+    ],
+    "date": "2024-07-09T03:46:35Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "cotizadoredit",
+    "name": "CotizadorEDIT",
+    "description": {
+      "es": "Web quote tool that estimates project costs, built with JavaScript.",
+      "en": "Web quote tool that estimates project costs, built with JavaScript."
+    },
+    "technologies": [
+      "CSS"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT"
+      }
+    ],
+    "date": "2024-07-08T20:29:09Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "wwwapas",
+    "name": "WWWapas",
+    "description": {
+      "es": "Responsive site in HTML and CSS. First project at Educación IT.",
+      "en": "Responsive site in HTML and CSS. First project at Educación IT."
+    },
+    "technologies": [
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/WWWapas"
+      },
+      {
+        "type": "website",
+        "url": "https://florenciamorelli.github.io/WWWapas/"
+      }
+    ],
+    "date": "2024-07-08T20:56:35Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
     "slug": "uces-di-grupo3",
     "name": "Uces Di Grupo3",
     "description": {
@@ -99,86 +179,6 @@
     "source": "github"
   },
   {
-    "slug": "wwwapas",
-    "name": "WWWapas",
-    "description": {
-      "es": "Responsive site in HTML and CSS. First project at Educación IT.",
-      "en": "Responsive site in HTML and CSS. First project at Educación IT."
-    },
-    "technologies": [
-      "HTML"
-    ],
-    "category": "Web",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/WWWapas"
-      },
-      {
-        "type": "website",
-        "url": "https://florenciamorelli.github.io/WWWapas/"
-      }
-    ],
-    "date": "2024-07-08T20:56:35Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "cotizadoredit",
-    "name": "CotizadorEDIT",
-    "description": {
-      "es": "Web quote tool that estimates project costs, built with JavaScript.",
-      "en": "Web quote tool that estimates project costs, built with JavaScript."
-    },
-    "technologies": [
-      "CSS"
-    ],
-    "category": "Web",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT"
-      }
-    ],
-    "date": "2024-07-08T20:29:09Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "diagon-alley-frontend",
-    "name": "Diagon Alley Frontend",
-    "description": {
-      "es": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo.",
-      "en": "E-commerce inspired by Harry Potter's Diagon Alley. Vue frontend, Codo a Codo."
-    },
-    "technologies": [
-      "codoacodo",
-      "css",
-      "fullstack",
-      "javascript",
-      "python",
-      "vue",
-      "HTML"
-    ],
-    "category": "Web",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/diagon-alley-frontend"
-      },
-      {
-        "type": "website",
-        "url": "https://taupe-souffle-e8d78a.netlify.app/"
-      }
-    ],
-    "date": "2024-07-09T03:46:35Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
     "slug": "whattowatch",
     "name": "WhatToWatch",
     "description": {
@@ -193,6 +193,10 @@
       {
         "type": "repo",
         "url": "https://github.com/FlorenciaMorelli/whatToWatch"
+      },
+      {
+        "type": "download",
+        "url": "https://github.com/FlorenciaMorelli/whatToWatch/releases/download/v2.0.0/what_to_watch.apk"
       }
     ],
     "date": "2025-03-11T18:08:51Z",
@@ -313,7 +317,7 @@
         "url": "https://florenciamorelli.github.io/wc_match_predictor_frontend/"
       }
     ],
-    "date": "2026-06-19T18:44:20Z",
+    "date": "2026-06-24T15:59:28Z",
     "featured": false,
     "order": 999,
     "source": "github"

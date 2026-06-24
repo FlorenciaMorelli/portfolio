@@ -104,6 +104,11 @@ ul {
   padding-block: var(--space-9);
 }
 
+/* Keep anchored sections clear of the sticky header */
+:where(section[id], [id]:target) {
+  scroll-margin-top: 5rem;
+}
+
 .section-title {
   font-size: var(--text-2xl);
   margin-bottom: var(--space-6);

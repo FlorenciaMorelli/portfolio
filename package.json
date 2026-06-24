@@ -7,6 +7,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "fetch:projects": "node scripts/fetch-github-projects.mjs",
+    "og": "node scripts/generate-og.mjs",
+    "cv": "node scripts/generate-cv.mjs",
     "prebuild": "node scripts/fetch-github-projects.mjs",
     "build": "astro build",
     "preview": "astro preview",

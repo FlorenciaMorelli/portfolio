@@ -12,7 +12,7 @@ const target = otherLocale(locale);
 const href = localizedPath(target, '');
 ---
 
-<a class="lang-switch" href={href} hreflang={target} aria-label={t.lang.switchTo}>
+<a class="lang-switch" href={href} hreflang={target} aria-label={t.lang.switchTo} data-lang-switch>
   <Icon name="globe" size={18} />
   <span>{target.toUpperCase()}</span>
   <span class="visually-hidden">{localeNames[target]}</span>
@@ -37,3 +37,13 @@ const href = localizedPath(target, '');
     color: var(--accent);
   }
 </style>
+
+<script>
+  // Keep the current section when switching language.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((link) => {
+    const base = link.getAttribute('href') ?? '';
+    const sync = () => link.setAttribute('href', base + location.hash);
+    sync();
+    window.addEventListener('hashchange', sync);
+  });
+</script>

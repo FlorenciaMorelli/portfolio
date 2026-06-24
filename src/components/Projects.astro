@@ -19,14 +19,13 @@ const fromGithub = projects.some((p) => p.source === 'github');
     <h2 class="section-title">{t.projects.title}</h2>
     <p class="projects__intro">{t.projects.intro}</p>
 
-    <div class="projects__filters" role="tablist" aria-label={t.projects.title} data-filters>
+    <div class="projects__filters" role="group" aria-label={t.projects.title} data-filters>
       {categories.map((category, i) => (
         <button
           type="button"
-          role="tab"
           class="filter"
           data-filter={category}
-          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-pressed={i === 0 ? 'true' : 'false'}
         >
           {t.projects.filters[category] ?? category}
         </button>
@@ -69,7 +68,7 @@ const fromGithub = projects.some((p) => p.source === 'github');
     border-color: var(--accent);
     color: var(--accent);
   }
-  .filter[aria-selected='true'] {
+  .filter[aria-pressed='true'] {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--accent-contrast);
@@ -103,7 +102,7 @@ const fromGithub = projects.some((p) => p.source === 'github');
     if (!btn || !grid) return;
 
     filters.querySelectorAll('[data-filter]').forEach((b) =>
-      b.setAttribute('aria-selected', String(b === btn)),
+      b.setAttribute('aria-pressed', String(b === btn)),
     );
 
     const category = btn.dataset.filter;
@@ -111,7 +110,10 @@ const fromGithub = projects.some((p) => p.source === 'github');
     grid.querySelectorAll<HTMLElement>('[data-category]').forEach((card) => {
       const show = category === 'All' || card.dataset.category === category;
       card.hidden = !show;
-      if (show) visible += 1;
+      if (show) {
+        visible += 1;
+        card.classList.add('is-visible');
+      }
     });
 
     if (empty) empty.hidden = visible !== 0;

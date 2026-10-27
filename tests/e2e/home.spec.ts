@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import type { Page } from '@playwright/test';
+
+// On small screens the theme and language controls live inside the collapsed menu.
+async function openMenu(page: Page) {
+  const toggle = page.locator('[data-nav-toggle]');
+  if (await toggle.isVisible()) await toggle.click();
+}
 
 test.describe('Spanish home', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,7 +22,7 @@ test.describe('Spanish home', () => {
   test('filters projects by category', async ({ page }) => {
     const games = page.locator('[data-filter="Games"]');
     await games.click();
-    await expect(games).toHaveAttribute('aria-selected', 'true');
+    await expect(games).toHaveAttribute('aria-pressed', 'true');
     const visible = page.locator('[data-grid] article:visible');
     await expect(visible).not.toHaveCount(0);
     for (const card of await visible.all()) {
@@ -26,6 +33,7 @@ test.describe('Spanish home', () => {
   test('toggles the theme and remembers it', async ({ page }) => {
     const html = page.locator('html');
     const before = await html.getAttribute('data-theme');
+    await openMenu(page);
     await page.locator('[data-theme-toggle]').first().click();
     await expect(html).not.toHaveAttribute('data-theme', before ?? '');
     await page.reload();
@@ -33,6 +41,7 @@ test.describe('Spanish home', () => {
   });
 
   test('switches language to English', async ({ page }) => {
+    await openMenu(page);
     await page.getByRole('link', { name: /english|inglés/i }).click();
     await expect(page).toHaveURL(/\/portfolio\/en\/?$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');

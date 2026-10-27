@@ -17,7 +17,8 @@ Definido en `src/styles/tokens.css`. Paleta base:
 | Token | Valor | Uso |
 |-------|-------|-----|
 | Navy | `#000033` | Texto en claro, fondo en oscuro |
-| Teal | `#007788` | Acento en tema claro |
+| Teal | `#007788` | Marca (portada OG y CV) |
+| Teal texto | `#006d7c` | Acento en tema claro: el teal oscurecido apenas para que el texto sobre Paper cumpla AA |
 | Lilac | `#bbbbf8` | Acento en tema oscuro |
 | Paper | `#e3e3e3` | Fondo en tema claro |
 

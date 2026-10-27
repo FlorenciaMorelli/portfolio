@@ -31,8 +31,8 @@
     }
   },
   "summary": {
-    "es": "Desarrolladora y analista técnico-funcional con experiencia en desarrollo web y frontend (React, JavaScript), integración de sistemas, APIs REST/SOAP, testing y análisis de requerimientos bajo metodologías Agile/Scrum. Oriento mi carrera a un puesto de desarrollo, donde aportar mi perfil técnico y mi capacidad de resolución de problemas.",
-    "en": "Developer and technical-functional analyst with experience in web and frontend development (React, JavaScript), systems integration, REST/SOAP APIs, testing and requirements analysis under Agile/Scrum. Focused on a development role where I can contribute my technical profile and problem-solving skills."
+    "es": "Desarrolladora y analista técnico-funcional, cofundadora de Guia, con experiencia en desarrollo web y frontend (React, TypeScript), diseño UX/UI, integración de sistemas, APIs REST/SOAP, testing y análisis de requerimientos bajo metodologías Agile/Scrum. Oriento mi carrera a un puesto de desarrollo, donde aportar mi perfil técnico y mi capacidad de resolución de problemas.",
+    "en": "Developer and technical-functional analyst, co-founder of Guia, with experience in web and frontend development (React, TypeScript), UX/UI design, systems integration, REST/SOAP APIs, testing and requirements analysis under Agile/Scrum. Focused on a development role where I can contribute my technical profile and problem-solving skills."
   },
   "languages": {
     "es": ["Español - Nativo", "Inglés - Intermedio-alto (B2+)"],
@@ -40,26 +40,40 @@
   },
   "skills": {
     "es": [
-      { "cat": "Desarrollo web", "items": ["HTML", "CSS", "JavaScript", "React.js", "Redux", "Angular"] },
+      { "cat": "Desarrollo web", "items": ["HTML", "CSS", "JavaScript", "TypeScript", "React.js", "Redux", "TanStack Query", "Tailwind CSS", "Angular"] },
       { "cat": "Mobile", "items": ["Kotlin", "Android"] },
       { "cat": "Videojuegos", "items": ["C++", "C#", "GDScript", "Unity", "Godot Engine"] },
       { "cat": "Backend", "items": ["Node.js", "Express.js", "PHP", "Java", "Python"] },
       { "cat": "Bases de datos", "items": ["SQL", "MySQL"] },
-      { "cat": "Herramientas", "items": ["Git/GitHub", "Figma", "Postman", "Newman"] },
+      { "cat": "Herramientas", "items": ["Git/GitHub", "Figma", "Postman", "Newman", "Vitest", "Playwright"] },
       { "cat": "Metodologías", "items": ["Agile", "Scrum"] }
     ],
     "en": [
-      { "cat": "Web Development", "items": ["HTML", "CSS", "JavaScript", "React.js", "Redux", "Angular"] },
+      { "cat": "Web Development", "items": ["HTML", "CSS", "JavaScript", "TypeScript", "React.js", "Redux", "TanStack Query", "Tailwind CSS", "Angular"] },
       { "cat": "Mobile", "items": ["Kotlin", "Android"] },
       { "cat": "Game Development", "items": ["C++", "C#", "GDScript", "Unity", "Godot Engine"] },
       { "cat": "Backend", "items": ["Node.js", "Express.js", "PHP", "Java", "Python"] },
       { "cat": "Databases", "items": ["SQL", "MySQL"] },
-      { "cat": "Tools", "items": ["Git/GitHub", "Figma", "Postman", "Newman"] },
+      { "cat": "Tools", "items": ["Git/GitHub", "Figma", "Postman", "Newman", "Vitest", "Playwright"] },
       { "cat": "Methodologies", "items": ["Agile", "Scrum"] }
     ]
   },
   "experience": {
     "es": [
+      {
+        "role": "Cofundadora · Desarrolladora frontend y diseñadora UX/UI",
+        "org": "Guia (Desarrollos Guia) · Remoto",
+        "period": "Sep 2026 – Actualidad",
+        "tech": "React, TypeScript, Vite, TanStack Query, Tailwind CSS, Zod, OpenAPI, Vitest, Playwright, Figma, Cloudflare Pages",
+        "points": [
+          "Audenpass (audenpass.com): plataforma de venta de entradas para eventos, primer proyecto del estudio, en producción para un cliente.",
+          "Diseño completo en Figma (sistema de diseño, pantallas desktop y mobile, modo oscuro) y desarrollo de todo el frontend.",
+          "Integración contract-first con OpenAPI y un backend simulado, para avanzar en paralelo con el backend y conectar la API real con cambios mínimos.",
+          "Calidad automatizada: cerca de 180 archivos de tests unitarios y de integración, 19 suites E2E y accesibilidad chequeada con axe.",
+          "Relación con el cliente, planificación, entregas por hitos (77 pull requests, cinco entregas validadas) y pruebas de aceptación.",
+          "Del primer commit a producción en unas tres semanas y media, dos días antes de la fecha comprometida."
+        ]
+      },
       {
         "role": "Analista Técnico Funcional",
         "org": "Diagnóstico Maipú (SMG) - Laboratory Information Systems (LIS)",
@@ -98,6 +112,20 @@
       }
     ],
     "en": [
+      {
+        "role": "Co-founder · Frontend Developer and UX/UI Designer",
+        "org": "Guia (Desarrollos Guia) · Remote",
+        "period": "Sep 2026 – Present",
+        "tech": "React, TypeScript, Vite, TanStack Query, Tailwind CSS, Zod, OpenAPI, Vitest, Playwright, Figma, Cloudflare Pages",
+        "points": [
+          "Audenpass (audenpass.com): event ticketing platform, the studio's first project, live in production for a client.",
+          "End-to-end design in Figma (design system, desktop and mobile screens, dark mode) and development of the entire frontend.",
+          "Contract-first integration with OpenAPI and a mock backend, so the frontend moved in parallel with the backend and switched to the real API with minimal changes.",
+          "Automated quality: about 180 unit and integration test files, 19 E2E suites and accessibility checked with axe.",
+          "Client relationship, planning, milestone deliveries (77 pull requests, five signed-off releases) and acceptance testing.",
+          "From first commit to production in about three and a half weeks, two days ahead of the committed date."
+        ]
+      },
       {
         "role": "Technical Functional Analyst",
         "org": "Diagnóstico Maipú (SMG) - Laboratory Information Systems (LIS)",
@@ -162,11 +190,13 @@
   },
   "projects": {
     "es": [
+      { "name": "Audenpass", "desc": "Plataforma de venta de entradas para eventos en producción (audenpass.com). Diseño en Figma y frontend completo en React y TypeScript." },
       { "name": "Formula 1 Debrief", "desc": "Plataforma web fullstack para seguir resultados y datos de Fórmula 1. React, Express y MySQL." },
       { "name": "World Cup 2026 Predictor", "desc": "App para predecir resultados de los partidos del Mundial 2026. React y TypeScript." },
       { "name": "WhatToWatch", "desc": "App Android que consume una API de películas y series. Kotlin." }
     ],
     "en": [
+      { "name": "Audenpass", "desc": "Event ticketing platform live in production (audenpass.com). Figma design and the entire frontend in React and TypeScript." },
       { "name": "Formula 1 Debrief", "desc": "Fullstack web platform to follow Formula 1 results and data. React, Express and MySQL." },
       { "name": "World Cup 2026 Predictor", "desc": "App to predict the results of the 2026 World Cup matches. React and TypeScript." },
       { "name": "WhatToWatch", "desc": "Android app that consumes a movie and series API. Kotlin." }

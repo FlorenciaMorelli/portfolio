@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  isPublicRepo,
   slugify,
   prettifyName,
   inferCategory,
@@ -19,6 +20,17 @@ const repo = {
   topics: ['portfolio', 'android', 'kotlin'],
   pushed_at: '2024-05-01T00:00:00Z',
 };
+
+describe('isPublicRepo', () => {
+  it('keeps public repos', () => {
+    expect(isPublicRepo({ ...repo, private: false, visibility: 'public' })).toBe(true);
+    expect(isPublicRepo(repo)).toBe(true);
+  });
+  it('drops private repos even if they carry the topic', () => {
+    expect(isPublicRepo({ ...repo, private: true })).toBe(false);
+    expect(isPublicRepo({ ...repo, private: false, visibility: 'private' })).toBe(false);
+  });
+});
 
 describe('slugify', () => {
   it('normalizes names with accents and spaces', () => {

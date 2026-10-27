@@ -47,7 +47,7 @@ function buildHtml(locale) {
 
   const education = cv.education[locale].map((e) => `<li>${esc(e)}</li>`).join('');
   const projects = cv.projects[locale]
-    .map((p) => `<li><strong>${esc(p.name)}</strong> — ${esc(p.desc)}</li>`)
+    .map((p) => `<li><strong>${esc(p.name)}</strong> - ${esc(p.desc)}</li>`)
     .join('');
   const languages = cv.languages[locale].map(esc).join('  ·  ');
 

@@ -4,7 +4,7 @@ Estrategia de pruebas para sostener la robustez del sitio.
 
 ## Niveles
 
-### Unitarias — Vitest
+### Unitarias - Vitest
 
 `tests/unit/`. Cubren la lógica que no depende de la red:
 
@@ -18,7 +18,7 @@ Estrategia de pruebas para sostener la robustez del sitio.
 npm test
 ```
 
-### End-to-end y accesibilidad — Playwright
+### End-to-end y accesibilidad - Playwright
 
 `tests/e2e/`. Levantan el build real y verifican comportamiento de usuario:
 
@@ -28,6 +28,8 @@ npm test
 - El cambio de idioma navega a `/en/` y actualiza el atributo `lang`.
 - axe no reporta violaciones críticas ni serias (WCAG A/AA).
 - La home en inglés muestra la navegación traducida.
+- El caso de estudio se abre desde su tarjeta, cambia de idioma a su par, todas sus
+  capturas tienen texto alternativo y axe no reporta violaciones serias en su contenido.
 
 Se corre en Chrome de escritorio y en un viewport mobile.
 

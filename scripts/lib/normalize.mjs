@@ -17,6 +17,17 @@ export function isPublicRepo(repo) {
   return repo?.private !== true && (repo?.visibility ?? 'public') === 'public';
 }
 
+// A repo belongs in the portfolio when it is public, ours (not a fork), still active
+// and tagged with the `portfolio` topic.
+export function isPortfolioRepo(repo, topic = 'portfolio') {
+  return (
+    isPublicRepo(repo) &&
+    !repo?.fork &&
+    !repo?.archived &&
+    (repo?.topics ?? []).some((t) => t.toLowerCase() === topic)
+  );
+}
+
 export function slugify(value) {
   return String(value)
     .toLowerCase()

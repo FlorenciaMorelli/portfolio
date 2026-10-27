@@ -11,6 +11,12 @@ const CATEGORY_HINTS = {
 
 const VALID_CATEGORIES = new Set(['Web', 'Mobile', 'Games', 'Design']);
 
+// Private repos must never reach the public site, even if they carry the topic:
+// their links would point to a page visitors cannot open.
+export function isPublicRepo(repo) {
+  return repo?.private !== true && (repo?.visibility ?? 'public') === 'public';
+}
+
 export function slugify(value) {
   return String(value)
     .toLowerCase()

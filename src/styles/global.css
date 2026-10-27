@@ -196,7 +196,7 @@ ul {
   border: 0;
 }
 
-/* Entrance reveal — only when JS is active and motion is welcome */
+/* Entrance reveal - only when JS is active and motion is welcome */
 @media (prefers-reduced-motion: no-preference) {
   .js .reveal {
     opacity: 0;

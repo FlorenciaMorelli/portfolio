@@ -55,8 +55,8 @@
     "highlights": [
       {
         "value": {
-          "es": "3,5",
-          "en": "3.5"
+          "es": "~3,5",
+          "en": "~3.5"
         },
         "label": {
           "es": "semanas del primer commit a producción",
@@ -231,8 +231,8 @@
           }
         ],
         "note": {
-          "es": "Los nombres, el teléfono y los flyers del cliente están difuminados.",
-          "en": "The client's names, phone number and flyers are blurred."
+          "es": "Los nombres de personas, los precios, el teléfono y los flyers están difuminados.",
+          "en": "People's names, prices, the phone number and the flyers are blurred."
         }
       },
       {

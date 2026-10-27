@@ -1,0 +1,329 @@
+{
+  "audenpass": {
+    "name": "Audenpass",
+    "summary": {
+      "es": "Plataforma de venta de entradas para eventos. Es el primer proyecto de Guia, el estudio que fundé con Juan Tomás Martínez, y está en producción en audenpass.com.",
+      "en": "An event ticketing platform. It's the first project from Guia, the studio I co-founded with Juan Tomás Martínez, and it's live at audenpass.com."
+    },
+    "website": "https://audenpass.com",
+    "studio": {
+      "name": "Guia",
+      "url": "https://desarrollosguia.com/"
+    },
+    "facts": [
+      {
+        "label": {
+          "es": "Rol",
+          "en": "Role"
+        },
+        "value": {
+          "es": "Cofundadora · Desarrolladora frontend y diseñadora UX/UI",
+          "en": "Co-founder · Frontend developer and UX/UI designer"
+        }
+      },
+      {
+        "label": {
+          "es": "Período",
+          "en": "Period"
+        },
+        "value": {
+          "es": "Sep 2026 – Actualidad",
+          "en": "Sep 2026 – Present"
+        }
+      },
+      {
+        "label": {
+          "es": "Modalidad",
+          "en": "Setup"
+        },
+        "value": {
+          "es": "Remoto",
+          "en": "Remote"
+        }
+      },
+      {
+        "label": {
+          "es": "Estudio",
+          "en": "Studio"
+        },
+        "value": {
+          "es": "Guia (Desarrollos Guia)",
+          "en": "Guia (Desarrollos Guia)"
+        }
+      }
+    ],
+    "highlights": [
+      {
+        "value": {
+          "es": "3,5",
+          "en": "3.5"
+        },
+        "label": {
+          "es": "semanas del primer commit a producción",
+          "en": "weeks from first commit to production"
+        }
+      },
+      {
+        "value": {
+          "es": "77",
+          "en": "77"
+        },
+        "label": {
+          "es": "pull requests",
+          "en": "pull requests"
+        }
+      },
+      {
+        "value": {
+          "es": "5",
+          "en": "5"
+        },
+        "label": {
+          "es": "entregas validadas por el cliente",
+          "en": "deliveries signed off by the client"
+        }
+      },
+      {
+        "value": {
+          "es": "19",
+          "en": "19"
+        },
+        "label": {
+          "es": "suites E2E",
+          "en": "E2E suites"
+        }
+      }
+    ],
+    "cover": {
+      "desktop": {
+        "src": "assets/projects/audenpass/home-desktop.webp",
+        "width": 1440,
+        "height": 900,
+        "alt": {
+          "es": "Inicio de Audenpass en desktop, con el titular principal, el buscador y un evento destacado.",
+          "en": "Audenpass home page on desktop, with the main headline, the search bar and a featured event."
+        }
+      },
+      "mobile": {
+        "src": "assets/projects/audenpass/home-mobile.webp",
+        "width": 780,
+        "height": 1688,
+        "alt": {
+          "es": "Inicio de Audenpass en mobile, con el titular y el botón para explorar eventos.",
+          "en": "Audenpass home page on mobile, with the headline and the button to browse events."
+        }
+      }
+    },
+    "sections": [
+      {
+        "id": "project",
+        "title": {
+          "es": "El proyecto",
+          "en": "The project"
+        },
+        "body": {
+          "es": [
+            "Audenpass es una plataforma para vender entradas a eventos. El público explora los eventos y compra entradas nominales sin crear una cuenta, paga con Mercado Pago y recibe sus entradas con QR por mail. Cada productor gestiona sus eventos desde su propio panel, y la plataforma se administra desde un panel en un subdominio propio."
+          ],
+          "en": [
+            "Audenpass is a platform for selling event tickets. People browse events and buy named tickets without creating an account, pay with Mercado Pago and get their QR tickets by email. Producers manage their events from their own dashboard, and the platform is run from an admin panel on its own subdomain."
+          ]
+        }
+      },
+      {
+        "id": "role",
+        "title": {
+          "es": "Mi rol",
+          "en": "My role"
+        },
+        "body": {
+          "es": [
+            "Hice el diseño completo en Figma (sistema de diseño, pantallas desktop y mobile y modo oscuro, con Bricolage Grotesque e Inter) y todo el frontend. El backend, en Express y PostgreSQL, lo hizo Juan Tomás Martínez, cofundador de Guia.",
+            "También llevé la relación con el cliente, la planificación, las entregas por etapas y las pruebas de aceptación."
+          ],
+          "en": [
+            "I did the full design in Figma (design system, desktop and mobile screens and dark mode, set in Bricolage Grotesque and Inter) and the entire frontend. The backend, in Express and PostgreSQL, was built by Juan Tomás Martínez, Guia's co-founder.",
+            "I also handled the client relationship, planning, staged deliveries and acceptance testing."
+          ]
+        }
+      },
+      {
+        "id": "features",
+        "title": {
+          "es": "Qué incluye",
+          "en": "What's included"
+        },
+        "list": {
+          "es": [
+            "Web pública para explorar eventos y comprar entradas nominales sin cuenta.",
+            "Pago con Mercado Pago, con tarjeta embebida (Checkout Bricks) o con redirección.",
+            "Entradas con QR enviadas por mail.",
+            "Panel del productor: eventos con lotes de entradas, recorte de flyer, ventas, asistentes y un link de seguimiento para compartir.",
+            "Panel de administración en su propio subdominio: aprobaciones, categorías, cargo de servicio y métricas.",
+            "Control de acceso en la puerta, escaneando el QR con la cámara del celular.",
+            "Botón de arrepentimiento y protección anti-bots con Cloudflare Turnstile."
+          ],
+          "en": [
+            "Public site to browse events and buy named tickets without an account.",
+            "Mercado Pago payments, with an embedded card form (Checkout Bricks) or a redirect.",
+            "QR tickets delivered by email.",
+            "Producer dashboard: events with ticket tiers, flyer cropping, sales, attendees and a shareable tracking link.",
+            "Admin panel on its own subdomain: approvals, categories, service fee and metrics.",
+            "Door check-in by scanning the QR with a phone camera.",
+            "Order cancellation button (required by Argentine consumer law) and bot protection with Cloudflare Turnstile."
+          ]
+        }
+      },
+      {
+        "id": "screens",
+        "title": {
+          "es": "Pantallas",
+          "en": "Screens"
+        },
+        "gallery": [
+          {
+            "caption": {
+              "es": "Detalle de evento: fecha, lugar y selección de entradas por lote.",
+              "en": "Event page: date, venue and ticket selection by tier."
+            },
+            "desktop": {
+              "src": "assets/projects/audenpass/event-desktop.webp",
+              "width": 1440,
+              "height": 900,
+              "alt": {
+                "es": "Detalle de un evento en desktop: flyer, fecha, lugar y selector de entradas por lote.",
+                "en": "Event page on desktop: flyer, date, venue and ticket tier selector."
+              }
+            },
+            "mobile": {
+              "src": "assets/projects/audenpass/event-mobile.webp",
+              "width": 780,
+              "height": 1688,
+              "alt": {
+                "es": "Detalle de un evento en mobile, con el flyer y la barra fija para continuar la compra.",
+                "en": "Event page on mobile, with the flyer and the sticky bar to continue checkout."
+              }
+            }
+          },
+          {
+            "caption": {
+              "es": "Compra: datos nominales de cada entrada y resumen del pedido.",
+              "en": "Checkout: named details for each ticket and the order summary."
+            },
+            "desktop": {
+              "src": "assets/projects/audenpass/checkout-desktop.webp",
+              "width": 1440,
+              "height": 900,
+              "alt": {
+                "es": "Paso de datos de la compra en desktop: formulario nominal por entrada y resumen con el total.",
+                "en": "Checkout details step on desktop: a named form per ticket and an order summary with the total."
+              }
+            },
+            "mobile": {
+              "src": "assets/projects/audenpass/checkout-mobile.webp",
+              "width": 780,
+              "height": 1688,
+              "alt": {
+                "es": "Paso de datos de la compra en mobile, con los pasos Entradas, Datos y Pago.",
+                "en": "Checkout details step on mobile, showing the Tickets, Details and Payment steps."
+              }
+            }
+          }
+        ],
+        "note": {
+          "es": "Los nombres, el teléfono y los flyers del cliente están difuminados.",
+          "en": "The client's names, phone number and flyers are blurred."
+        }
+      },
+      {
+        "id": "decisions",
+        "title": {
+          "es": "Decisiones técnicas",
+          "en": "Technical decisions"
+        },
+        "cards": [
+          {
+            "title": {
+              "es": "Contract-first",
+              "en": "Contract-first"
+            },
+            "body": {
+              "es": "El contrato OpenAPI fue la única interfaz con el backend. Armé un backend simulado que responde exactamente lo que dice el contrato, así el frontend avanzó en paralelo y se conectó a la API real al final con cambios mínimos.",
+              "en": "The OpenAPI contract was the only interface with the backend. I built a mock backend that returns exactly what the contract specifies, so the frontend moved forward in parallel and switched to the real API at the end with minimal changes."
+            }
+          },
+          {
+            "title": {
+              "es": "Del Figma al código",
+              "en": "From Figma to code"
+            },
+            "body": {
+              "es": "Los tokens son la única fuente de colores, tipografías y espacios. Un linter propio rechaza cualquier valor por fuera de ellos, y una galería interna muestra cada componente con sus variantes.",
+              "en": "Tokens are the single source of colors, type and spacing. A custom linter rejects any value outside them, and an internal gallery shows every component with its variants."
+            }
+          },
+          {
+            "title": {
+              "es": "Calidad automatizada",
+              "en": "Automated quality"
+            },
+            "body": {
+              "es": "Cerca de 180 archivos de tests unitarios y de integración y 19 suites E2E, con la accesibilidad chequeada con axe y las capas de la arquitectura controladas por ESLint. Además, el build de producción falla si queda algo del simulador.",
+              "en": "About 180 unit and integration test files and 19 E2E suites, with accessibility checked with axe and architecture layers enforced by ESLint. The production build also fails if anything from the mock is left in."
+            }
+          }
+        ]
+      },
+      {
+        "id": "process",
+        "title": {
+          "es": "Proceso",
+          "en": "Process"
+        },
+        "body": {
+          "es": [
+            "Trabajé por hitos: 77 pull requests y cinco entregas a staging validadas por el cliente. El seguimiento lo hicimos en Notion, con un portal para el cliente y rondas de UAT, incluida la integración con la API real. Del primer commit (28/09/2026) a producción (21/10/2026) pasaron unas tres semanas y media, y el sitio salió dos días antes de la fecha comprometida.",
+            "Trabajé con Spec-Driven Development: escribí los requisitos, el diseño técnico y las reglas de calidad, y usé herramientas de IA para acelerar la implementación, con revisión y tests de mi parte."
+          ],
+          "en": [
+            "I worked in milestones: 77 pull requests and five staging deliveries signed off by the client. We tracked the work in Notion, with a client portal and UAT rounds, including the integration with the real API. It took about three and a half weeks from first commit (Sep 28, 2026) to production (Oct 21, 2026), and the site launched two days ahead of the committed date.",
+            "I worked with Spec-Driven Development: I wrote the requirements, the technical design and the quality rules, and used AI tools to speed up implementation, with my own review and tests."
+          ]
+        }
+      },
+      {
+        "id": "stack",
+        "title": {
+          "es": "Stack",
+          "en": "Stack"
+        },
+        "tags": [
+          "React 19",
+          "TypeScript",
+          "Vite",
+          "React Router",
+          "TanStack Query",
+          "Tailwind CSS v4",
+          "Zod",
+          "OpenAPI 3.1",
+          "openapi-fetch",
+          "MSW",
+          "Vitest",
+          "Testing Library",
+          "Playwright",
+          "axe",
+          "Cloudflare Pages",
+          "GitHub Actions"
+        ],
+        "body": {
+          "es": [
+            "TypeScript estricto, con tipos generados desde el contrato OpenAPI 3.1. Desplegado en Cloudflare Pages, con una Pages Function como proxy a la API, y GitHub Actions."
+          ],
+          "en": [
+            "Strict TypeScript, with types generated from the OpenAPI 3.1 contract. Deployed on Cloudflare Pages, with a Pages Function proxying the API, and GitHub Actions."
+          ]
+        }
+      }
+    ]
+  }
+}

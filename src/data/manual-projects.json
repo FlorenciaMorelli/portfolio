@@ -1,5 +1,36 @@
 [
   {
+    "slug": "audenpass",
+    "name": "Audenpass",
+    "institution": "Guia",
+    "description": {
+      "es": "Plataforma de venta de entradas para eventos, en producción. Diseñé la interfaz en Figma y desarrollé el frontend completo, desde la compra con Mercado Pago hasta los paneles de productor y administración.",
+      "en": "Event ticketing platform, live in production. I designed the interface in Figma and built the entire frontend, from the Mercado Pago checkout to the producer and admin dashboards."
+    },
+    "image": "assets/projects/audenpass/home-desktop.webp",
+    "imageAlt": {
+      "es": "Inicio de Audenpass en desktop, con el titular principal, el buscador y un evento destacado.",
+      "en": "Audenpass home page on desktop, with the main headline, the search bar and a featured event."
+    },
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "TanStack Query",
+      "OpenAPI",
+      "Playwright",
+      "Figma",
+      "Cloudflare Pages",
+      "Mercado Pago"
+    ],
+    "category": "Web",
+    "links": [{ "type": "website", "url": "https://audenpass.com" }],
+    "date": "2026-10-21",
+    "featured": true,
+    "order": 0,
+    "source": "manual"
+  },
+  {
     "slug": "ford-pinasco",
     "name": "Ford Pinasco",
     "institution": "Enivel7",

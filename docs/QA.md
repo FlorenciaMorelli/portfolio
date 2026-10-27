@@ -28,6 +28,8 @@ npm test
 - El cambio de idioma navega a `/en/` y actualiza el atributo `lang`.
 - axe no reporta violaciones críticas ni serias (WCAG A/AA).
 - La home en inglés muestra la navegación traducida.
+- El caso de estudio se abre desde su tarjeta, cambia de idioma a su par, todas sus
+  capturas tienen texto alternativo y axe no reporta violaciones serias en su contenido.
 
 Se corre en Chrome de escritorio y en un viewport mobile.
 

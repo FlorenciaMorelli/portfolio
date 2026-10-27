@@ -10,9 +10,12 @@ export const localeNames: Record<Locale, string> = {
 interface Job {
   role: string;
   org: string;
+  orgUrl?: string;
+  mode?: string;
   period: string;
   tech?: string;
   points: string[];
+  caseStudy?: { slug: string; label: string };
 }
 
 type Dict = {
@@ -42,7 +45,16 @@ type Dict = {
     filters: Record<string, string>;
     empty: string;
     links: Record<string, string>;
+    caseStudy: string;
     sourcedNote: string;
+  };
+  caseStudy: {
+    eyebrow: string;
+    back: string;
+    visit: string;
+    studio: string;
+    highlights: string;
+    more: string;
   };
   contact: {
     title: string;
@@ -76,7 +88,7 @@ export const ui: Record<Locale, Dict> = {
       greeting: 'Hola, soy',
       role: 'Desarrolladora y analista técnico-funcional',
       intro:
-        'Trabajo en integración de sistemas, APIs y testing, y construyo proyectos web, mobile y de videojuegos. Me interesa el desarrollo frontend y los productos digitales.',
+        'Trabajo en integración de sistemas, APIs y testing, y construyo proyectos web, mobile y de videojuegos. Cofundé Guia, un estudio de soluciones digitales, y me interesa el desarrollo de productos digitales de principio a fin.',
       cta: 'Conocé mi trabajo',
       viewProjects: 'Ver proyectos',
     },
@@ -85,7 +97,7 @@ export const ui: Record<Locale, Dict> = {
       body: [
         'Soy desarrolladora y analista técnico-funcional. Trabajo en integración de sistemas, APIs REST/SOAP, análisis de requerimientos y testing, con metodologías Agile/Scrum.',
         'Llegué a la programación desde el diseño UX/UI en 2021 y me formé en la Tecnicatura Universitaria en Programación de Sistemas en UCES.',
-        'Hoy busco sumar mi perfil de desarrollo web y frontend en productos digitales. También me apasiona el desarrollo de videojuegos.',
+        'Con Juan Tomás Martínez cofundé Guia, donde hice el diseño y el frontend de Audenpass, nuestro primer proyecto. Hoy busco sumarme al desarrollo de productos digitales en general: del diseño y el frontend a la integración y la calidad. También me apasiona el desarrollo de videojuegos.',
         'Acá hay una selección de proyectos académicos, personales y para clientes. Mirá los que te interesen.',
       ],
       skillsTitle: 'Tecnologías',
@@ -102,6 +114,22 @@ export const ui: Record<Locale, Dict> = {
     experience: {
       title: 'Experiencia',
       jobs: [
+        {
+          role: 'Cofundadora · Desarrolladora frontend y diseñadora UX/UI',
+          org: 'Guia (Desarrollos Guia)',
+          orgUrl: 'https://desarrollosguia.com/',
+          mode: 'Remoto',
+          period: 'Sep 2026 – Actualidad',
+          tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
+          points: [
+            'Audenpass, el primer proyecto del estudio: una plataforma de venta de entradas para eventos, en producción para un cliente.',
+            'Diseño completo en Figma: sistema de diseño, pantallas desktop y mobile y modo oscuro.',
+            'Frontend completo en React y TypeScript, conectado a la API a través de un contrato OpenAPI.',
+            'Relación con el cliente, planificación, entregas por etapas y pruebas de aceptación.',
+            'Del primer commit a producción en unas tres semanas y media, dos días antes de la fecha comprometida.',
+          ],
+          caseStudy: { slug: 'audenpass', label: 'Leé el caso de estudio de Audenpass' },
+        },
         {
           role: 'Analista técnico-funcional',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
@@ -156,7 +184,16 @@ export const ui: Record<Locale, Dict> = {
         presentation: 'Ver presentación',
         figma: 'Ver en Figma',
       },
+      caseStudy: 'Ver caso de estudio',
       sourcedNote: 'Actualizado automáticamente desde GitHub.',
+    },
+    caseStudy: {
+      eyebrow: 'Caso de estudio',
+      back: 'Volver a proyectos',
+      visit: 'Ver sitio',
+      studio: 'Conocé Guia',
+      highlights: 'En números',
+      more: 'Ver todos los proyectos',
     },
     contact: {
       title: 'Hablemos',
@@ -192,7 +229,7 @@ export const ui: Record<Locale, Dict> = {
       greeting: "Hi, I'm",
       role: 'Developer and technical-functional analyst',
       intro:
-        'I work on systems integration, APIs and testing, and I build web, mobile and game projects. I am drawn to frontend development and digital products.',
+        "I work on systems integration, APIs and testing, and I build web, mobile and game projects. I co-founded Guia, a digital solutions studio, and I'm interested in building digital products from start to finish.",
       cta: 'See my work',
       viewProjects: 'View projects',
     },
@@ -201,7 +238,7 @@ export const ui: Record<Locale, Dict> = {
       body: [
         "I'm a developer and technical-functional analyst. I work on systems integration, REST/SOAP APIs, requirements analysis and testing, using Agile/Scrum.",
         'I came into programming through UX/UI design in 2021 and trained as a Systems Programming Technician at UCES.',
-        "These days I'm looking to bring my web and frontend development into digital products. I'm also passionate about game development.",
+        "With Juan Tomás Martínez I co-founded Guia, where I did the design and frontend of Audenpass, our first project. These days I want to work on digital products as a whole: from design and frontend to integration and quality. I'm also passionate about game development.",
         'Below is a selection of academic, personal and client projects. Have a look at whatever catches your eye.',
       ],
       skillsTitle: 'Technologies',
@@ -218,6 +255,22 @@ export const ui: Record<Locale, Dict> = {
     experience: {
       title: 'Experience',
       jobs: [
+        {
+          role: 'Co-founder · Frontend developer and UX/UI designer',
+          org: 'Guia (Desarrollos Guia)',
+          orgUrl: 'https://desarrollosguia.com/',
+          mode: 'Remote',
+          period: 'Sep 2026 – Present',
+          tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
+          points: [
+            "Audenpass, the studio's first project: an event ticketing platform, live in production for a client.",
+            'End-to-end design in Figma: design system, desktop and mobile screens, and dark mode.',
+            'The entire frontend in React and TypeScript, connected to the API through an OpenAPI contract.',
+            'Client relationship, planning, staged deliveries and acceptance testing.',
+            'From first commit to production in about three and a half weeks, two days ahead of the committed date.',
+          ],
+          caseStudy: { slug: 'audenpass', label: 'Read the Audenpass case study' },
+        },
         {
           role: 'Technical-functional analyst',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
@@ -272,7 +325,16 @@ export const ui: Record<Locale, Dict> = {
         presentation: 'View presentation',
         figma: 'View on Figma',
       },
+      caseStudy: 'Read the case study',
       sourcedNote: 'Updated automatically from GitHub.',
+    },
+    caseStudy: {
+      eyebrow: 'Case study',
+      back: 'Back to projects',
+      visit: 'Visit site',
+      studio: 'About Guia',
+      highlights: 'By the numbers',
+      more: 'See all projects',
     },
     contact: {
       title: "Let's talk",

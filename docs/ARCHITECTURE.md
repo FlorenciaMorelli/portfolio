@@ -30,7 +30,9 @@ src/
 
 ## Flujo de datos de los proyectos
 
-1. `fetch-github-projects.mjs` busca repos con `user:FlorenciaMorelli topic:portfolio`.
+1. `fetch-github-projects.mjs` lista los repos de `FlorenciaMorelli` y se queda con los
+   públicos, propios, no archivados y con el topic `portfolio`. No usa la API de
+   búsqueda: con el token de Actions devolvía resultados incompletos.
 2. Por cada repo lee sus metadatos, intenta leer `.portfolio.json` y la última release.
 3. `normalize.mjs` transforma cada repo al esquema interno (`Project`).
 4. Se escribe `projects.generated.json`. Ese archivo es a la vez caché y red de

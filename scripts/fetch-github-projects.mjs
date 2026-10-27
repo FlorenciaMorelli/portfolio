@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 // Builds src/data/projects.generated.json from public GitHub repos tagged with
-// the `portfolio` topic. Designed to never break the build: on any failure it
-// keeps the previous snapshot (or writes an empty list if none exists yet).
+// the `portfolio` topic. It lists the user's repos instead of using the search
+// API: search results depend on the token (the Actions GITHUB_TOKEN got back a
+// single repo) and on the search index, so they can silently come back short.
+// Designed to never break the build: on any failure it keeps the previous
+// snapshot (or writes an empty list if none exists yet).
 
 import { writeFile, readFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { normalizeRepo, isPublicRepo } from './lib/normalize.mjs';
+import { normalizeRepo, isPortfolioRepo } from './lib/normalize.mjs';
 
 const USERNAME = 'FlorenciaMorelli';
 const TOPIC = 'portfolio';
@@ -33,11 +36,15 @@ async function gh(path) {
   return res.json();
 }
 
-async function searchTaggedRepos() {
-  const query = encodeURIComponent(`user:${USERNAME} topic:${TOPIC} fork:false archived:false`);
-  const data = await gh(`/search/repositories?q=${query}&per_page=100&sort=pushed`);
-  return (data.items ?? []).filter(
-    (repo) => isPublicRepo(repo) && !EXCLUDED_REPOS.has(repo.name.toLowerCase()),
+async function listTaggedRepos() {
+  const repos = [];
+  for (let page = 1; ; page += 1) {
+    const batch = await gh(`/users/${USERNAME}/repos?type=owner&sort=pushed&per_page=100&page=${page}`);
+    repos.push(...batch);
+    if (batch.length < 100) break;
+  }
+  return repos.filter(
+    (repo) => isPortfolioRepo(repo, TOPIC) && !EXCLUDED_REPOS.has(repo.name.toLowerCase()),
   );
 }
 
@@ -80,9 +87,9 @@ async function main() {
 
   let repos;
   try {
-    repos = await searchTaggedRepos();
+    repos = await listTaggedRepos();
   } catch (error) {
-    console.warn(`[projects] GitHub search failed: ${error.message}`);
+    console.warn(`[projects] Listing GitHub repos failed: ${error.message}`);
     if (existsSync(OUT_FILE)) {
       console.warn('[projects] Keeping the previous snapshot.');
       return;

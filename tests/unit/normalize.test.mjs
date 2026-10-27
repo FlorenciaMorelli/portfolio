@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   isPublicRepo,
+  isPortfolioRepo,
   slugify,
   prettifyName,
   inferCategory,
@@ -29,6 +30,18 @@ describe('isPublicRepo', () => {
   it('drops private repos even if they carry the topic', () => {
     expect(isPublicRepo({ ...repo, private: true })).toBe(false);
     expect(isPublicRepo({ ...repo, private: false, visibility: 'private' })).toBe(false);
+  });
+});
+
+describe('isPortfolioRepo', () => {
+  it('keeps public repos tagged with the topic', () => {
+    expect(isPortfolioRepo(repo)).toBe(true);
+  });
+  it('drops untagged, forked, archived and private repos', () => {
+    expect(isPortfolioRepo({ ...repo, topics: ['android'] })).toBe(false);
+    expect(isPortfolioRepo({ ...repo, fork: true })).toBe(false);
+    expect(isPortfolioRepo({ ...repo, archived: true })).toBe(false);
+    expect(isPortfolioRepo({ ...repo, private: true })).toBe(false);
   });
 });
 

@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { assetUrl } from '../lib/url';
+import { getCaseStudy, caseStudyPath } from '../lib/case-studies';
 import type { Project, ProjectLinkType, IconName } from '../lib/types';
 
 interface Props {
@@ -22,12 +23,14 @@ const iconFor: Record<ProjectLinkType, IconName> = {
 
 const image = assetUrl(project.image);
 const description = project.description[locale] || project.description.en || project.description.es;
+const imageAlt = project.imageAlt?.[locale] ?? project.name;
+const caseStudy = getCaseStudy(project.slug) ? caseStudyPath(locale, project.slug) : undefined;
 ---
 
 <article class="card reveal" data-category={project.category}>
   {image && (
     <div class="card__media">
-      <img src={image} alt={project.name} loading="lazy" decoding="async" width="640" height="400" />
+      <img src={image} alt={imageAlt} loading="lazy" decoding="async" width="640" height="400" />
     </div>
   )}
   <div class="card__body">
@@ -57,6 +60,13 @@ const description = project.description[locale] || project.description.en || pro
     <ul class="card__tech">
       {project.technologies.map((tech) => <li>{tech}</li>)}
     </ul>
+
+    {caseStudy && (
+      <a class="card__case" href={caseStudy}>
+        {t.projects.caseStudy}
+        <Icon name="arrow-right" size={16} />
+      </a>
+    )}
   </div>
 </article>
 
@@ -133,6 +143,21 @@ const description = project.description[locale] || project.description.en || pro
     color: var(--text-muted);
     font-size: var(--text-sm);
     flex: 1;
+  }
+  .card__case {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    margin-top: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .card__case :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .card__case:hover :global(svg) {
+    transform: translateX(3px);
   }
   .card__tech {
     display: flex;

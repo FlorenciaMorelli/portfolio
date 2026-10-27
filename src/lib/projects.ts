@@ -53,6 +53,7 @@ function applyOverride(project: Project): Project {
     category: o.category ?? project.category,
     technologies: o.technologies ?? project.technologies,
     image: o.image ?? project.image,
+    imageAlt: o.imageAlt ?? project.imageAlt,
     featured: o.featured ?? project.featured,
     order: o.order ?? project.order,
     description: {

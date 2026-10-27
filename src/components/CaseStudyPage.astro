@@ -1,0 +1,424 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import { useTranslations, localizedPath, otherLocale, type Locale } from '../i18n/utils';
+import { getCaseStudy, caseStudyPath } from '../lib/case-studies';
+import { assetUrl } from '../lib/url';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+const { locale, slug } = Astro.props;
+const t = useTranslations(locale);
+const study = getCaseStudy(slug);
+if (!study) throw new Error(`Unknown case study: ${slug}`);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const strip = (path: string) => path.slice(base.length);
+const projectsHref = `${localizedPath(locale, '')}/#projects`;
+const { cover } = study;
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${study.name} · ${t.caseStudy.eyebrow} · Florencia Morelli`}
+  description={study.summary[locale]}
+  alternates={{ es: strip(caseStudyPath('es', slug)), en: strip(caseStudyPath('en', slug)) }}
+>
+  <span id="top"></span>
+  <Header locale={locale} onHome={false} altHref={caseStudyPath(otherLocale(locale), slug)} />
+  <main id="main" class="case">
+    <section class="case__hero">
+      <div class="container">
+        <a class="case__back" href={projectsHref}>
+          <Icon name="arrow-left" size={16} />
+          {t.caseStudy.back}
+        </a>
+        <p class="eyebrow">
+          {t.caseStudy.eyebrow}{study.studio && ` · ${study.studio.name}`}
+        </p>
+        <h1 class="case__title">{study.name}</h1>
+        <p class="case__summary">{study.summary[locale]}</p>
+
+        <div class="case__actions">
+          {study.website && (
+            <a class="btn btn--primary" href={study.website} target="_blank" rel="noopener">
+              {t.caseStudy.visit}
+              <Icon name="external" size={16} />
+            </a>
+          )}
+          {study.studio && (
+            <a class="btn btn--ghost" href={study.studio.url} target="_blank" rel="noopener">
+              {t.caseStudy.studio}
+              <Icon name="external" size={16} />
+            </a>
+          )}
+        </div>
+
+        <dl class="case__facts">
+          {study.facts.map((fact) => (
+            <div>
+              <dt>{fact.label[locale]}</dt>
+              <dd>{fact.value[locale]}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <div class="container">
+      <figure class="case__cover">
+        <img
+          class="case__cover-desktop"
+          src={assetUrl(cover.desktop.src)}
+          alt={cover.desktop.alt[locale]}
+          width={cover.desktop.width}
+          height={cover.desktop.height}
+          fetchpriority="high"
+        />
+        <img
+          class="case__cover-mobile"
+          src={assetUrl(cover.mobile.src)}
+          alt={cover.mobile.alt[locale]}
+          width={cover.mobile.width}
+          height={cover.mobile.height}
+        />
+      </figure>
+
+      <section class="case__highlights" aria-labelledby="highlights-title">
+        <h2 id="highlights-title" class="visually-hidden">{t.caseStudy.highlights}</h2>
+        <ul>
+          {study.highlights.map((item) => (
+            <li>
+              <strong>{item.value[locale]}</strong>
+              <span>{item.label[locale]}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    {study.sections.map((section) => (
+      <section id={section.id} class="case__section reveal">
+        <div class="container">
+          <h2 class="section-title">{section.title[locale]}</h2>
+
+          {section.tags && (
+            <ul class="case__tags">
+              {section.tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+          )}
+
+          {section.body && (
+            <div class="case__prose">
+              {section.body[locale].map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+          )}
+
+          {section.list && (
+            <ul class="case__list">
+              {section.list[locale].map((item) => <li>{item}</li>)}
+            </ul>
+          )}
+
+          {section.cards && (
+            <ul class="case__cards">
+              {section.cards.map((card) => (
+                <li class="case__card">
+                  <h3>{card.title[locale]}</h3>
+                  <p>{card.body[locale]}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {section.gallery && (
+            <div class="case__gallery">
+              {section.gallery.map((shot) => (
+                <figure class="case__shot">
+                  <div class="case__shot-pair">
+                    <img
+                      class="case__shot-desktop"
+                      src={assetUrl(shot.desktop.src)}
+                      alt={shot.desktop.alt[locale]}
+                      width={shot.desktop.width}
+                      height={shot.desktop.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <img
+                      class="case__shot-mobile"
+                      src={assetUrl(shot.mobile.src)}
+                      alt={shot.mobile.alt[locale]}
+                      width={shot.mobile.width}
+                      height={shot.mobile.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <figcaption>{shot.caption[locale]}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {section.note && <p class="case__note">{section.note[locale]}</p>}
+        </div>
+      </section>
+    ))}
+
+    <div class="container case__end">
+      <a class="btn btn--ghost" href={projectsHref}>
+        <Icon name="arrow-left" size={16} />
+        {t.caseStudy.more}
+      </a>
+    </div>
+  </main>
+  <Footer locale={locale} />
+</BaseLayout>
+
+<style>
+  .case__hero {
+    position: relative;
+    padding-block: var(--space-7) var(--space-6);
+    overflow: hidden;
+  }
+  .case__hero::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 34rem;
+    height: 34rem;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .case__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .case__back:hover {
+    color: var(--accent);
+  }
+  .case__title {
+    margin-top: var(--space-2);
+    font-size: clamp(2.5rem, 8vw, var(--text-4xl));
+    color: var(--accent);
+  }
+  .case__summary {
+    margin-top: var(--space-4);
+    max-width: 44rem;
+    font-size: var(--text-md);
+    color: var(--text-muted);
+  }
+  .case__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+  .case__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--space-4) var(--space-6);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .case__facts dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+  .case__facts dd {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
+  }
+
+  .case__cover {
+    position: relative;
+    margin-top: var(--space-4);
+    padding-right: 9%;
+    padding-bottom: 6%;
+  }
+  .case__cover-desktop {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .case__cover-mobile {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 22%;
+    border: 6px solid var(--bg-elevated);
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .case__highlights ul {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+  }
+  .case__highlights li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .case__highlights strong {
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
+    color: var(--accent);
+  }
+  .case__highlights span {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .case__section {
+    padding-block: var(--space-8) 0;
+  }
+  .case__prose {
+    max-width: 44rem;
+  }
+  .case__prose p {
+    color: var(--text-muted);
+  }
+  .case__prose p + p {
+    margin-top: var(--space-4);
+  }
+  .case__tags + .case__prose {
+    margin-top: var(--space-5);
+  }
+
+  .case__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3) var(--space-6);
+  }
+  .case__list li {
+    position: relative;
+    padding-left: var(--space-4);
+    color: var(--text-muted);
+  }
+  .case__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.8em;
+    width: 6px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .case__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-5);
+  }
+  .case__card {
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .case__card h3 {
+    font-size: var(--text-md);
+    color: var(--accent);
+  }
+  .case__card p {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .case__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+  .case__shot-pair {
+    display: grid;
+    /* Columns in the ratio that gives both screenshots the same height. */
+    grid-template-columns: 3.46fr 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+  .case__shot img {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+  .case__shot figcaption {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .case__note {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  .case__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .case__tags li {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .case__end {
+    padding-top: var(--space-8);
+  }
+
+  @media (max-width: 768px) {
+    .case__highlights ul,
+    .case__list {
+      grid-template-columns: 1fr 1fr;
+    }
+    .case__list {
+      grid-template-columns: 1fr;
+    }
+    .case__highlights strong {
+      font-size: var(--text-2xl);
+    }
+    .case__cover-mobile {
+      width: 26%;
+      border-width: 4px;
+      border-radius: 1rem;
+    }
+    .case__shot-pair {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    .case__shot-mobile {
+      max-width: 15rem;
+    }
+  }
+</style>

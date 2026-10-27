@@ -17,13 +17,21 @@ const cv = JSON.parse(await readFile(DATA, 'utf8'));
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const link = ({ label, url }) => `<a href="${esc(url)}">${esc(label)}</a>`;
+
+// Escape a line and turn the labels it shares with `links` into real links.
+const linkify = (text, links = []) =>
+  links.reduce((out, l) => out.replace(esc(l.label), link(l)), esc(text));
+
 function buildHtml(locale) {
   const S = cv.sections[locale];
   const techLabel = locale === 'es' ? 'Tecnologías' : 'Technologies';
   const c = cv.contact;
-  const contactLine = [c.phone, c.email, c.linkedin, c.github, c.portfolio, c.location]
-    .map(esc)
-    .join('  ·  ');
+  const contactLines = [
+    `${esc(c.location[locale])} | ${esc(c.availability[locale])}`,
+    `${link({ label: c.email, url: `mailto:${c.email}` })} | ${esc(c.phone)}`,
+    c.links.map(link).join(' | '),
+  ];
 
   const skills = cv.skills[locale]
     .map((g) => `<p class="skill"><strong>${esc(g.cat)}:</strong> ${esc(g.items.join(', '))}</p>`)
@@ -34,11 +42,10 @@ function buildHtml(locale) {
       (job) => `
       <div class="job">
         <div class="job-head">
-          <span class="job-role">${esc(job.role)}</span>
+          <span><span class="job-role">${esc(job.role)}</span> | ${esc(job.org)}</span>
           <span class="job-period">${esc(job.period)}</span>
         </div>
-        <div class="job-org">${esc(job.org)}</div>
-        ${job.note ? `<div class="job-note">${esc(job.note)}</div>` : ''}
+        ${job.note ? `<div class="job-note">${linkify(job.note, job.links)}</div>` : ''}
         ${job.tech ? `<div class="job-tech">${esc(techLabel)}: ${esc(job.tech)}</div>` : ''}
         <ul>${job.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
       </div>`,
@@ -47,9 +54,18 @@ function buildHtml(locale) {
 
   const education = cv.education[locale].map((e) => `<li>${esc(e)}</li>`).join('');
   const projects = cv.projects[locale]
-    .map((p) => `<li><strong>${esc(p.name)}</strong> - ${esc(p.desc)}</li>`)
+    .map(
+      (p) => `
+      <div class="job">
+        <div class="job-head">
+          <span><span class="job-role">${esc(p.name)}</span> | ${esc(p.tech)}</span>
+          <span class="job-period">${(p.links ?? []).map(link).join(' | ')}</span>
+        </div>
+        <ul><li>${esc(p.desc)}</li></ul>
+      </div>`,
+    )
     .join('');
-  const languages = cv.languages[locale].map(esc).join('  ·  ');
+  const languages = esc(cv.languages[locale]);
 
   return `<!doctype html>
 <html lang="${locale}">
@@ -65,11 +81,14 @@ function buildHtml(locale) {
   }
   h1 { font-size: 22px; letter-spacing: 0.5px; }
   .title { font-size: 12px; color: #007788; font-weight: bold; margin-top: 2px; }
-  .contact { font-size: 9.5px; color: #333; margin-top: 6px; }
+  .contact { font-size: 9.5px; color: #333; margin-top: 2px; }
+  .title + .contact { margin-top: 6px; }
+  a { color: #007788; text-decoration: none; }
   h2 {
     font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px;
     color: #000033; border-bottom: 1.5px solid #007788;
-    padding-bottom: 3px; margin: 16px 0 8px;
+    padding-bottom: 3px; margin: 13px 0 7px;
+    break-after: avoid;
   }
   p { margin: 0 0 4px; }
   .skill { margin: 0 0 3px; }
@@ -79,8 +98,7 @@ function buildHtml(locale) {
   .job-head { display: flex; justify-content: space-between; align-items: baseline; }
   .job-role { font-weight: bold; font-size: 11px; }
   .job-period { font-size: 9.5px; color: #555; white-space: nowrap; }
-  .job-org { font-size: 10px; color: #333; }
-  .job-note { font-size: 9.5px; font-style: italic; color: #555; margin-top: 1px; }
+  .job-note { font-size: 9.5px; color: #555; margin-top: 1px; }
   .job-tech { font-size: 9.5px; color: #007788; margin-top: 2px; }
 </style>
 </head>
@@ -88,7 +106,7 @@ function buildHtml(locale) {
   <header>
     <h1>${esc(cv.name)}</h1>
     <div class="title">${esc(cv.title[locale])}</div>
-    <div class="contact">${contactLine}</div>
+    ${contactLines.map((line) => `<div class="contact">${line}</div>`).join('')}
   </header>
 
   <h2>${esc(S.summary)}</h2>
@@ -101,7 +119,7 @@ function buildHtml(locale) {
   ${experience}
 
   <h2>${esc(S.projects)}</h2>
-  <ul>${projects}</ul>
+  ${projects}
 
   <h2>${esc(S.education)}</h2>
   <ul>${education}</ul>
@@ -127,7 +145,7 @@ try {
       path: resolve(OUT_DIR, file),
       format: 'A4',
       printBackground: false,
-      margin: { top: '14mm', bottom: '14mm', left: '16mm', right: '16mm' },
+      margin: { top: '12mm', bottom: '12mm', left: '16mm', right: '16mm' },
     });
     await page.close();
     console.log(`[cv] Wrote ${file}`);

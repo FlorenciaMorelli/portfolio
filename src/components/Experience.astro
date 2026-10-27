@@ -1,5 +1,7 @@
 ---
+import Icon from './Icon.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
+import { caseStudyPath } from '../lib/case-studies';
 
 interface Props {
   locale: Locale;
@@ -18,11 +20,27 @@ const t = useTranslations(locale);
             <h3 class="timeline__role">{job.role}</h3>
             <span class="timeline__period">{job.period}</span>
           </div>
-          <p class="timeline__org">{job.org}</p>
+          <p class="timeline__org">
+            {job.orgUrl ? (
+              <a href={job.orgUrl} target="_blank" rel="noopener">
+                {job.org}
+                <Icon name="external" size={14} />
+              </a>
+            ) : (
+              job.org
+            )}
+            {job.mode && <span> · {job.mode}</span>}
+          </p>
           {job.tech && <p class="timeline__tech">{job.tech}</p>}
           <ul class="timeline__points">
             {job.points.map((point) => <li>{point}</li>)}
           </ul>
+          {job.caseStudy && (
+            <a class="timeline__more" href={caseStudyPath(locale, job.caseStudy.slug)}>
+              {job.caseStudy.label}
+              <Icon name="arrow-right" size={16} />
+            </a>
+          )}
         </li>
       ))}
     </ol>
@@ -76,6 +94,32 @@ const t = useTranslations(locale);
     font-size: var(--text-xs);
     color: var(--accent);
     margin-top: var(--space-2);
+  }
+  .timeline__org a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  .timeline__org a:hover {
+    color: var(--accent);
+  }
+  .timeline__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .timeline__more :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .timeline__more:hover :global(svg) {
+    transform: translateX(3px);
   }
   .timeline__points {
     margin-top: var(--space-3);

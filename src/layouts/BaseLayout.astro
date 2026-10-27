@@ -7,9 +7,11 @@ interface Props {
   locale: Locale;
   title?: string;
   description?: string;
+  /** Path of this page in each language, relative to the base. Defaults to the home. */
+  alternates?: Record<Locale, string>;
 }
 
-const { locale, title, description } = Astro.props;
+const { locale, title, description, alternates: paths = { es: '/', en: '/en/' } } = Astro.props;
 const t = useTranslations(locale);
 
 const pageTitle = title ?? t.meta.title;
@@ -21,9 +23,9 @@ const canonical = new URL(Astro.url.pathname, site).href;
 const ogImage = new URL(`${base}/assets/img/og-cover.png`, site).href;
 
 const alternates = [
-  { hreflang: 'es', href: new URL(`${base}/`, site).href },
-  { hreflang: 'en', href: new URL(`${base}/en/`, site).href },
-  { hreflang: 'x-default', href: new URL(`${base}/`, site).href },
+  { hreflang: 'es', href: new URL(`${base}${paths.es}`, site).href },
+  { hreflang: 'en', href: new URL(`${base}${paths.en}`, site).href },
+  { hreflang: 'x-default', href: new URL(`${base}${paths.es}`, site).href },
 ];
 ---
 

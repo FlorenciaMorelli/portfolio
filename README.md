@@ -67,6 +67,16 @@ Los cambios en este archivo se ven en `npm run dev` sin volver a correr el fetch
 El sitio se reconstruye solo una vez por día; para verlo antes, correr el workflow
 *Deploy* a mano (Actions → Deploy → Run workflow).
 
+### Casos de estudio
+
+Un proyecto puede tener su página de caso de estudio en `/proyectos/<slug>/` y
+`/en/projects/<slug>/`. El contenido vive en `src/data/case-studies.json`, con la misma
+clave que el slug del proyecto; la tarjeta suma el link sola. Las capturas van en
+`public/assets/projects/<slug>/`, en WebP y con texto alternativo en los dos idiomas.
+
+Los repos privados nunca se importan, aunque tengan el topic `portfolio`: un proyecto
+privado se carga a mano en `manual-projects.json`, sin link al repositorio.
+
 ## Idiomas
 
 Español en `/` e inglés en `/en/`. Los textos están en `src/i18n/`.

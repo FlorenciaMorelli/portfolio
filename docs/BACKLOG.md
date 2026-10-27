@@ -9,45 +9,45 @@ varios PR de `feature/*` hacia `main`.
 - **Should:** importante, pero el sitio funciona sin ello.
 - **Could:** mejoras de pulido.
 
-## Fase 0 — Cimientos · Must
+## Fase 0 - Cimientos · Must
 
 - Scaffolding de Astro con `base: /portfolio` y `site` configurados.
 - Tokens de diseño y estilos globales.
 - Layout base con SEO, `hreflang` y arranque de tema sin parpadeo.
 
-## Fase 1 — Automatización GitHub · Must
+## Fase 1 - Automatización GitHub · Must
 
 - Script `fetch-github-projects.mjs` (topic `portfolio`, `.portfolio.json`, releases).
 - Esquema de datos y capa de merge (`src/lib/`).
 - Snapshot como caché y fallback.
 - Pruebas unitarias del normalizador.
 
-## Fase 2 — Diseño y responsive · Must
+## Fase 2 - Diseño y responsive · Must
 
 - Header, Hero, Sobre mí, Proyectos, Contacto, Footer.
 - Grilla de proyectos fluida y tarjetas.
 - Filtros por categoría.
 - Tema claro/oscuro y micro-interacciones.
 
-## Fase 3 — Internacionalización · Must
+## Fase 3 - Internacionalización · Must
 
 - Diccionarios ES/EN y utilidades.
 - Selector de idioma y rutas.
 - `hreflang`, sitemap y CV por idioma.
 
-## Fase 4 — CI/CD y deploy · Must
+## Fase 4 - CI/CD y deploy · Must
 
 - Workflow de deploy (push a `main`, cron diario, manual).
 - Workflow de CI en PR (tests + build).
 - Pages servido desde Actions.
 
-## Fase 5 — QA · Should
+## Fase 5 - QA · Should
 
 - Pruebas unitarias del merge de proyectos.
 - E2E con Playwright + accesibilidad con axe.
 - Validación en CI.
 
-## Fase 6 — Pulido · Could
+## Fase 6 - Pulido · Could
 
 - [x] Datos estructurados ampliados (`Person` con ubicación, formación y skills).
 - [x] Animaciones de entrada sutiles (reveal con respeto por `prefers-reduced-motion`).

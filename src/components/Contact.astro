@@ -20,7 +20,7 @@ const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     <form class="contact__form reveal" action={action} method="POST">
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value={redirect} />
-      <input type="hidden" name="_subject" value="Portfolio — nuevo mensaje" />
+      <input type="hidden" name="_subject" value="Portfolio - nuevo mensaje" />
       <input
         type="text"
         name="_honey"

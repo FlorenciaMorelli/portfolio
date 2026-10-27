@@ -7,7 +7,7 @@ import { writeFile, readFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { normalizeRepo } from './lib/normalize.mjs';
+import { normalizeRepo, isPublicRepo } from './lib/normalize.mjs';
 
 const USERNAME = 'FlorenciaMorelli';
 const TOPIC = 'portfolio';
@@ -36,7 +36,9 @@ async function gh(path) {
 async function searchTaggedRepos() {
   const query = encodeURIComponent(`user:${USERNAME} topic:${TOPIC} fork:false archived:false`);
   const data = await gh(`/search/repositories?q=${query}&per_page=100&sort=pushed`);
-  return (data.items ?? []).filter((repo) => !EXCLUDED_REPOS.has(repo.name.toLowerCase()));
+  return (data.items ?? []).filter(
+    (repo) => isPublicRepo(repo) && !EXCLUDED_REPOS.has(repo.name.toLowerCase()),
+  );
 }
 
 async function fetchOverride(repo) {

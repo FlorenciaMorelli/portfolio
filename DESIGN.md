@@ -270,10 +270,11 @@ usa `.portfolio.json`.
 
 ## Plan de implementación del rediseño
 
-Orden propuesto para la etapa de código. Cada bloque es un PR a `staging` desde una rama
-`feature/*` que sale de `staging`, se mergea con «Create a merge commit» (nunca squash) y usa
-commits en Conventional Commits con la identidad de Florencia, sin `Co-authored-by` ni
-firmas. Esta sección se borra cuando el rediseño esté implementado.
+Orden propuesto para la etapa de código. Cada bloque sale en una rama `feature/*` desde
+`develop` y sigue el flujo `feature/*` → PR con squash → `develop` → PR con squash →
+`staging` → PR con «Create a merge commit» → `main`. Los commits van en Conventional Commits
+con la identidad de Florencia, sin `Co-authored-by` ni firmas. Esta sección se borra cuando
+el rediseño esté implementado.
 
 ### P0. Lo que se ve en los primeros 10 segundos
 

@@ -4,7 +4,7 @@ Estrategia de pruebas para sostener la robustez del sitio.
 
 ## Niveles
 
-### Unitarias — Vitest
+### Unitarias - Vitest
 
 `tests/unit/`. Cubren la lógica que no depende de la red:
 
@@ -18,7 +18,7 @@ Estrategia de pruebas para sostener la robustez del sitio.
 npm test
 ```
 
-### End-to-end y accesibilidad — Playwright
+### End-to-end y accesibilidad - Playwright
 
 `tests/e2e/`. Levantan el build real y verifican comportamiento de usuario:
 

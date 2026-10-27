@@ -61,7 +61,7 @@ type Dict = {
 export const ui: Record<Locale, Dict> = {
   es: {
     meta: {
-      title: 'Florencia Morelli — Desarrolladora y analista funcional',
+      title: 'Florencia Morelli - Desarrolladora y analista funcional',
       description:
         'Portfolio de Florencia Morelli, desarrolladora y analista técnico-funcional de Buenos Aires. Integración de sistemas, APIs y desarrollo web, mobile y de videojuegos.',
     },
@@ -104,7 +104,7 @@ export const ui: Record<Locale, Dict> = {
       jobs: [
         {
           role: 'Analista técnico-funcional',
-          org: 'Diagnóstico Maipú — SMG · Laboratory Information Systems (LIS)',
+          org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dic 2024 – Actualidad',
           tech: 'JSON, XML, APIs REST/SOAP, Postman, Agile',
           points: [
@@ -117,7 +117,7 @@ export const ui: Record<Locale, Dict> = {
         },
         {
           role: 'Desarrolladora web front-end',
-          org: 'Enivel7 — Máximo Pinasco / Ford',
+          org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Ago 2023 – Sep 2023',
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [
@@ -177,7 +177,7 @@ export const ui: Record<Locale, Dict> = {
   },
   en: {
     meta: {
-      title: 'Florencia Morelli — Developer and functional analyst',
+      title: 'Florencia Morelli - Developer and functional analyst',
       description:
         'Portfolio of Florencia Morelli, a developer and technical-functional analyst from Buenos Aires. Systems integration, APIs and web, mobile and game development.',
     },
@@ -220,7 +220,7 @@ export const ui: Record<Locale, Dict> = {
       jobs: [
         {
           role: 'Technical-functional analyst',
-          org: 'Diagnóstico Maipú — SMG · Laboratory Information Systems (LIS)',
+          org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dec 2024 – Present',
           tech: 'JSON, XML, REST/SOAP APIs, Postman, Agile',
           points: [
@@ -233,7 +233,7 @@ export const ui: Record<Locale, Dict> = {
         },
         {
           role: 'Front-end web developer',
-          org: 'Enivel7 — Máximo Pinasco / Ford',
+          org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Aug 2023 – Sep 2023',
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [

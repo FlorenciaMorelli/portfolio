@@ -74,7 +74,9 @@ export type IconName =
   | 'pen-tool'
   | 'code-xml'
   | 'check-check'
-  | 'clipboard-list';
+  | 'clipboard-list'
+  | 'mail'
+  | 'linkedin-outline';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {

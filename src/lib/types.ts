@@ -62,6 +62,7 @@ export type IconName =
   | 'arrow-right'
   | 'arrow-left'
   | 'arrow-up-right'
+  | 'check'
   | 'sun'
   | 'moon'
   | 'external'

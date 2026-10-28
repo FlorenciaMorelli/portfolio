@@ -20,6 +20,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const strip = (path: string) => path.slice(base.length);
 const projectsHref = `${localizedPath(locale, '')}/#projects`;
 const { cover } = study;
+const studioName = study.studio?.name;
 ---
 
 <BaseLayout
@@ -33,12 +34,16 @@ const { cover } = study;
   <main id="main" class="case">
     <section class="case__hero">
       <div class="container">
-        <a class="case__back" href={projectsHref}>
-          <Icon name="arrow-left" size={16} />
-          {t.caseStudy.back}
-        </a>
-        <p class="eyebrow">
-          {t.caseStudy.eyebrow}{study.studio && ` · ${study.studio.name}`}
+        <nav class="crumbs" aria-label={t.caseStudy.breadcrumb}>
+          <ol>
+            <li><a href={projectsHref}>{t.nav.projects}</a></li>
+            <li aria-current="page">{study.name}</li>
+          </ol>
+        </nav>
+
+        <p class="case__meta">
+          <span class="tag">{t.projects.client}</span>
+          {studioName && <span>{t.projects.builtAt.replace('{studio}', studioName)}</span>}
         </p>
         <h1 class="case__title">{study.name}</h1>
         <p class="case__summary">{study.summary[locale]}</p>
@@ -46,14 +51,12 @@ const { cover } = study;
         <div class="case__actions">
           {study.website && (
             <a class="btn btn--primary" href={study.website} target="_blank" rel="noopener">
-              {t.caseStudy.visit}
-              <Icon name="external" size={16} />
+              {t.caseStudy.visit}<Icon name="external" size={18} />
             </a>
           )}
           {study.studio && (
-            <a class="btn btn--ghost" href={study.studio.url} target="_blank" rel="noopener">
+            <a class="btn btn--secondary" href={study.studio.url} target="_blank" rel="noopener">
               {t.caseStudy.studio}
-              <Icon name="external" size={16} />
             </a>
           )}
         </div>
@@ -70,9 +73,9 @@ const { cover } = study;
     </section>
 
     <div class="container">
-      <figure class="case__cover">
+      <figure class="pair">
         <img
-          class="case__cover-desktop"
+          class="pair__desktop"
           src={assetUrl(cover.desktop.src)}
           alt={cover.desktop.alt[locale]}
           width={cover.desktop.width}
@@ -80,7 +83,7 @@ const { cover } = study;
           fetchpriority="high"
         />
         <img
-          class="case__cover-mobile"
+          class="pair__mobile"
           src={assetUrl(cover.mobile.src)}
           alt={cover.mobile.alt[locale]}
           width={cover.mobile.width}
@@ -88,7 +91,7 @@ const { cover } = study;
         />
       </figure>
 
-      <section class="case__highlights" aria-labelledby="highlights-title">
+      <section class="stats" aria-labelledby="highlights-title">
         <h2 id="highlights-title" class="visually-hidden">{t.caseStudy.highlights}</h2>
         <ul>
           {study.highlights.map((item) => (
@@ -101,80 +104,93 @@ const { cover } = study;
       </section>
     </div>
 
-    {study.sections.map((section) => (
-      <section id={section.id} class="case__section reveal">
-        <div class="container">
-          <h2 class="section-title">{section.title[locale]}</h2>
-
-          {section.tags && (
-            <ul class="case__tags">
-              {section.tags.map((tag) => <li>{tag}</li>)}
-            </ul>
-          )}
-
-          {section.body && (
-            <div class="case__prose">
-              {section.body[locale].map((paragraph) => <p>{paragraph}</p>)}
+    {study.sections.map((section) =>
+      section.gallery || section.cards ? (
+        <section id={section.id} class="part part--wide reveal">
+          <div class="container">
+            <div class="part__head">
+              <h2 class="part__title">{section.title[locale]}</h2>
+              {section.note && <p class="part__note">{section.note[locale]}</p>}
             </div>
-          )}
 
-          {section.list && (
-            <ul class="case__list">
-              {section.list[locale].map((item) => <li>{item}</li>)}
-            </ul>
-          )}
+            {section.cards && (
+              <ol class="decisions">
+                {section.cards.map((card, i) => (
+                  <li class="decision">
+                    <span class="decision__num">{String(i + 1).padStart(2, '0')}</span>
+                    <h3>{card.title[locale]}</h3>
+                    <p>{card.body[locale]}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
 
-          {section.cards && (
-            <ul class="case__cards">
-              {section.cards.map((card) => (
-                <li class="case__card">
-                  <h3>{card.title[locale]}</h3>
-                  <p>{card.body[locale]}</p>
-                </li>
-              ))}
-            </ul>
-          )}
+            {section.gallery && (
+              <div class="gallery">
+                {section.gallery.map((shot) => (
+                  <figure>
+                    <div class="pair">
+                      <img
+                        class="pair__desktop"
+                        src={assetUrl(shot.desktop.src)}
+                        alt={shot.desktop.alt[locale]}
+                        width={shot.desktop.width}
+                        height={shot.desktop.height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <img
+                        class="pair__mobile"
+                        src={assetUrl(shot.mobile.src)}
+                        alt={shot.mobile.alt[locale]}
+                        width={shot.mobile.width}
+                        height={shot.mobile.height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <figcaption>{shot.caption[locale]}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ) : (
+        <section id={section.id} class="part reveal">
+          <div class="container part__block">
+            <h2 class="part__title part__title--small">{section.title[locale]}</h2>
+            <div class="part__content">
+              {section.tags && (
+                <ul class="chips">
+                  {section.tags.map((tag) => <li class="tag tag--tech">{tag}</li>)}
+                </ul>
+              )}
 
-          {section.gallery && (
-            <div class="case__gallery">
-              {section.gallery.map((shot) => (
-                <figure class="case__shot">
-                  <div class="case__shot-pair">
-                    <img
-                      class="case__shot-desktop"
-                      src={assetUrl(shot.desktop.src)}
-                      alt={shot.desktop.alt[locale]}
-                      width={shot.desktop.width}
-                      height={shot.desktop.height}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <img
-                      class="case__shot-mobile"
-                      src={assetUrl(shot.mobile.src)}
-                      alt={shot.mobile.alt[locale]}
-                      width={shot.mobile.width}
-                      height={shot.mobile.height}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <figcaption>{shot.caption[locale]}</figcaption>
-                </figure>
-              ))}
+              {section.body && (
+                <div class="prose">
+                  {section.body[locale].map((paragraph) => <p>{paragraph}</p>)}
+                </div>
+              )}
+
+              {section.list && (
+                <ul class="checks">
+                  {section.list[locale].map((item) => (
+                    <li>
+                      <Icon name="check" size={18} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          )}
-
-          {section.note && <p class="case__note">{section.note[locale]}</p>}
-        </div>
-      </section>
-    ))}
+          </div>
+        </section>
+      ),
+    )}
 
     <div class="container case__end">
-      <a class="btn btn--ghost" href={projectsHref}>
-        <Icon name="arrow-left" size={16} />
-        {t.caseStudy.more}
-      </a>
+      <a class="btn btn--secondary" href={projectsHref}>{t.caseStudy.more}</a>
     </div>
   </main>
   <Footer locale={locale} />
@@ -182,42 +198,48 @@ const { cover } = study;
 
 <style>
   .case__hero {
-    position: relative;
-    padding-block: calc(var(--header-h) + var(--space-12)) var(--space-8);
-    overflow: hidden;
+    padding-block: calc(var(--header-h) + var(--space-16)) var(--space-12);
   }
-  .case__hero::before {
-    content: '';
-    position: absolute;
-    top: -30%;
-    right: -10%;
-    width: 34rem;
-    height: 34rem;
-    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
-    z-index: -1;
-    pointer-events: none;
-  }
-  .case__back {
-    display: inline-flex;
+
+  /* Breadcrumb: Projects / name, replacing the old eyebrow and back link */
+  .crumbs ol {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    margin-bottom: var(--space-8);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
     color: var(--text-muted);
   }
-  .case__back:hover {
-    color: var(--accent);
+  .crumbs a {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    content: '/' / '';
+    margin-right: var(--space-2);
+    color: var(--text-faint);
+  }
+
+  .case__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
   }
   .case__title {
-    margin-top: var(--space-2);
-    font-size: var(--text-display);
-    color: var(--accent);
+    margin-top: var(--space-4);
   }
   .case__summary {
-    margin-top: var(--space-4);
-    max-width: 44rem;
+    max-width: 48rem;
+    margin-top: var(--space-6);
     font-size: var(--text-lead);
+    line-height: var(--text-lead-lh);
     color: var(--text-muted);
   }
   .case__actions {
@@ -226,200 +248,232 @@ const { cover } = study;
     gap: var(--space-3);
     margin-top: var(--space-8);
   }
+
+  /* Fact sheet (Ficha) */
   .case__facts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: var(--space-4) var(--space-8);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
     margin-top: var(--space-12);
     padding-top: var(--space-6);
-    border-top: 1px solid var(--border);
+    border-top: var(--border-width) solid var(--border);
   }
   .case__facts dt {
     font-family: var(--font-mono);
     font-size: var(--text-mono);
-    color: var(--text-muted);
+    line-height: var(--text-mono-lh);
+    color: var(--text-faint);
   }
   .case__facts dd {
-    margin: var(--space-1) 0 0;
-    font-size: var(--text-sm);
+    margin: var(--space-2) 0 0;
+    line-height: var(--text-base-lh);
   }
 
-  .case__cover {
-    position: relative;
-    margin-top: var(--space-4);
-    padding-right: 9%;
-    padding-bottom: 6%;
-  }
-  .case__cover-desktop {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-3);
-  }
-  .case__cover-mobile {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 22%;
-    border: 6px solid var(--surface);
-    border-radius: 1.5rem;
-    box-shadow: var(--shadow-3);
-  }
-
-  .case__highlights ul {
+  /* Screenshot pair: both images end up the same height */
+  .pair {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 3.46fr 1fr;
     gap: var(--space-4);
+    align-items: start;
+    max-width: 62.5rem;
+  }
+  .pair img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2);
+  }
+
+  /* Key figures: one card each */
+  .stats ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    gap: var(--space-6);
     margin-top: var(--space-12);
   }
-  .case__highlights li {
+  .stats li {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
     padding: var(--space-6);
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: var(--border-width) solid var(--border);
     border-radius: var(--radius-xl);
   }
-  .case__highlights strong {
-    font-family: var(--font-mono);
+  .stats strong {
     font-size: var(--text-stat);
     line-height: var(--text-stat-lh);
     letter-spacing: var(--text-stat-ls);
+    font-weight: 600;
     color: var(--accent);
   }
-  .case__highlights span {
+  .stats span {
     font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
     color: var(--text-muted);
   }
 
-  .case__section {
-    padding-block: var(--space-16) 0;
+  /* Parts of the write-up: title on the left, content on the right, a line between them */
+  .part {
+    padding-block: calc(var(--space-16) + var(--space-2));
+    border-top: var(--border-width) solid var(--border);
   }
-  .case__prose {
-    max-width: 44rem;
+  .case__hero + .container + .part,
+  .stats + .part {
+    margin-top: var(--space-20);
   }
-  .case__prose p {
-    color: var(--text-muted);
-  }
-  .case__prose p + p {
-    margin-top: var(--space-4);
-  }
-  .case__tags + .case__prose {
-    margin-top: var(--space-6);
-  }
-
-  .case__list {
+  .part__block {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3) var(--space-8);
+    grid-template-columns: 11fr 19fr;
   }
-  .case__list li {
-    position: relative;
-    padding-left: var(--space-4);
-    color: var(--text-muted);
+  .part__title--small {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3-lh);
+    letter-spacing: var(--text-h3-ls);
   }
-  .case__list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.8em;
-    width: 6px;
-    height: 2px;
-    background: var(--accent);
-  }
-
-  .case__cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--space-6);
-  }
-  .case__card {
-    padding: var(--space-6);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-  }
-  .case__card h3 {
-    font-size: var(--text-h4);
-    color: var(--accent);
-  }
-  .case__card p {
-    margin-top: var(--space-3);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-
-  .case__gallery {
+  .part__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-12);
+    gap: var(--space-6);
   }
-  .case__shot-pair {
-    display: grid;
-    /* Columns in the ratio that gives both screenshots the same height. */
-    grid-template-columns: 3.46fr 1fr;
+  .prose {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-4);
-    align-items: start;
-  }
-  .case__shot img {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-2);
-  }
-  .case__shot figcaption {
-    margin-top: var(--space-3);
-    font-size: var(--text-sm);
+    font-size: var(--text-lead);
+    line-height: var(--text-lead-lh);
     color: var(--text-muted);
   }
-  .case__note {
-    margin-top: var(--space-6);
-    font-family: var(--font-mono);
-    font-size: var(--text-mono);
-    color: var(--text-muted);
-  }
-
-  .case__tags {
+  .chips {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
   }
-  .case__tags li {
-    padding: var(--space-1) var(--space-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
-    font-family: var(--font-mono);
+  .chips .tag--tech {
+    background: var(--surface-alt);
+  }
+  /* Two columns that fill top to bottom, as in Figma */
+  .checks {
+    column-count: 2;
+    column-gap: var(--space-10);
+  }
+  .checks li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    break-inside: avoid;
+    color: var(--text-muted);
+  }
+  .checks :global(svg) {
+    margin-top: 0.25rem;
+    color: var(--accent);
+  }
+
+  /* Wide parts (screens, decisions) have the big heading and an intro on the right */
+  .part__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-8);
+  }
+  .part__note {
+    max-width: 35rem;
+    font-size: var(--text-lead);
+    line-height: var(--text-lead-lh);
+    color: var(--text-muted);
+  }
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin-top: var(--space-16);
+  }
+  .gallery figcaption {
+    margin-top: var(--space-4);
     font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
+  }
+
+  .decisions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-16);
+    padding: 0;
+    list-style: none;
+  }
+  .decision {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--surface);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+  .decision__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    color: var(--accent);
+  }
+  .decision h3 {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4-lh);
+  }
+  .decision p {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
     color: var(--text-muted);
   }
 
   .case__end {
-    padding-top: var(--space-16);
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-4);
   }
 
+  @media (max-width: 1023.98px) {
+    .decisions {
+      grid-template-columns: 1fr;
+    }
+    .part__block {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+  }
   @media (max-width: 767.98px) {
-    .case__highlights ul,
-    .case__list {
-      grid-template-columns: 1fr 1fr;
+    .case__hero {
+      padding-top: calc(var(--header-h) + var(--space-10));
     }
-    .case__list {
+    .case__facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .pair {
       grid-template-columns: 1fr;
+      gap: var(--space-3);
     }
-    .case__highlights strong {
-      font-size: var(--text-h2);
+    .pair__mobile {
+      max-width: 12.25rem;
     }
-    .case__cover-mobile {
-      width: 26%;
-      border-width: 4px;
-      border-radius: 1rem;
+    .stats ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
     }
-    .case__shot-pair {
-      grid-template-columns: 1fr;
-      justify-items: center;
+    .stats li {
+      padding: var(--space-4);
     }
-    .case__shot-mobile {
-      max-width: 15rem;
+    .part {
+      padding-block: var(--space-12);
+    }
+    .checks {
+      column-count: 1;
+    }
+    .gallery {
+      gap: var(--space-12);
     }
   }
 </style>

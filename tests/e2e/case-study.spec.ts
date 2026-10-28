@@ -9,6 +9,33 @@ test.describe('Audenpass case study', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Audenpass');
   });
 
+  test('shows a breadcrumb, the client tag and the fact sheet', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
+    await expect(crumbs.getByRole('link', { name: 'Proyectos' })).toHaveAttribute('href', /\/#projects$/);
+    await expect(crumbs.locator('[aria-current="page"]')).toHaveText('Audenpass');
+    await expect(page.locator('.case__meta')).toContainText('Cliente');
+    await expect(page.locator('.case__meta')).toContainText('Desarrollado en Guia');
+    await expect(page.locator('.case__facts div')).toHaveCount(4);
+    await expect(page.locator('.stats li')).toHaveCount(4);
+  });
+
+  test('numbers the decisions, lists what it includes and ends without a contact section', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await expect(page.locator('.decision__num')).toHaveText(['01', '02', '03']);
+    expect(await page.locator('.checks li').count()).toBeGreaterThan(3);
+    await expect(page.locator('#contact')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Ver todos los proyectos' })).toHaveAttribute('href', /\/#projects$/);
+    await expect(page.getByRole('link', { name: 'Ver sitio' })).toHaveAttribute('href', 'https://audenpass.com');
+  });
+
+  test('is translated in English', async ({ page }) => {
+    await page.goto('/portfolio/en/projects/audenpass/');
+    await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toBeVisible();
+    await expect(page.locator('.case__meta')).toContainText('Client');
+    await expect(page.locator('.case__meta')).toContainText('Built at Guia');
+  });
+
   test('switches to the English version of the same page', async ({ page }) => {
     await page.goto('/portfolio/proyectos/audenpass/');
     // On small screens the switch lives inside the collapsed menu.

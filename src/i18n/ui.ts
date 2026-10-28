@@ -86,7 +86,8 @@ type Dict = {
   };
   caseStudy: {
     eyebrow: string;
-    back: string;
+    /** Accessible name of the breadcrumb (Projects / name). */
+    breadcrumb: string;
     visit: string;
     studio: string;
     highlights: string;
@@ -250,7 +251,7 @@ export const ui: Record<Locale, Dict> = {
     },
     caseStudy: {
       eyebrow: 'Caso de estudio',
-      back: 'Volver a proyectos',
+      breadcrumb: 'Ruta de navegación',
       visit: 'Ver sitio',
       studio: 'Conocé Guia',
       highlights: 'En números',
@@ -416,7 +417,7 @@ export const ui: Record<Locale, Dict> = {
     },
     caseStudy: {
       eyebrow: 'Case study',
-      back: 'Back to projects',
+      breadcrumb: 'Breadcrumb',
       visit: 'Visit site',
       studio: 'About Guia',
       highlights: 'By the numbers',

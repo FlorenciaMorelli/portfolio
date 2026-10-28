@@ -32,11 +32,24 @@ type Dict = {
     label: string;
   };
   hero: {
-    greeting: string;
+    /** The headline in three parts: on small screens the connector moves to the accent line. */
+    title: { lead: string; connector: string; accent: string };
+    /** Not shown on the page; feeds the JSON-LD jobTitle. */
     role: string;
     intro: string;
-    cta: string;
     viewProjects: string;
+    contact: string;
+    modes: {
+      label: string;
+      analysis: string;
+      design: string;
+      development: string;
+      quality: string;
+    };
+    /** `{mode}` is replaced by the active mode name. */
+    modeName: string;
+    notes: { analysis: string; quality: string };
+    tags: { quality: string };
   };
   about: {
     title: string;
@@ -99,12 +112,25 @@ export const ui: Record<Locale, Dict> = {
       label: 'Principal',
     },
     hero: {
-      greeting: 'Hola, soy',
+      title: { lead: 'Del requerimiento', connector: 'a', accent: 'producción.' },
       role: 'Desarrolladora y analista técnico-funcional',
       intro:
-        'Trabajo en integración de sistemas, APIs y testing, y construyo proyectos web, mobile y de videojuegos. Cofundé Guia, un estudio de soluciones digitales, y me interesa el desarrollo de productos digitales de principio a fin.',
-      cta: 'Conocé mi trabajo',
+        'Soy Florencia Morelli, desarrolladora full stack y analista técnico-funcional. Me interesa el desarrollo de productos digitales de principio a fin: del análisis y el diseño al desarrollo, la integración y la calidad.',
       viewProjects: 'Ver proyectos',
+      contact: 'Escribime',
+      modes: {
+        label: 'Ver el titular desde',
+        analysis: 'Análisis',
+        design: 'Diseño',
+        development: 'Desarrollo',
+        quality: 'Calidad',
+      },
+      modeName: 'Modo {mode}',
+      notes: {
+        analysis: 'Como cliente, quiero tener mi sitio web, para que más gente me conozca.',
+        quality: 'Contraste AA · Navegable con teclado · Respeta reduced motion',
+      },
+      tags: { quality: '3 de 3' },
     },
     about: {
       title: 'Sobre mí',
@@ -244,12 +270,25 @@ export const ui: Record<Locale, Dict> = {
       label: 'Main',
     },
     hero: {
-      greeting: "Hi, I'm",
+      title: { lead: 'From requirement', connector: 'to', accent: 'production.' },
       role: 'Developer and technical-functional analyst',
       intro:
-        "I work on systems integration, APIs and testing, and I build web, mobile and game projects. I co-founded Guia, a digital solutions studio, and I'm interested in building digital products from start to finish.",
-      cta: 'See my work',
+        "I'm Florencia Morelli, a full stack developer and technical-functional analyst. I'm interested in building digital products from start to finish: from analysis and design to development, integration and quality.",
       viewProjects: 'View projects',
+      contact: 'Get in touch',
+      modes: {
+        label: 'View the headline as',
+        analysis: 'Analysis',
+        design: 'Design',
+        development: 'Development',
+        quality: 'Quality',
+      },
+      modeName: '{mode} mode',
+      notes: {
+        analysis: 'As a client, I want my own website, so that more people get to know me.',
+        quality: 'AA contrast · Keyboard accessible · Respects reduced motion',
+      },
+      tags: { quality: '3 of 3' },
     },
     about: {
       title: 'About me',

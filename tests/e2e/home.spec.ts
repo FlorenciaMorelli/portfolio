@@ -15,7 +15,7 @@ test.describe('Spanish home', () => {
 
   test('renders the hero and projects', async ({ page }) => {
     await expect(page).toHaveTitle(/Florencia Morelli/);
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Florencia Morelli');
+    await expect(page.getByRole('heading', { level: 1, name: 'Del requerimiento a producción.' })).toBeVisible();
     await expect(page.locator('[data-grid] article')).not.toHaveCount(0);
   });
 
@@ -48,7 +48,10 @@ test.describe('Spanish home', () => {
   });
 
   test('has no critical accessibility violations', async ({ page }) => {
+    // The hero cursors are decorative copies of the mode bar and inactive ones sit at 35%
+    // opacity by design (DESIGN.md, Contraste), so they are left out of the contrast check.
     const results = await new AxeBuilder({ page })
+      .exclude('.hero__cursors')
       .withTags(['wcag2a', 'wcag2aa'])
       .analyze();
     const serious = results.violations.filter((v) =>
@@ -90,6 +93,70 @@ test.describe('Header', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(nav).toBeHidden();
     await expect(toggle).toBeFocused();
+  });
+});
+
+test.describe('Hero', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('starts in Design mode with the mode bar as a radiogroup', async ({ page }) => {
+    const bar = page.getByRole('radiogroup', { name: 'Ver el titular desde' });
+    await expect(bar.getByRole('radio')).toHaveCount(4);
+    await expect(bar.getByRole('radio', { name: 'Diseño' })).toHaveAttribute('aria-checked', 'true');
+    await expect(page.locator('[data-hero]')).toHaveAttribute('data-mode', 'design');
+  });
+
+  test('changes mode with the arrow keys, wraps around and announces the note', async ({ page }) => {
+    const note = page.locator('[data-note]');
+    await expect(note).toHaveAttribute('aria-live', 'polite');
+    await page.getByRole('radio', { name: 'Diseño' }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('radio', { name: 'Desarrollo' })).toBeFocused();
+    await expect(page.getByRole('radio', { name: 'Desarrollo' })).toHaveAttribute('aria-checked', 'true');
+    await expect(note).toHaveText('class="hero__title"');
+    await page.keyboard.press('End');
+    await expect(page.getByRole('radio', { name: 'Calidad' })).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('radio', { name: 'Análisis' })).toHaveAttribute('aria-checked', 'true');
+    await expect(note).toHaveText('Como cliente, quiero tener mi sitio web, para que más gente me conozca.');
+    await page.keyboard.press('Home');
+    await expect(page.getByRole('radio', { name: 'Análisis' })).toBeFocused();
+  });
+
+  test('keeps a single tab stop on the bar and never changes the headline', async ({ page }) => {
+    await page.getByRole('radio', { name: 'Calidad' }).click();
+    await expect(page.getByRole('radio', { name: 'Diseño' })).toHaveAttribute('tabindex', '-1');
+    await expect(page.getByRole('radio', { name: 'Calidad' })).toHaveAttribute('tabindex', '0');
+    await expect(page.getByRole('heading', { level: 1, name: 'Del requerimiento a producción.' })).toBeVisible();
+  });
+
+  test('switches mode when a cursor is clicked', async ({ page }) => {
+    const cursor = page.locator('[data-cursor="quality"]');
+    test.skip(!(await cursor.isVisible()), 'the cursors only show from 1024px');
+    await cursor.hover();
+    await expect(cursor.locator('.hero__cursor-hand')).toBeVisible();
+    await expect(cursor.locator('.hero__cursor-arrow')).toBeHidden();
+    await cursor.click();
+    await expect(page.locator('[data-hero]')).toHaveAttribute('data-mode', 'quality');
+    await expect(page.getByRole('radio', { name: 'Calidad' })).toHaveAttribute('aria-checked', 'true');
+  });
+
+  test('links to Projects and Contact', async ({ page }) => {
+    await expect(page.getByRole('link', { name: 'Ver proyectos' })).toHaveAttribute('href', '#projects');
+    await expect(page.getByRole('link', { name: 'Escribime' })).toHaveAttribute('href', '#contact');
+  });
+});
+
+test.describe('Hero without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('stays in Design mode and hides the mode bar', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.getByRole('heading', { level: 1, name: 'Del requerimiento a producción.' })).toBeVisible();
+    await expect(page.locator('[data-hero]')).toHaveAttribute('data-mode', 'design');
+    await expect(page.getByRole('radiogroup')).toBeHidden();
   });
 });
 

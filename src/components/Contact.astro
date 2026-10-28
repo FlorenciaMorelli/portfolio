@@ -175,9 +175,15 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
     padding-block: var(--space-3);
     resize: vertical;
   }
-  .field input:hover,
-  .field textarea:hover {
-    border-color: var(--text-faint);
+  .field input:disabled,
+  .field textarea:disabled {
+    background: var(--surface-alt);
+    border-color: var(--border);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+  .field:has(:disabled) span {
+    color: var(--text-disabled);
   }
   .field input:focus-visible,
   .field textarea:focus-visible {

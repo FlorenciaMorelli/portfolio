@@ -305,6 +305,83 @@ test.describe('Contact and footer', () => {
   });
 });
 
+// Interactive states from the Components page: hover, active, focus and disabled.
+test.describe('States', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  const style = (page: Page, selector: string, prop: string) =>
+    page.locator(selector).first().evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
+
+  test('the primary button gets the accent glow on hover and loses it when pressed', async ({ page }) => {
+    const button = page.locator('.hero__actions .btn--primary');
+    await button.scrollIntoViewIfNeeded();
+    expect(await style(page, '.hero__actions .btn--primary', 'box-shadow')).toBe('none');
+    await button.hover();
+    await expect.poll(() => style(page, '.hero__actions .btn--primary', 'box-shadow')).not.toBe('none');
+    await page.mouse.down();
+    await expect.poll(() => style(page, '.hero__actions .btn--primary', 'box-shadow')).toBe('none');
+    await page.mouse.up();
+  });
+
+  test('the secondary button fills on hover', async ({ page }) => {
+    const rest = await style(page, '.hero__actions .btn--secondary', 'background-color');
+    await page.locator('.hero__actions .btn--secondary').hover();
+    await expect.poll(() => style(page, '.hero__actions .btn--secondary', 'background-color')).not.toBe(rest);
+  });
+
+  test('a disabled button is flat, muted and not clickable-looking', async ({ page }) => {
+    await page.locator('#contact button[type=submit]').evaluate((el) => ((el as HTMLButtonElement).disabled = true));
+    expect(await style(page, '#contact button[type=submit]', 'cursor')).toBe('not-allowed');
+    expect(await style(page, '#contact button[type=submit]', 'box-shadow')).toBe('none');
+    await page.locator('#contact button[type=submit]').hover({ force: true });
+    expect(await style(page, '#contact button[type=submit]', 'box-shadow')).toBe('none');
+  });
+
+  test('the pressed filter is filled with the accent and the others are not', async ({ page }) => {
+    const all = await style(page, '[data-filter="All"]', 'background-color');
+    const web = await style(page, '[data-filter="Web"]', 'background-color');
+    expect(all).not.toBe(web);
+    await page.locator('[data-filter="Web"]').click();
+    await expect.poll(() => style(page, '[data-filter="Web"]', 'background-color')).toBe(all);
+  });
+
+  test('keyboard focus draws a visible ring on links, buttons and fields', async ({ page }) => {
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    const ring = await page.evaluate(() => {
+      const s = getComputedStyle(document.activeElement as Element);
+      return { style: s.outlineStyle, width: s.outlineWidth };
+    });
+    expect(ring).toEqual({ style: 'solid', width: '2px' });
+
+    const field = page.locator('#contact input[name=name]');
+    await field.focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab');
+    await expect(field).toBeFocused();
+    const accent = await page.evaluate(() => {
+      const probe = document.createElement('i');
+      probe.style.color = 'var(--accent)';
+      document.body.appendChild(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      return color;
+    });
+    await expect.poll(() => field.evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(accent);
+    expect(await field.evaluate((el) => getComputedStyle(el).outlineStyle)).toBe('solid');
+  });
+
+  test('a disabled field and its label are muted', async ({ page }) => {
+    await page.locator('#contact input[name=name]').evaluate((el) => ((el as HTMLInputElement).disabled = true));
+    expect(await style(page, '#contact input[name=name]', 'cursor')).toBe('not-allowed');
+    const label = await page.locator('#contact .field').first().locator('span').evaluate((el) => getComputedStyle(el).color);
+    const text = await page.locator('#contact .field').nth(1).locator('span').evaluate((el) => getComputedStyle(el).color);
+    expect(label).not.toBe(text);
+  });
+});
+
 test.describe('Hero without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 

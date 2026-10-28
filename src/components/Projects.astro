@@ -67,10 +67,10 @@ const rest = projects.filter((p) => p !== featured);
   .filter {
     height: 2.25rem;
     padding: 0 var(--space-4);
-    border: var(--border-width) solid var(--border-strong);
+    border: var(--border-width) solid var(--border);
     border-radius: var(--radius-pill);
     background: var(--surface);
-    color: var(--text);
+    color: var(--text-muted);
     font-family: var(--font-sans);
     font-size: var(--text-nav);
     line-height: var(--text-nav-lh);
@@ -79,13 +79,19 @@ const rest = projects.filter((p) => p !== featured);
       color var(--dur-fast) var(--ease);
   }
   .filter:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--border-strong);
+    color: var(--text);
   }
   .filter[aria-pressed='true'] {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--accent-contrast);
+  }
+  .filter:disabled {
+    background: var(--surface-alt);
+    border-color: var(--border);
+    color: var(--text-disabled);
+    cursor: not-allowed;
   }
   .projects__grid {
     display: grid;

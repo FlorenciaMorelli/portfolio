@@ -87,11 +87,15 @@ const year = new Date().getFullYear();
     width: 2.5rem;
     height: 2.5rem;
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--text-muted);
     transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
   }
   .site-footer__socials a:hover {
     background: var(--surface-alt);
+    color: var(--text);
+  }
+  .site-footer__socials a:active {
+    background: var(--accent-soft);
     color: var(--accent);
   }
 

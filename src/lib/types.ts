@@ -65,7 +65,11 @@ export type IconName =
   | 'presentation'
   | 'globe'
   | 'menu'
-  | 'close';
+  | 'close'
+  | 'pen-tool'
+  | 'code-xml'
+  | 'check-check'
+  | 'clipboard-list';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {

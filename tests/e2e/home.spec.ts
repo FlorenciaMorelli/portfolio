@@ -265,6 +265,46 @@ test.describe('Hero', () => {
   });
 });
 
+test.describe('Contact and footer', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('has the title with a full stop, direct links and the form in a card', async ({ page }) => {
+    const contact = page.locator('#contact');
+    await expect(contact.getByRole('heading', { level: 2, name: 'Hablemos.' })).toBeVisible();
+    await expect(contact.getByRole('link', { name: 'florenciamorelliIT@gmail.com' })).toHaveAttribute('href', 'mailto:florenciamorelliIT@gmail.com');
+    await expect(contact.getByRole('link', { name: 'linkedin.com/in/florenciamorelli' })).toHaveAttribute('href', /linkedin\.com\/in\/florenciamorelli/);
+    await expect(contact.getByRole('link', { name: 'github.com/FlorenciaMorelli' })).toHaveAttribute('href', 'https://github.com/FlorenciaMorelli');
+    await expect(contact.locator('form')).toHaveAttribute('action', 'https://formsubmit.co/florenciamorelliIT@gmail.com');
+  });
+
+  test('labels every field and keeps the form fields required', async ({ page }) => {
+    const form = page.locator('#contact form');
+    for (const name of ['Nombre', 'Email', 'Mensaje']) {
+      await expect(form.getByLabel(name)).toBeVisible();
+      await expect(form.getByLabel(name)).toHaveAttribute('required', '');
+    }
+    await expect(form.getByRole('button', { name: 'Enviar' })).toBeVisible();
+  });
+
+  test('has a footer with the logo, the rights and labelled social links, without the Astro credit', async ({ page }) => {
+    const footer = page.locator('footer');
+    await expect(footer).toContainText('Florencia Morelli');
+    await expect(footer).toContainText('Todos los derechos reservados.');
+    await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/FlorenciaMorelli');
+    await expect(footer.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
+    await expect(footer.getByRole('link', { name: 'Volver arriba' })).toHaveAttribute('href', '#top');
+    await expect(footer).not.toContainText('Astro');
+  });
+
+  test('shows the English version of the title', async ({ page }) => {
+    await page.goto('/portfolio/en/');
+    await expect(page.locator('#contact').getByRole('heading', { level: 2, name: "Let's talk." })).toBeVisible();
+    await expect(page.locator('footer')).toContainText('All rights reserved.');
+  });
+});
+
 test.describe('Hero without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 

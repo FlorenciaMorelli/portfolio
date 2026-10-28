@@ -101,7 +101,7 @@ type Dict = {
     message: string;
     send: string;
   };
-  footer: { built: string; rights: string };
+  footer: { rights: string };
   theme: { toLight: string; toDark: string };
   lang: { switchTo: string };
   a11y: { skip: string; toTop: string };
@@ -258,7 +258,7 @@ export const ui: Record<Locale, Dict> = {
       more: 'Ver todos los proyectos',
     },
     contact: {
-      title: 'Hablemos',
+      title: 'Hablemos.',
       intro:
         'Escribime si querés que trabajemos juntos o si tenés alguna consulta. Respondo todo.',
       name: 'Nombre',
@@ -267,7 +267,6 @@ export const ui: Record<Locale, Dict> = {
       send: 'Enviar',
     },
     footer: {
-      built: 'Hecho con Astro',
       rights: 'Todos los derechos reservados.',
     },
     theme: { toLight: 'Cambiar a tema claro', toDark: 'Cambiar a tema oscuro' },
@@ -424,7 +423,7 @@ export const ui: Record<Locale, Dict> = {
       more: 'See all projects',
     },
     contact: {
-      title: "Let's talk",
+      title: "Let's talk.",
       intro:
         "Get in touch if you'd like to work together or have a question. I read everything.",
       name: 'Name',
@@ -433,7 +432,6 @@ export const ui: Record<Locale, Dict> = {
       send: 'Send',
     },
     footer: {
-      built: 'Built with Astro',
       rights: 'All rights reserved.',
     },
     theme: { toLight: 'Switch to light theme', toDark: 'Switch to dark theme' },

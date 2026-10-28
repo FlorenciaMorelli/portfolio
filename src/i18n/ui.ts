@@ -20,7 +20,17 @@ interface Job {
 
 type Dict = {
   meta: { title: string; description: string };
-  nav: { about: string; experience: string; projects: string; contact: string; resume: string };
+  nav: {
+    about: string;
+    experience: string;
+    projects: string;
+    contact: string;
+    resume: string;
+    resumeLong: string;
+    menuOpen: string;
+    menuClose: string;
+    label: string;
+  };
   hero: {
     greeting: string;
     role: string;
@@ -83,6 +93,10 @@ export const ui: Record<Locale, Dict> = {
       projects: 'Proyectos',
       contact: 'Contacto',
       resume: 'CV',
+      resumeLong: 'Descargar CV',
+      menuOpen: 'Abrir menú',
+      menuClose: 'Cerrar menú',
+      label: 'Principal',
     },
     hero: {
       greeting: 'Hola, soy',
@@ -224,6 +238,10 @@ export const ui: Record<Locale, Dict> = {
       projects: 'Projects',
       contact: 'Contact',
       resume: 'Resume',
+      resumeLong: 'Download CV',
+      menuOpen: 'Open menu',
+      menuClose: 'Close menu',
+      label: 'Main',
     },
     hero: {
       greeting: "Hi, I'm",

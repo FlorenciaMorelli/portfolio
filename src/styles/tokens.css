@@ -128,6 +128,7 @@
   /* Layout: content is 1200px wide inside 120px margins on desktop */
   --container-max: 75rem;
   --container-pad: clamp(1.25rem, 8.33vw, 7.5rem);
+  --header-h: 4.5rem;
 
   /* Motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -140,6 +141,7 @@
 @media (max-width: 767.98px) {
   :root {
     --container-pad: 1.25rem;
+    --header-h: 4.25rem;
     --text-display: 2.75rem;
     --text-display-lh: 3.125rem;
     --text-display-accent: 3.25rem;

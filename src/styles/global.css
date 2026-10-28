@@ -168,6 +168,15 @@ ul {
   color: var(--accent-contrast);
   box-shadow: var(--glow-accent);
 }
+.btn--secondary {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.btn--secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .btn--ghost {
   border-color: var(--border-strong);
   color: var(--text);

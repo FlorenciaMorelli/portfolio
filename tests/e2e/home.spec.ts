@@ -58,10 +58,46 @@ test.describe('Spanish home', () => {
   });
 });
 
+test.describe('Header', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('turns solid once the page scrolls', async ({ page }) => {
+    const header = page.locator('[data-header]');
+    await expect(header).not.toHaveClass(/is-scrolled/);
+    await page.evaluate(() => window.scrollTo(0, 400));
+    await expect(header).toHaveClass(/is-scrolled/);
+  });
+
+  test('marks the link of the section in view with aria-current', async ({ page }) => {
+    await expect(page.locator('[data-section][aria-current]')).toHaveCount(0);
+    await page.evaluate(() => document.getElementById('projects')?.scrollIntoView());
+    await expect(page.locator('[data-section="projects"]')).toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('[data-section][aria-current]')).toHaveCount(1);
+  });
+
+  test('opens and closes the mobile menu with the keyboard', async ({ page }) => {
+    const toggle = page.locator('[data-nav-toggle]');
+    test.skip(!(await toggle.isVisible()), 'the menu only exists below 1024px');
+    const nav = page.locator('#primary-nav');
+    await expect(nav).toBeHidden();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(nav).toBeVisible();
+    await expect(page.locator('html')).toHaveClass(/menu-open/);
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(nav).toBeHidden();
+    await expect(toggle).toBeFocused();
+  });
+});
+
 test.describe('English home', () => {
   test('renders translated navigation', async ({ page }) => {
     await page.goto('/portfolio/en/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await openMenu(page);
     await expect(page.getByRole('link', { name: 'About' })).toBeVisible();
   });
 });

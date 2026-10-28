@@ -39,7 +39,7 @@ const t = useTranslations(locale);
 <style>
   .hero {
     position: relative;
-    padding-block: clamp(4rem, 12vh, 8rem) var(--space-16);
+    padding-block: calc(var(--header-h) + clamp(4rem, 12vh, 8rem)) var(--space-16);
     overflow: hidden;
   }
   .hero::before {

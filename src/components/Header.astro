@@ -18,182 +18,315 @@ const t = useTranslations(locale);
 const home = localizedPath(locale, '');
 const anchor = (id: string) => (onHome ? `#${id}` : `${home}/#${id}`);
 const resume = assetUrl(profile.resume[locale]);
+const links = [
+  { id: 'about', label: t.nav.about },
+  { id: 'experience', label: t.nav.experience },
+  { id: 'projects', label: t.nav.projects },
+  { id: 'contact', label: t.nav.contact },
+];
 ---
 
-<header class="site-header">
+<header class="site-header" data-header data-home={onHome}>
   <div class="container site-header__inner">
     <a class="brand" href={home}>
-      <span class="brand__mark">FM</span>
+      <span class="brand__mark" aria-hidden="true">FM</span>
       <span class="brand__name">Florencia Morelli</span>
     </a>
 
-    <button
-      type="button"
-      class="nav-toggle"
-      data-nav-toggle
-      aria-expanded="false"
-      aria-controls="primary-nav"
-      aria-label="Menu"
-    >
-      <Icon name="menu" />
-    </button>
+    <div class="site-header__group">
+      <nav id="primary-nav" class="site-nav" data-nav aria-label={t.nav.label}>
+        <ul class="site-nav__list">
+          {links.map((link) => (
+            <li><a href={anchor(link.id)} data-section={link.id}>{link.label}</a></li>
+          ))}
+        </ul>
+        <div class="site-nav__foot">
+          <LangSwitcher locale={locale} href={altHref} />
+          <a class="btn btn--secondary" href={resume} download>{t.nav.resumeLong}</a>
+        </div>
+      </nav>
 
-    <nav id="primary-nav" class="site-nav" data-nav>
-      <ul class="site-nav__list">
-        <li><a href={anchor('about')}>{t.nav.about}</a></li>
-        <li><a href={anchor('experience')}>{t.nav.experience}</a></li>
-        <li><a href={anchor('projects')}>{t.nav.projects}</a></li>
-        <li><a href={anchor('contact')}>{t.nav.contact}</a></li>
-        <li>
-          <a class="site-nav__resume" href={resume} download>
-            <Icon name="download" size={18} />{t.nav.resume}
-          </a>
-        </li>
-      </ul>
-      <div class="site-nav__tools">
-        <LangSwitcher locale={locale} href={altHref} />
+      <span class="site-header__divider" aria-hidden="true"></span>
+
+      <div class="site-header__tools">
+        <div class="only-desktop"><LangSwitcher locale={locale} href={altHref} /></div>
         <ThemeToggle locale={locale} />
+        <a class="header-cv only-desktop" href={resume} download>
+          <Icon name="download" size={18} />{t.nav.resume}
+        </a>
+        <button
+          type="button"
+          class="nav-toggle"
+          data-nav-toggle
+          data-label-open={t.nav.menuOpen}
+          data-label-close={t.nav.menuClose}
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label={t.nav.menuOpen}
+        >
+          <span class="nav-toggle__open"><Icon name="menu" /></span>
+          <span class="nav-toggle__close"><Icon name="close" /></span>
+        </button>
       </div>
-    </nav>
+    </div>
   </div>
 </header>
 
 <style>
+  /* Overlaps the content that follows (negative margin) so the hero can sit behind it. */
   .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
+    height: var(--header-h);
+    margin-bottom: calc(var(--header-h) * -1);
+    border-bottom: var(--border-width) solid transparent;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .site-header.is-scrolled {
+    background: var(--bg);
+    border-bottom-color: var(--border);
   }
   .site-header__inner {
+    position: relative;
+    z-index: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    min-height: 4.25rem;
+    height: 100%;
   }
+  .site-header__group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
   .brand {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
     color: var(--text);
-    font-family: var(--font-mono);
-    font-weight: 700;
+    font-size: var(--text-h4);
+    line-height: var(--text-h4-lh);
+    font-weight: 600;
+  }
+  .brand:hover {
+    color: var(--text);
   }
   .brand__mark {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-md);
-    background: var(--accent);
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
     color: var(--accent-contrast);
-    font-size: var(--text-sm);
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    font-weight: 500;
   }
-  .brand__name {
-    font-size: var(--text-h4);
-  }
-  .site-nav {
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-  }
+
   .site-nav__list {
     display: flex;
     align-items: center;
     gap: var(--space-6);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
   }
   .site-nav__list a {
+    position: relative;
+    display: inline-block;
+    padding: 0.375rem var(--space-1) 0;
+    font-size: var(--text-nav);
+    line-height: var(--text-nav-lh);
+    font-weight: 500;
     color: var(--text-muted);
+    transition: color var(--dur-fast) var(--ease);
   }
-  .site-nav__list a:hover {
-    color: var(--accent);
+  .site-nav__list a:hover,
+  .site-nav__list a[aria-current] {
+    color: var(--text);
   }
-  .site-nav__resume {
+  /* Short accent underline marks the section in view. */
+  .site-nav__list a::after {
+    content: '';
+    display: block;
+    width: var(--space-4);
+    height: 2px;
+    margin-top: var(--space-1);
+    background: transparent;
+    border-radius: var(--radius-pill);
+  }
+  .site-nav__list a[aria-current]::after {
+    background: var(--accent);
+  }
+  .site-nav__foot {
+    display: none;
+  }
+
+  .site-header__divider {
+    width: var(--border-width);
+    height: var(--space-6);
+    background: var(--border-strong);
+  }
+  .site-header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .header-cv {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-pill);
-    color: var(--accent) !important;
+    height: 2.25rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-button);
+    line-height: var(--text-button-lh);
+    font-weight: 600;
+    color: var(--text);
+    transition: background var(--dur-fast) var(--ease);
   }
-  .site-nav__resume:hover {
-    background: var(--accent);
-    color: var(--accent-contrast) !important;
-  }
-  .site-nav__tools {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+  .header-cv:hover {
+    background: var(--surface-alt);
+    color: var(--text);
   }
   .nav-toggle {
     display: none;
     width: 2.5rem;
     height: 2.5rem;
+    padding: 0;
     place-items: center;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text);
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .nav-toggle:hover {
+    background: var(--surface-alt);
+  }
+  .nav-toggle__close,
+  .nav-toggle[aria-expanded='true'] .nav-toggle__open {
+    display: none;
+  }
+  .nav-toggle[aria-expanded='true'] .nav-toggle__close {
+    display: block;
   }
 
   @media (max-width: 1023.98px) {
-    .brand__name {
+    .site-header__divider,
+    .only-desktop {
       display: none;
     }
-    .nav-toggle {
+    /* Full-screen menu. It needs JS, so without it the links are left out. */
+    .site-nav {
+      display: none;
+    }
+    :global(.js) .nav-toggle {
       display: grid;
     }
-    .site-nav {
+    :global(.js) .site-nav {
       position: fixed;
-      inset: 4.25rem 0 auto 0;
+      inset: 0;
+      z-index: -1;
+      display: flex;
       flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-6);
-      padding: var(--space-6) var(--container-pad) var(--space-8);
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow-2);
-      transform: translateY(-130%);
-      transition: transform var(--dur) var(--ease);
+      padding: calc(var(--header-h) + var(--space-8)) var(--container-pad) var(--space-6);
+      background: var(--bg);
+      transition: opacity var(--dur) var(--ease), visibility 0s;
     }
-    .site-nav[data-open='true'] {
-      transform: translateY(0);
+    /* Hide after the fade; show at once so the first link can take focus. */
+    :global(.js) .site-nav:not([data-open='true']) {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease), visibility 0s var(--dur);
     }
-    .site-nav__list {
+    :global(.js) .site-nav__list {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-4);
-      font-size: var(--text-h4);
     }
+    :global(.js) .site-nav__list a {
+      font-size: var(--text-h3);
+      line-height: var(--text-h3-lh);
+      letter-spacing: var(--text-h3-ls);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    :global(.js) .site-nav__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    :global(.js) .site-nav__foot :global(.lang-switch) {
+      padding-inline: 0;
+    }
+  }
+  :global(html.menu-open) {
+    overflow: hidden;
   }
 </style>
 
 <script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const desktop = window.matchMedia('(min-width: 1024px)');
 
-  function closeNav() {
-    nav?.removeAttribute('data-open');
-    toggle?.setAttribute('aria-expanded', 'false');
+  function setOpen(open: boolean) {
+    if (!nav || !toggle) return;
+    if (open) nav.setAttribute('data-open', 'true');
+    else nav.removeAttribute('data-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '');
+    document.documentElement.classList.toggle('menu-open', open);
   }
 
   toggle?.addEventListener('click', () => {
-    const open = nav?.getAttribute('data-open') === 'true';
-    if (open) {
-      closeNav();
-    } else {
-      nav?.setAttribute('data-open', 'true');
-      toggle.setAttribute('aria-expanded', 'true');
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    setOpen(open);
+    if (open) nav?.querySelector<HTMLElement>('a')?.focus();
+  });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
     }
   });
+  desktop.addEventListener('change', () => desktop.matches && setOpen(false));
 
-  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
-  window.addEventListener('keydown', (e) => e.key === 'Escape' && closeNav());
+  // Transparent over the hero; solid with a bottom border once the page scrolls.
+  const syncScrolled = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+
+  // Mark the link of the section in view with aria-current (home only).
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-section]')];
+  const sections = links
+    .map((link) => document.getElementById(link.dataset.section ?? ''))
+    .filter((el): el is HTMLElement => el !== null);
+  const syncActive = () => {
+    if (header?.dataset.home !== 'true') return;
+    const line = window.innerHeight * 0.35;
+    const current = sections.filter((s) => s.getBoundingClientRect().top <= line).at(-1);
+    links.forEach((link) => {
+      if (current && link.dataset.section === current.id) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  let queued = false;
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      syncScrolled();
+      syncActive();
+      queued = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  syncScrolled();
+  syncActive();
 </script>

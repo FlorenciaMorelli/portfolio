@@ -14,7 +14,7 @@ test.describe('Audenpass case study', () => {
     // On small screens the switch lives inside the collapsed menu.
     const menu = page.locator('[data-nav-toggle]');
     if (await menu.isVisible()) await menu.click();
-    await page.locator('[data-lang-switch]').first().click();
+    await page.locator('[data-lang-switch]:visible').first().click();
     await expect(page).toHaveURL(/\/portfolio\/en\/projects\/audenpass\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });

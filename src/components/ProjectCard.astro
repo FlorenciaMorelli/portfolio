@@ -15,7 +15,7 @@ const { project, locale, rank } = Astro.props;
 const t = useTranslations(locale);
 
 const iconFor: Record<ProjectLinkType, IconName> = {
-  repo: 'github',
+  repo: 'github-outline',
   download: 'download',
   website: 'arrow-up-right',
   demo: 'arrow-up-right',
@@ -132,7 +132,8 @@ const category = t.projects.filters[project.category] ?? project.category;
   }
 
   .card__media {
-    aspect-ratio: 16 / 9;
+    /* Figma: 368 × 200 */
+    aspect-ratio: 368 / 200;
     background: var(--surface-alt);
     border-radius: var(--radius-sm);
     overflow: hidden;

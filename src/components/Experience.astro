@@ -51,9 +51,9 @@ const t = useTranslations(locale);
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-8);
     border-left: 2px solid var(--border);
-    padding-left: var(--space-6);
+    padding-left: var(--space-8);
     list-style: none;
   }
   .timeline__item {
@@ -62,7 +62,7 @@ const t = useTranslations(locale);
   .timeline__item::before {
     content: '';
     position: absolute;
-    left: calc(var(--space-6) * -1 - 6px);
+    left: calc(var(--space-8) * -1 - 6px);
     top: 0.4em;
     width: 10px;
     height: 10px;
@@ -78,11 +78,11 @@ const t = useTranslations(locale);
     gap: var(--space-2);
   }
   .timeline__role {
-    font-size: var(--text-md);
+    font-size: var(--text-h4);
   }
   .timeline__period {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-mono);
     color: var(--text-faint);
   }
   .timeline__org {
@@ -92,7 +92,7 @@ const t = useTranslations(locale);
   }
   .timeline__tech {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-mono);
     color: var(--accent);
     margin-top: var(--space-2);
   }

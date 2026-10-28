@@ -41,7 +41,7 @@ const photo = assetUrl(profile.photo);
   .about__grid {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
-    gap: var(--space-8);
+    gap: var(--space-16);
     align-items: start;
   }
   .about__text p + p {
@@ -50,10 +50,10 @@ const photo = assetUrl(profile.photo);
   }
   .about__text p:first-child {
     color: var(--text);
-    font-size: var(--text-md);
+    font-size: var(--text-lead);
   }
   .about__skills-title {
-    margin-top: var(--space-6);
+    margin-top: var(--space-8);
     margin-bottom: var(--space-4);
   }
   .about__skill-groups {
@@ -82,15 +82,15 @@ const photo = assetUrl(profile.photo);
   }
   .about__photo img {
     width: 100%;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     object-fit: cover;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-2);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767.98px) {
     .about__grid {
       grid-template-columns: 1fr;
-      gap: var(--space-6);
+      gap: var(--space-8);
     }
     .about__photo {
       order: -1;

@@ -54,7 +54,7 @@ const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
   }
   .contact__intro {
     color: var(--text-muted);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
   }
   .contact__form {
     display: flex;
@@ -82,11 +82,9 @@ const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     font: inherit;
     transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
   }
-  .field input:focus,
-  .field textarea:focus {
-    outline: none;
+  .field input:focus-visible,
+  .field textarea:focus-visible {
     border-color: var(--accent);
-    box-shadow: var(--focus-ring);
   }
   .field textarea {
     resize: vertical;

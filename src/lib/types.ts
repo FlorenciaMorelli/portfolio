@@ -55,6 +55,7 @@ export interface ProjectOverride {
 
 export type IconName =
   | 'github'
+  | 'github-outline'
   | 'linkedin'
   | 'arrow-down'
   | 'arrow-up'

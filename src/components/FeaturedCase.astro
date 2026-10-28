@@ -67,7 +67,7 @@ const description = project.description[locale] || project.description.en || pro
     <div class="featured__frame">
       {host && (
         <span class="featured__label" aria-hidden="true">
-          <Icon name="globe" size={14} />{host}
+          <Icon name="globe" size={12} />{host}
         </span>
       )}
       <span class="featured__handle featured__handle--tl" aria-hidden="true"></span>
@@ -101,7 +101,7 @@ const description = project.description[locale] || project.description.en || pro
 <style>
   .featured {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.47fr);
     gap: var(--space-10);
     align-items: center;
     padding: var(--space-16) var(--space-12) var(--space-12);
@@ -168,8 +168,16 @@ const description = project.description[locale] || project.description.en || pro
 
   /* Selection box around the screenshots, with the site's address as its label */
   .featured__frame {
+    /* Figma: frame 634 × 380; screenshots placed inside it as percentages of that box */
+    --shot-desktop-left: 1.9%;
+    --shot-desktop-top: 6.3%;
+    --shot-desktop-width: 82%;
+    --shot-mobile-right: 4.3%;
+    --shot-mobile-bottom: 1.6%;
+    --shot-mobile-width: 23.3%;
+
     position: relative;
-    padding: var(--space-4);
+    aspect-ratio: 634 / 380;
     border: var(--border-width) solid var(--accent);
   }
   .featured__label {
@@ -178,14 +186,14 @@ const description = project.description[locale] || project.description.en || pro
     left: calc(var(--border-width) * -1);
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 0.375rem;
     padding: var(--space-1) var(--space-2);
     margin-bottom: calc(var(--border-width) * -1);
     background: var(--accent);
     color: var(--accent-contrast);
     font-family: var(--font-mono);
-    font-size: var(--text-mono);
-    line-height: var(--text-mono-lh);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
     font-weight: 500;
   }
   .featured__handle {
@@ -200,21 +208,23 @@ const description = project.description[locale] || project.description.en || pro
   .featured__handle--bl { bottom: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
   .featured__handle--br { bottom: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
   .featured__shots {
-    position: relative;
-    padding-right: 9%;
-    padding-bottom: 6%;
+    position: absolute;
+    inset: 0;
   }
   .featured__desktop {
-    width: 100%;
+    position: absolute;
+    left: var(--shot-desktop-left);
+    top: var(--shot-desktop-top);
+    width: var(--shot-desktop-width);
     height: auto;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-2);
   }
   .featured__mobile {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 22%;
+    right: var(--shot-mobile-right);
+    bottom: var(--shot-mobile-bottom);
+    width: var(--shot-mobile-width);
     height: auto;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-3);
@@ -233,6 +243,17 @@ const description = project.description[locale] || project.description.en || pro
   @media (max-width: 767.98px) {
     .featured {
       gap: var(--space-8);
+    }
+    /* Figma mobile: frame 264 × 197 with the phone larger and flush to the corner */
+    .featured__frame {
+      --shot-desktop-left: 3.8%;
+      --shot-desktop-top: 11.2%;
+      --shot-desktop-width: 80%;
+      --shot-mobile-right: 0.8%;
+      --shot-mobile-bottom: 0.5%;
+      --shot-mobile-width: 34%;
+
+      aspect-ratio: 264 / 197;
     }
     .featured__stats {
       display: grid;

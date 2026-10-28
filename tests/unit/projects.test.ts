@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getProjects, getUsedCategories } from '../../src/lib/projects';
+import { getProjects, getUsedCategories, getClientCase } from '../../src/lib/projects';
 import { CATEGORIES } from '../../src/lib/types';
 
 describe('getProjects', () => {
@@ -36,5 +36,18 @@ describe('getUsedCategories', () => {
     const indexes = used.map((c) => CATEGORIES.indexOf(c));
     const sorted = [...indexes].sort((a, b) => a - b);
     expect(indexes).toEqual(sorted);
+  });
+});
+
+describe('getClientCase', () => {
+  it('returns the client project that gets the featured block', () => {
+    const client = getClientCase(getProjects());
+    expect(client?.slug).toBe('audenpass');
+    expect(client?.client).toBe(true);
+  });
+
+  it('returns nothing when no project is a client case', () => {
+    const none = getProjects().map((p) => ({ ...p, client: false }));
+    expect(getClientCase(none)).toBeUndefined();
   });
 });

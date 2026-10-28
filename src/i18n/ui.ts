@@ -70,6 +70,11 @@ type Dict = {
     links: Record<string, string>;
     caseStudy: string;
     sourcedNote: string;
+    client: string;
+    /** `{studio}` is replaced by the studio name. */
+    builtAt: string;
+    /** `{n}` is replaced by the number of projects. */
+    showAll: string;
   };
   caseStudy: {
     eyebrow: string;
@@ -226,6 +231,9 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Ver caso de estudio',
       sourcedNote: 'Actualizado automáticamente desde GitHub.',
+      client: 'Cliente',
+      builtAt: 'Desarrollado en {studio}',
+      showAll: 'Ver los {n} proyectos',
     },
     caseStudy: {
       eyebrow: 'Caso de estudio',
@@ -384,6 +392,9 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Read the case study',
       sourcedNote: 'Updated automatically from GitHub.',
+      client: 'Client',
+      builtAt: 'Built at {studio}',
+      showAll: 'See all {n} projects',
     },
     caseStudy: {
       eyebrow: 'Case study',

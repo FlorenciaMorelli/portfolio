@@ -61,6 +61,54 @@ test.describe('Spanish home', () => {
   });
 });
 
+test.describe('Projects', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('shows the client case first and only a few cards until asked', async ({ page }) => {
+    const featured = page.locator('[data-featured]');
+    await expect(featured.getByRole('heading', { level: 3, name: 'Audenpass' })).toBeVisible();
+    await expect(featured).toContainText('Cliente');
+    await expect(featured).toContainText('Desarrollado en Guia');
+    await expect(featured.locator('.featured__stats li')).toHaveCount(3);
+    // Three cards next to the featured case from 1024px, two below.
+    const wide = (page.viewportSize()?.width ?? 0) >= 1024;
+    await expect(page.locator('[data-card]:visible')).toHaveCount(wide ? 3 : 2);
+  });
+
+  test('«Ver los {n} proyectos» reveals the rest and then goes away', async ({ page }) => {
+    const total = await page.locator('[data-card]').count();
+    const more = page.getByRole('button', { name: `Ver los ${total + 1} proyectos` });
+    await more.click();
+    await expect(page.locator('[data-card]:visible')).toHaveCount(total);
+    await expect(more).toBeHidden();
+  });
+
+  test('a filter shows every project of that category and no «Ver los» button', async ({ page }) => {
+    await page.locator('[data-filter="Web"]').click();
+    await expect(page.getByRole('button', { name: /^Ver los \d+ proyectos$/ })).toBeHidden();
+    await expect(page.locator('[data-featured]')).toBeVisible();
+    const visible = page.locator('[data-card]:visible');
+    expect(await visible.count()).toBeGreaterThan(3);
+    for (const card of await visible.all()) {
+      await expect(card).toHaveAttribute('data-category', 'Web');
+    }
+    await page.locator('[data-filter="Games"]').click();
+    await expect(page.locator('[data-featured]')).toBeHidden();
+  });
+
+  test('cards use a stretched title link with labelled icon buttons and no nested links', async ({ page }) => {
+    const card = page.locator('[data-card]:visible').first();
+    await expect(card.locator('.card__link')).toHaveAttribute('href', /^https?:/);
+    for (const button of await card.locator('.icon-btn').all()) {
+      await expect(button).toHaveAttribute('aria-label', /\w{3,}/);
+    }
+    expect(await page.locator('a a').count()).toBe(0);
+    expect(await card.locator('.tag--tech').count()).toBeLessThanOrEqual(3);
+  });
+});
+
 test.describe('Header', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');

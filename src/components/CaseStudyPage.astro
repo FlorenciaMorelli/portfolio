@@ -183,7 +183,7 @@ const { cover } = study;
 <style>
   .case__hero {
     position: relative;
-    padding-block: var(--space-7) var(--space-6);
+    padding-block: calc(var(--header-h) + var(--space-12)) var(--space-8);
     overflow: hidden;
   }
   .case__hero::before {
@@ -201,7 +201,7 @@ const { cover } = study;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--text-muted);
@@ -211,32 +211,32 @@ const { cover } = study;
   }
   .case__title {
     margin-top: var(--space-2);
-    font-size: clamp(2.5rem, 8vw, var(--text-4xl));
+    font-size: var(--text-display);
     color: var(--accent);
   }
   .case__summary {
     margin-top: var(--space-4);
     max-width: 44rem;
-    font-size: var(--text-md);
+    font-size: var(--text-lead);
     color: var(--text-muted);
   }
   .case__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    margin-top: var(--space-6);
+    margin-top: var(--space-8);
   }
   .case__facts {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: var(--space-4) var(--space-6);
-    margin-top: var(--space-7);
-    padding-top: var(--space-5);
+    gap: var(--space-4) var(--space-8);
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
     border-top: 1px solid var(--border);
   }
   .case__facts dt {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-mono);
     color: var(--text-muted);
   }
   .case__facts dd {
@@ -253,38 +253,39 @@ const { cover } = study;
   .case__cover-desktop {
     width: 100%;
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-3);
   }
   .case__cover-mobile {
     position: absolute;
     right: 0;
     bottom: 0;
     width: 22%;
-    border: 6px solid var(--bg-elevated);
+    border: 6px solid var(--surface);
     border-radius: 1.5rem;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-3);
   }
 
   .case__highlights ul {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-4);
-    margin-top: var(--space-7);
+    margin-top: var(--space-12);
   }
   .case__highlights li {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    padding: var(--space-5);
+    padding: var(--space-6);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
   }
   .case__highlights strong {
     font-family: var(--font-mono);
-    font-size: var(--text-3xl);
-    line-height: var(--leading-tight);
+    font-size: var(--text-stat);
+    line-height: var(--text-stat-lh);
+    letter-spacing: var(--text-stat-ls);
     color: var(--accent);
   }
   .case__highlights span {
@@ -293,7 +294,7 @@ const { cover } = study;
   }
 
   .case__section {
-    padding-block: var(--space-8) 0;
+    padding-block: var(--space-16) 0;
   }
   .case__prose {
     max-width: 44rem;
@@ -305,13 +306,13 @@ const { cover } = study;
     margin-top: var(--space-4);
   }
   .case__tags + .case__prose {
-    margin-top: var(--space-5);
+    margin-top: var(--space-6);
   }
 
   .case__list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3) var(--space-6);
+    gap: var(--space-3) var(--space-8);
   }
   .case__list li {
     position: relative;
@@ -331,16 +332,16 @@ const { cover } = study;
   .case__cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--space-5);
+    gap: var(--space-6);
   }
   .case__card {
-    padding: var(--space-5);
+    padding: var(--space-6);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
   }
   .case__card h3 {
-    font-size: var(--text-md);
+    font-size: var(--text-h4);
     color: var(--accent);
   }
   .case__card p {
@@ -352,7 +353,7 @@ const { cover } = study;
   .case__gallery {
     display: flex;
     flex-direction: column;
-    gap: var(--space-7);
+    gap: var(--space-12);
   }
   .case__shot-pair {
     display: grid;
@@ -365,7 +366,7 @@ const { cover } = study;
     width: 100%;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-2);
   }
   .case__shot figcaption {
     margin-top: var(--space-3);
@@ -373,9 +374,9 @@ const { cover } = study;
     color: var(--text-muted);
   }
   .case__note {
-    margin-top: var(--space-5);
+    margin-top: var(--space-6);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-mono);
     color: var(--text-muted);
   }
 
@@ -394,10 +395,10 @@ const { cover } = study;
   }
 
   .case__end {
-    padding-top: var(--space-8);
+    padding-top: var(--space-16);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767.98px) {
     .case__highlights ul,
     .case__list {
       grid-template-columns: 1fr 1fr;
@@ -406,7 +407,7 @@ const { cover } = study;
       grid-template-columns: 1fr;
     }
     .case__highlights strong {
-      font-size: var(--text-2xl);
+      font-size: var(--text-h2);
     }
     .case__cover-mobile {
       width: 26%;

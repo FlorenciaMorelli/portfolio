@@ -27,6 +27,7 @@
     "links": [{ "type": "website", "url": "https://audenpass.com" }],
     "date": "2026-10-21",
     "featured": true,
+    "client": true,
     "order": 0,
     "source": "manual"
   },

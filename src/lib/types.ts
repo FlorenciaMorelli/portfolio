@@ -30,6 +30,8 @@ export interface Project {
   links: ProjectLink[];
   date: string;
   featured: boolean;
+  /** A project built for a client: it gets the large featured block on the home. */
+  client?: boolean;
   order: number;
   source: 'github' | 'manual';
 }
@@ -46,17 +48,20 @@ export interface ProjectOverride {
   image?: string;
   imageAlt?: LocalizedText;
   featured?: boolean;
+  client?: boolean;
   order?: number;
   links?: ProjectLink[];
 }
 
 export type IconName =
   | 'github'
+  | 'github-outline'
   | 'linkedin'
   | 'arrow-down'
   | 'arrow-up'
   | 'arrow-right'
   | 'arrow-left'
+  | 'arrow-up-right'
   | 'sun'
   | 'moon'
   | 'external'
@@ -65,7 +70,11 @@ export type IconName =
   | 'presentation'
   | 'globe'
   | 'menu'
-  | 'close';
+  | 'close'
+  | 'pen-tool'
+  | 'code-xml'
+  | 'check-check'
+  | 'clipboard-list';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {
@@ -96,7 +105,8 @@ export interface CaseStudy {
   website?: string;
   studio?: { name: string; url: string };
   facts: { label: LocalizedText; value: LocalizedText }[];
-  highlights: { value: LocalizedText; label: LocalizedText }[];
+  /** `short` is the label used on the home; `home` marks the figures shown there. */
+  highlights: { value: LocalizedText; label: LocalizedText; short?: LocalizedText; home?: boolean }[];
   cover: { desktop: Shot; mobile: Shot };
   sections: CaseStudySection[];
 }

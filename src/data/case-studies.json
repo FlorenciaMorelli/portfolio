@@ -61,7 +61,12 @@
         "label": {
           "es": "semanas del primer commit a producción",
           "en": "weeks from first commit to production"
-        }
+        },
+        "short": {
+          "es": "semanas a producción",
+          "en": "weeks to production"
+        },
+        "home": true
       },
       {
         "value": {
@@ -71,7 +76,8 @@
         "label": {
           "es": "pull requests",
           "en": "pull requests"
-        }
+        },
+        "home": true
       },
       {
         "value": {
@@ -91,7 +97,8 @@
         "label": {
           "es": "suites E2E",
           "en": "E2E suites"
-        }
+        },
+        "home": true
       }
     ],
     "cover": {

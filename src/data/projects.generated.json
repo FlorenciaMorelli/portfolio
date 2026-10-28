@@ -1,10 +1,54 @@
 [
   {
-    "slug": "tututor",
-    "name": "Tututor",
+    "slug": "cruzarg-on-godot",
+    "name": "CruzARG On Godot",
     "description": {
-      "es": "Web platform to connect students with private tutors.",
-      "en": "Web platform to connect students with private tutors."
+      "es": "Remake of the CruzARG game in the Godot engine.",
+      "en": "Remake of the CruzARG game in the Godot engine."
+    },
+    "technologies": [
+      "GDScript"
+    ],
+    "category": "Games",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cruzARG-on-godot"
+      }
+    ],
+    "date": "2026-10-27T15:31:01Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "cruzarg",
+    "name": "CruzARG",
+    "description": {
+      "es": "My first game: crossing the road dodging cars, made in C++ with SFML.",
+      "en": "My first game: crossing the road dodging cars, made in C++ with SFML."
+    },
+    "technologies": [
+      "C++"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/cruzARG"
+      }
+    ],
+    "date": "2026-10-27T15:30:56Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "wc-match-predictor-frontend",
+    "name": "Wc Match Predictor Frontend",
+    "description": {
+      "es": "",
+      "en": ""
     },
     "technologies": [
       "TypeScript"
@@ -13,20 +57,72 @@
     "links": [
       {
         "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/tututor"
+        "url": "https://github.com/FlorenciaMorelli/wc_match_predictor_frontend"
+      },
+      {
+        "type": "website",
+        "url": "https://wc-match-predictor-frontend.vercel.app/"
       }
     ],
-    "date": "2024-02-21T23:10:48Z",
+    "date": "2026-09-18T03:44:45Z",
     "featured": false,
     "order": 999,
     "source": "github"
   },
   {
-    "slug": "react34785",
-    "name": "React34785",
+    "slug": "whattowatch",
+    "name": "WhatToWatch",
     "description": {
-      "es": "Sneaker e-commerce (Adidike) with a minimalist design, built in React.",
-      "en": "Sneaker e-commerce (Adidike) with a minimalist design, built in React."
+      "es": "Android app to find what to watch by consuming a movie/series API.",
+      "en": "Android app to find what to watch by consuming a movie/series API."
+    },
+    "technologies": [
+      "Kotlin"
+    ],
+    "category": "Mobile",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/whatToWatch"
+      },
+      {
+        "type": "download",
+        "url": "https://github.com/FlorenciaMorelli/whatToWatch/releases/download/v2.0.0/what_to_watch.apk"
+      }
+    ],
+    "date": "2025-03-11T18:08:51Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "bookvault",
+    "name": "Bookvault",
+    "description": {
+      "es": "Android app to manage your personal library: add, edit and delete books.",
+      "en": "Android app to manage your personal library: add, edit and delete books."
+    },
+    "technologies": [
+      "Kotlin"
+    ],
+    "category": "Mobile",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/bookvault"
+      }
+    ],
+    "date": "2024-07-23T01:54:37Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "formula1debrief",
+    "name": "Formula1debrief",
+    "description": {
+      "es": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II.",
+      "en": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II."
     },
     "technologies": [
       "JavaScript"
@@ -35,14 +131,14 @@
     "links": [
       {
         "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/React34785"
+        "url": "https://github.com/FlorenciaMorelli/formula1debrief"
       },
       {
         "type": "website",
-        "url": "https://florenciamorelli.github.io/React34785/"
+        "url": "https://formula1debrief.netlify.app/"
       }
     ],
-    "date": "2024-07-09T01:17:08Z",
+    "date": "2024-07-22T15:55:59Z",
     "featured": false,
     "order": 999,
     "source": "github"
@@ -80,23 +176,27 @@
     "source": "github"
   },
   {
-    "slug": "cotizadoredit",
-    "name": "CotizadorEDIT",
+    "slug": "react34785",
+    "name": "React34785",
     "description": {
-      "es": "Web quote tool that estimates project costs, built with JavaScript.",
-      "en": "Web quote tool that estimates project costs, built with JavaScript."
+      "es": "Sneaker e-commerce (Adidike) with a minimalist design, built in React.",
+      "en": "Sneaker e-commerce (Adidike) with a minimalist design, built in React."
     },
     "technologies": [
-      "CSS"
+      "JavaScript"
     ],
     "category": "Web",
     "links": [
       {
         "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT"
+        "url": "https://github.com/FlorenciaMorelli/React34785"
+      },
+      {
+        "type": "website",
+        "url": "https://florenciamorelli.github.io/React34785/"
       }
     ],
-    "date": "2024-07-08T20:29:09Z",
+    "date": "2024-07-09T01:17:08Z",
     "featured": false,
     "order": 999,
     "source": "github"
@@ -128,78 +228,23 @@
     "source": "github"
   },
   {
-    "slug": "uces-di-grupo3",
-    "name": "Uces Di Grupo3",
+    "slug": "cotizadoredit",
+    "name": "CotizadorEDIT",
     "description": {
-      "es": "E-commerce frontend (SugarMax), for the Interface Design course at UCES.",
-      "en": "E-commerce frontend (SugarMax), for the Interface Design course at UCES."
+      "es": "Web quote tool that estimates project costs, built with JavaScript.",
+      "en": "Web quote tool that estimates project costs, built with JavaScript."
     },
     "technologies": [
-      "bootstrap",
-      "css",
-      "uces",
-      "HTML"
+      "CSS"
     ],
     "category": "Web",
     "links": [
       {
         "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/uces-di-grupo3"
-      },
-      {
-        "type": "website",
-        "url": "https://chic-torte-b81f84.netlify.app/"
+        "url": "https://github.com/FlorenciaMorelli/cotizadorEDIT"
       }
     ],
-    "date": "2023-07-10T22:43:51Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "bookvault",
-    "name": "Bookvault",
-    "description": {
-      "es": "Android app to manage your personal library: add, edit and delete books.",
-      "en": "Android app to manage your personal library: add, edit and delete books."
-    },
-    "technologies": [
-      "Kotlin"
-    ],
-    "category": "Mobile",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/bookvault"
-      }
-    ],
-    "date": "2024-07-23T01:54:37Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "whattowatch",
-    "name": "WhatToWatch",
-    "description": {
-      "es": "Android app to find what to watch by consuming a movie/series API.",
-      "en": "Android app to find what to watch by consuming a movie/series API."
-    },
-    "technologies": [
-      "Kotlin"
-    ],
-    "category": "Mobile",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/whatToWatch"
-      },
-      {
-        "type": "download",
-        "url": "https://github.com/FlorenciaMorelli/whatToWatch/releases/download/v2.0.0/what_to_watch.apk"
-      }
-    ],
-    "date": "2025-03-11T18:08:51Z",
+    "date": "2024-07-08T20:29:09Z",
     "featured": false,
     "order": 999,
     "source": "github"
@@ -227,81 +272,11 @@
     "source": "github"
   },
   {
-    "slug": "formula1debrief",
-    "name": "Formula1debrief",
+    "slug": "tututor",
+    "name": "Tututor",
     "description": {
-      "es": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II.",
-      "en": "Fullstack app to follow Formula 1 results and data. Final project for Web Development II."
-    },
-    "technologies": [
-      "JavaScript"
-    ],
-    "category": "Web",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/formula1debrief"
-      },
-      {
-        "type": "website",
-        "url": "https://formula1debrief.netlify.app/"
-      }
-    ],
-    "date": "2024-07-22T15:55:59Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "cruzarg-on-godot",
-    "name": "CruzARG On Godot",
-    "description": {
-      "es": "Remake of the CruzARG game in the Godot engine.",
-      "en": "Remake of the CruzARG game in the Godot engine."
-    },
-    "technologies": [
-      "GDScript"
-    ],
-    "category": "Games",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/cruzARG-on-godot"
-      }
-    ],
-    "date": "2024-12-18T20:33:56Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "cruzarg",
-    "name": "CruzARG",
-    "description": {
-      "es": "My first game: crossing the road dodging cars, made in C++ with SFML.",
-      "en": "My first game: crossing the road dodging cars, made in C++ with SFML."
-    },
-    "technologies": [
-      "C++"
-    ],
-    "category": "Web",
-    "links": [
-      {
-        "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/cruzARG"
-      }
-    ],
-    "date": "2024-02-20T20:09:32Z",
-    "featured": false,
-    "order": 999,
-    "source": "github"
-  },
-  {
-    "slug": "wc-match-predictor-frontend",
-    "name": "Wc Match Predictor Frontend",
-    "description": {
-      "es": "",
-      "en": ""
+      "es": "Web platform to connect students with private tutors.",
+      "en": "Web platform to connect students with private tutors."
     },
     "technologies": [
       "TypeScript"
@@ -310,14 +285,39 @@
     "links": [
       {
         "type": "repo",
-        "url": "https://github.com/FlorenciaMorelli/wc_match_predictor_frontend"
+        "url": "https://github.com/FlorenciaMorelli/tututor"
+      }
+    ],
+    "date": "2024-02-21T23:10:48Z",
+    "featured": false,
+    "order": 999,
+    "source": "github"
+  },
+  {
+    "slug": "uces-di-grupo3",
+    "name": "Uces Di Grupo3",
+    "description": {
+      "es": "E-commerce frontend (SugarMax), for the Interface Design course at UCES.",
+      "en": "E-commerce frontend (SugarMax), for the Interface Design course at UCES."
+    },
+    "technologies": [
+      "bootstrap",
+      "css",
+      "uces",
+      "HTML"
+    ],
+    "category": "Web",
+    "links": [
+      {
+        "type": "repo",
+        "url": "https://github.com/FlorenciaMorelli/uces-di-grupo3"
       },
       {
         "type": "website",
-        "url": "https://florenciamorelli.github.io/wc_match_predictor_frontend/"
+        "url": "https://chic-torte-b81f84.netlify.app/"
       }
     ],
-    "date": "2026-06-24T15:59:28Z",
+    "date": "2023-07-10T22:43:51Z",
     "featured": false,
     "order": 999,
     "source": "github"

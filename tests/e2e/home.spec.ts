@@ -61,6 +61,36 @@ test.describe('Spanish home', () => {
   });
 });
 
+test.describe('About', () => {
+  test('shows the photo, the four facets and the technologies by group', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const about = page.locator('#about');
+    const photo = about.getByRole('img', { name: 'Florencia Morelli' });
+    await expect(photo).toHaveAttribute('src', /me-2026\.jpg$/);
+    await expect(about.getByRole('heading', { level: 3, name: 'Cómo trabajo' })).toBeVisible();
+    for (const name of ['Análisis', 'Diseño', 'Desarrollo', 'Calidad']) {
+      await expect(about.getByRole('heading', { level: 4, name })).toBeVisible();
+    }
+    await expect(about.getByRole('heading', { level: 3, name: 'Tecnologías' })).toBeVisible();
+    await expect(about.locator('.stack__row')).toHaveCount(6);
+    await expect(about.locator('.stack__row').first()).toContainText('HTML');
+  });
+
+  test('mentions the degree and its date, and has three paragraphs', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const text = page.locator('.about__text p');
+    await expect(text).toHaveCount(3);
+    await expect(text.nth(1)).toContainText('en diciembre de 2024 me recibí de Técnica Universitaria en Programación de Sistemas en UCES');
+  });
+
+  test('is translated in English', async ({ page }) => {
+    await page.goto('/portfolio/en/');
+    const about = page.locator('#about');
+    await expect(about.getByRole('heading', { level: 3, name: 'How I work' })).toBeVisible();
+    await expect(about.locator('.about__text p').nth(1)).toContainText('in December 2024 I earned a Technical Degree in Systems Programming from UCES');
+  });
+});
+
 test.describe('Projects', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');

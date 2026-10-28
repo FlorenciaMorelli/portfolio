@@ -57,6 +57,9 @@ type Dict = {
     skillsTitle: string;
     skillsCategories: Record<string, string>;
     photoAlt: string;
+    howTitle: string;
+    /** One line per facet; the facet names are in `hero.modes`. */
+    how: { analysis: string; design: string; development: string; quality: string };
   };
   experience: {
     title: string;
@@ -141,9 +144,8 @@ export const ui: Record<Locale, Dict> = {
       title: 'Sobre mí',
       body: [
         'Soy desarrolladora y analista técnico-funcional. Trabajo en integración de sistemas, APIs REST/SOAP, análisis de requerimientos y testing, con metodologías Agile/Scrum.',
-        'Llegué a la programación desde el diseño UX/UI en 2021 y me formé en la Tecnicatura Universitaria en Programación de Sistemas en UCES.',
+        'Llegué a la programación desde el diseño UX/UI en 2021 y en diciembre de 2024 me recibí de Técnica Universitaria en Programación de Sistemas en UCES.',
         'Con Juan Tomás Martínez cofundé Guia, donde hice el diseño y el frontend de Audenpass, nuestro primer proyecto. Hoy busco sumarme al desarrollo de productos digitales en general: del diseño y el frontend a la integración y la calidad. También me apasiona el desarrollo de videojuegos.',
-        'Acá hay una selección de proyectos académicos, personales y para clientes. Mirá los que te interesen.',
       ],
       skillsTitle: 'Tecnologías',
       skillsCategories: {
@@ -155,6 +157,13 @@ export const ui: Record<Locale, Dict> = {
         tools: 'Herramientas',
       },
       photoAlt: 'Florencia Morelli',
+      howTitle: 'Cómo trabajo',
+      how: {
+        analysis: 'Requerimientos, historias de usuario y criterios de aceptación.',
+        design: 'Sistemas de diseño y pantallas desktop y mobile en Figma.',
+        development: 'Frontends conectados a APIs e integraciones entre sistemas.',
+        quality: 'Pruebas, validaciones automatizadas y tests E2E.',
+      },
     },
     experience: {
       title: 'Experiencia',
@@ -302,9 +311,8 @@ export const ui: Record<Locale, Dict> = {
       title: 'About me',
       body: [
         "I'm a developer and technical-functional analyst. I work on systems integration, REST/SOAP APIs, requirements analysis and testing, using Agile/Scrum.",
-        'I came into programming through UX/UI design in 2021 and trained as a Systems Programming Technician at UCES.',
+        'I came into programming through UX/UI design in 2021 and in December 2024 I earned a Technical Degree in Systems Programming from UCES.',
         "With Juan Tomás Martínez I co-founded Guia, where I did the design and frontend of Audenpass, our first project. These days I want to work on digital products as a whole: from design and frontend to integration and quality. I'm also passionate about game development.",
-        'Below is a selection of academic, personal and client projects. Have a look at whatever catches your eye.',
       ],
       skillsTitle: 'Technologies',
       skillsCategories: {
@@ -316,6 +324,13 @@ export const ui: Record<Locale, Dict> = {
         tools: 'Tools',
       },
       photoAlt: 'Florencia Morelli',
+      howTitle: 'How I work',
+      how: {
+        analysis: 'Requirements, user stories and acceptance criteria.',
+        design: 'Design systems and desktop and mobile screens in Figma.',
+        development: 'Frontends connected to APIs and integrations between systems.',
+        quality: 'Testing, automated validations and E2E tests.',
+      },
     },
     experience: {
       title: 'Experience',

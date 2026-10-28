@@ -55,6 +55,7 @@ function applyOverride(project: Project): Project {
     image: o.image ?? project.image,
     imageAlt: o.imageAlt ?? project.imageAlt,
     featured: o.featured ?? project.featured,
+    client: o.client ?? project.client,
     order: o.order ?? project.order,
     description: {
       es: o.description?.es ?? project.description.es,
@@ -89,4 +90,9 @@ export function getProjects(): Project[] {
 export function getUsedCategories(projects: Project[]): ProjectCategory[] {
   const present = new Set(projects.map((p) => p.category));
   return CATEGORIES.filter((c) => present.has(c));
+}
+
+/** The project shown in the large client block, if any. */
+export function getClientCase(projects: Project[]): Project | undefined {
+  return projects.find((p) => p.client);
 }

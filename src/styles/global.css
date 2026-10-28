@@ -240,3 +240,54 @@ ul {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Tags (Etiqueta): category, technology */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: 500;
+}
+.tag--tech {
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  line-height: var(--text-mono-lh);
+  font-weight: 400;
+}
+
+/* Icon button (Botón icono): always needs an aria-label */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.icon-btn:hover {
+  background: var(--surface-alt);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.icon-btn--accent {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.icon-btn--accent:hover {
+  background: var(--accent-strong);
+  border-color: transparent;
+  color: var(--accent-contrast);
+}

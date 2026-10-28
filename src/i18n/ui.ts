@@ -7,14 +7,19 @@ export const localeNames: Record<Locale, string> = {
   en: 'English',
 };
 
+/** Parts of the work a job covers; each has the name and color of a hero mode. */
+type Facet = 'analysis' | 'design' | 'development' | 'quality';
+
 interface Job {
   role: string;
   org: string;
   orgUrl?: string;
   mode?: string;
   period: string;
+  facets?: Facet[];
   tech?: string;
-  points: string[];
+  /** Jobs without points are shown in the compact format. */
+  points?: string[];
   caseStudy?: { slug: string; label: string };
 }
 
@@ -174,6 +179,7 @@ export const ui: Record<Locale, Dict> = {
           orgUrl: 'https://desarrollosguia.com/',
           mode: 'Remoto',
           period: 'Sep 2026 – Actualidad',
+          facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
           points: [
             'Audenpass, el primer proyecto del estudio: una plataforma de venta de entradas para eventos, en producción para un cliente.',
@@ -188,6 +194,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Analista técnico-funcional',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dic 2024 – Actualidad',
+          facets: ['analysis', 'quality'],
           tech: 'JSON, XML, APIs REST/SOAP, Postman, Agile',
           points: [
             'Análisis funcional y técnico de requerimientos para módulos críticos del sistema.',
@@ -201,6 +208,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Desarrolladora web front-end',
           org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Ago 2023 – Sep 2023',
+          facets: ['development'],
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [
             'Desarrollo de la interfaz web con HTML5, CSS3 y JavaScript.',
@@ -212,10 +220,6 @@ export const ui: Record<Locale, Dict> = {
           role: 'Recepcionista y administrativa',
           org: 'Diagnóstico Maipú',
           period: 'Jul 2021 – Dic 2024',
-          points: [
-            'Optimización de procesos administrativos y documentación operativa.',
-            'Coordinación interáreas, gestión de datos y capacitación de personal.',
-          ],
         },
       ],
     },
@@ -341,6 +345,7 @@ export const ui: Record<Locale, Dict> = {
           orgUrl: 'https://desarrollosguia.com/',
           mode: 'Remote',
           period: 'Sep 2026 – Present',
+          facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
           points: [
             "Audenpass, the studio's first project: an event ticketing platform, live in production for a client.",
@@ -355,6 +360,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Technical-functional analyst',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dec 2024 – Present',
+          facets: ['analysis', 'quality'],
           tech: 'JSON, XML, REST/SOAP APIs, Postman, Agile',
           points: [
             'Functional and technical analysis of requirements for critical system modules.',
@@ -368,6 +374,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Front-end web developer',
           org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Aug 2023 – Sep 2023',
+          facets: ['development'],
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [
             'Built the web interface with HTML5, CSS3 and JavaScript.',
@@ -379,10 +386,6 @@ export const ui: Record<Locale, Dict> = {
           role: 'Receptionist and administrative assistant',
           org: 'Diagnóstico Maipú',
           period: 'Jul 2021 – Dec 2024',
-          points: [
-            'Streamlined administrative processes and operational documentation.',
-            'Cross-team coordination, data management and staff training.',
-          ],
         },
       ],
     },

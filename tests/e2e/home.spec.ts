@@ -91,6 +91,44 @@ test.describe('About', () => {
   });
 });
 
+test.describe('Experience', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('lists four jobs with date and mode on one side and the facets of each', async ({ page }) => {
+    const jobs = page.locator('#experience .job');
+    await expect(jobs).toHaveCount(4);
+    await expect(jobs.nth(0).locator('.job__when')).toContainText('Sep 2026');
+    await expect(jobs.nth(0).locator('.job__when')).toContainText('Remoto');
+    await expect(jobs.nth(0).locator('.facet-chip')).toHaveText(['Análisis', 'Diseño', 'Desarrollo', 'Calidad']);
+    await expect(jobs.nth(1).locator('.facet-chip')).toHaveText(['Análisis', 'Calidad']);
+    await expect(jobs.nth(2).locator('.facet-chip')).toHaveText(['Desarrollo']);
+  });
+
+  test('only Guia links its organisation, and the case study is linked', async ({ page }) => {
+    const jobs = page.locator('#experience .job');
+    await expect(jobs.nth(0).getByRole('link', { name: 'Guia (Desarrollos Guia)' })).toHaveAttribute('href', 'https://desarrollosguia.com/');
+    await expect(jobs.nth(1).locator('.job__org a')).toHaveCount(0);
+    await expect(jobs.nth(0).getByRole('link', { name: /caso de estudio de Audenpass/ })).toHaveAttribute('href', /\/proyectos\/audenpass\/$/);
+  });
+
+  test('shows the receptionist role in the compact format, without bullets', async ({ page }) => {
+    const job = page.locator('#experience .job').nth(3);
+    await expect(job).toHaveClass(/job--compact/);
+    await expect(job.getByRole('heading', { level: 3 })).toHaveText('Recepcionista y administrativa');
+    await expect(job.locator('.job__points')).toHaveCount(0);
+    await expect(job.locator('.facet-chip')).toHaveCount(0);
+  });
+
+  test('is translated in English', async ({ page }) => {
+    await page.goto('/portfolio/en/');
+    const jobs = page.locator('#experience .job');
+    await expect(jobs.nth(0).locator('.job__when')).toContainText('Remote');
+    await expect(jobs.nth(0).locator('.facet-chip')).toHaveText(['Analysis', 'Design', 'Development', 'Quality']);
+  });
+});
+
 test.describe('Projects', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');

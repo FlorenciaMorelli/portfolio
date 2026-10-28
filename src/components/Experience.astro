@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import SectionHeading from './SectionHeading.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { caseStudyPath } from '../lib/case-studies';
 
@@ -12,35 +13,50 @@ const t = useTranslations(locale);
 
 <section id="experience" class="section experience">
   <div class="container">
-    <h2 class="section-title">{t.experience.title}</h2>
-    <ol class="timeline">
+    <SectionHeading title={t.experience.title} />
+    <ol class="jobs">
       {t.experience.jobs.map((job) => (
-        <li class="timeline__item reveal">
-          <div class="timeline__head">
-            <h3 class="timeline__role">{job.role}</h3>
-            <span class="timeline__period">{job.period}</span>
-          </div>
-          <p class="timeline__org">
-            {job.orgUrl ? (
-              <a href={job.orgUrl} target="_blank" rel="noopener">
-                {job.org}
-                <Icon name="external" size={14} />
-              </a>
-            ) : (
-              job.org
-            )}
-            {job.mode && <span> · {job.mode}</span>}
+        <li class:list={['job', 'reveal', !job.points && 'job--compact']}>
+          <p class="job__when">
+            <span>{job.period}</span>
+            {job.mode && <span>{job.mode}</span>}
           </p>
-          {job.tech && <p class="timeline__tech">{job.tech}</p>}
-          <ul class="timeline__points">
-            {job.points.map((point) => <li>{point}</li>)}
-          </ul>
-          {job.caseStudy && (
-            <a class="timeline__more" href={caseStudyPath(locale, job.caseStudy.slug)}>
-              {job.caseStudy.label}
-              <Icon name="arrow-right" size={16} />
-            </a>
-          )}
+
+          <div class="job__body">
+            <h3 class="job__role">{job.role}</h3>
+
+            {job.facets && (
+              <ul class="job__facets">
+                {job.facets.map((facet) => <li class={`facet-chip facet-chip--${facet}`}>{t.hero.modes[facet]}</li>)}
+              </ul>
+            )}
+
+            <p class="job__org">
+              {job.orgUrl ? (
+                <a href={job.orgUrl} target="_blank" rel="noopener">{job.org}</a>
+              ) : (
+                job.org
+              )}
+            </p>
+
+            {job.points && (
+              <ul class="job__points">
+                {job.points.map((point) => <li>{point}</li>)}
+              </ul>
+            )}
+
+            {job.tech && (
+              <ul class="job__tech">
+                {job.tech.split(', ').map((tech) => <li>{tech}</li>)}
+              </ul>
+            )}
+
+            {job.caseStudy && (
+              <a class="job__more" href={caseStudyPath(locale, job.caseStudy.slug)}>
+                {job.caseStudy.label}<Icon name="arrow-right" size={18} />
+              </a>
+            )}
+          </div>
         </li>
       ))}
     </ol>
@@ -48,99 +64,143 @@ const t = useTranslations(locale);
 </section>
 
 <style>
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-    border-left: 2px solid var(--border);
-    padding-left: var(--space-8);
+  .experience {
+    padding-block: var(--space-30);
+  }
+  .jobs {
+    margin-top: var(--space-5);
+    padding: 0;
     list-style: none;
   }
-  .timeline__item {
-    position: relative;
+
+  /* Date and mode on the left, the job on the right */
+  .job {
+    display: grid;
+    grid-template-columns: 12.5rem minmax(0, 1fr);
+    column-gap: var(--space-10);
+    padding-block: calc(var(--space-6) + var(--space-1));
+    border-top: var(--border-width) solid var(--border);
   }
-  .timeline__item::before {
-    content: '';
-    position: absolute;
-    left: calc(var(--space-8) * -1 - 6px);
-    top: 0.4em;
-    width: 10px;
-    height: 10px;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--bg);
+  .job:first-child {
+    border-top: 0;
   }
-  .timeline__head {
+  .job--compact {
+    padding-block: var(--space-5);
+  }
+  .job__when {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-  .timeline__role {
-    font-size: var(--text-h4);
-  }
-  .timeline__period {
+    flex-direction: column;
+    gap: var(--space-1);
     font-family: var(--font-mono);
     font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
     color: var(--text-faint);
   }
-  .timeline__org {
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    margin-top: var(--space-1);
+  .job__role {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4-lh);
   }
-  .timeline__tech {
-    font-family: var(--font-mono);
-    font-size: var(--text-mono);
-    color: var(--accent);
-    margin-top: var(--space-2);
-  }
-  .timeline__org a {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    color: var(--text-muted);
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    text-underline-offset: 3px;
-  }
-  .timeline__org a:hover {
-    color: var(--accent);
-  }
-  .timeline__more {
-    display: inline-flex;
-    align-items: center;
+
+  /* Facet chips, colored like their hero cursor */
+  .job__facets {
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-2);
-    margin-top: var(--space-4);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-  }
-  .timeline__more :global(svg) {
-    transition: transform var(--dur-fast) var(--ease);
-  }
-  .timeline__more:hover :global(svg) {
-    transform: translateX(3px);
-  }
-  .timeline__points {
     margin-top: var(--space-3);
+  }
+  .facet-chip {
+    padding: 0.1875rem var(--space-2);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+  }
+  .facet-chip--analysis { background: var(--cursor-analysis); color: var(--cursor-analysis-text); }
+  .facet-chip--design { background: var(--cursor-design); color: var(--cursor-design-text); }
+  .facet-chip--development { background: var(--cursor-dev); color: var(--cursor-dev-text); }
+  .facet-chip--quality { background: var(--cursor-qa); color: var(--cursor-qa-text); }
+
+  .job__org {
+    margin-top: var(--space-3);
+    color: var(--text-muted);
+  }
+  .job--compact .job__org {
+    margin-top: 0;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+  }
+  .job__org a {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .job__points {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    max-width: 45rem;
+    margin-top: var(--space-4);
   }
-  .timeline__points li {
+  .job__points li {
     position: relative;
-    padding-left: var(--space-4);
+    padding-left: var(--space-5);
     color: var(--text-muted);
-    font-size: var(--text-sm);
   }
-  .timeline__points li::before {
+  .job__points li::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0.7em;
-    width: 6px;
-    height: 2px;
+    left: var(--space-1);
+    top: 0.6em;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: var(--radius-pill);
     background: var(--accent);
+  }
+
+  .job__tech {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    color: var(--accent);
+  }
+  .job__tech li:not(:first-child)::before {
+    content: '·';
+    content: '·' / '';
+    margin-inline: var(--space-2);
+  }
+
+  .job__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--text-button);
+    line-height: var(--text-button-lh);
+    font-weight: 600;
+  }
+  .job__more :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .job__more:hover :global(svg) {
+    transform: translateX(var(--space-1));
+  }
+
+  @media (max-width: 767.98px) {
+    .experience {
+      padding-block: var(--space-20);
+    }
+    .job {
+      grid-template-columns: 1fr;
+      row-gap: var(--space-3);
+      padding-block: var(--space-6);
+    }
+    .job--compact {
+      padding-block: var(--space-4);
+      row-gap: var(--space-1);
+    }
   }
 </style>

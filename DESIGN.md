@@ -327,8 +327,8 @@ el rediseño esté implementado.
      tecnologías como listas compactas por grupo, en lugar de chips.
 6. **Experiencia** (`Experience.astro`)
    - Fecha y modalidad en una columna, y el detalle en la otra.
-   - Chips de facetas debajo del rol, con los colores de los cursores: Guia (Diseño, Desarrollo,
-     Calidad), SMG (Análisis, Calidad) y Enivel7 (Desarrollo). Hace falta un campo `facets`
+   - Chips de facetas debajo del rol, con los colores de los cursores: Guia (Análisis, Diseño,
+     Desarrollo, Calidad), SMG (Análisis, Calidad) y Enivel7 (Desarrollo). Hace falta un campo `facets`
      por puesto en `ui.ts`.
    - El puesto de recepcionista pasa a formato compacto, sin bullets.
 7. **Caso de estudio** (`CaseStudyPage.astro`)

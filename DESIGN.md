@@ -10,8 +10,8 @@ con las páginas Portada, Fundamentos, Componentes, Home, Caso de estudio y Expl
 código, la fuente de verdad es `src/styles/tokens.css`. Este documento dice cómo se
 corresponden.
 
-**Estado:** diseño aprobado, pendiente de implementación. Los nombres CSS marcados como
-nuevos todavía no existen en `tokens.css`; se crean en el P0 del plan del final.
+**Estado:** implementado. La portada OG y el CV generados leen sus colores y fuentes de
+`tokens.css` y `global.css`, así que cambian junto con el sistema.
 
 ## Principios
 
@@ -73,10 +73,6 @@ Primitivos con transparencia (solo para sombras):
 | `brillo/teal-30` | `#006d7c` al 30 % |
 | `brillo/lila-35` | `#bbbbf8` al 35 % |
 
-Cambios respecto de la versión anterior: el fondo claro pasa de `#e3e3e3` a `#ececf0` (el
-papel queda como texto del tema oscuro) y `--gray-100`, `--gray-300` y `--gray-500` cambian
-de valor.
-
 ### Tema (semánticos)
 
 | Figma | CSS | Claro | Oscuro |
@@ -84,21 +80,21 @@ de valor.
 | `fondo/base` | `--bg` | `gris/100` | `navy/900` |
 | `fondo/superficie` | `--surface` (reemplaza `--bg-elevated`) | `gris/0` | `navy/800` |
 | `fondo/superficie-alt` | `--surface-alt` | `gris/50` | `navy/700` |
-| `fondo/banda` | `--bg-band` (nuevo) | `gris/50` | `navy/850` |
-| `fondo/canvas-punto` | `--canvas-dot` (nuevo) | `gris/300` | `navy/600` |
+| `fondo/banda` | `--bg-band` | `gris/50` | `navy/850` |
+| `fondo/canvas-punto` | `--canvas-dot` | `gris/300` | `navy/600` |
 | `texto/principal` | `--text` | `navy/900` | `gris/200` |
 | `texto/secundario` | `--text-muted` | `gris/700` | `lila/400` |
 | `texto/terciario` | `--text-faint` | `gris/600` | `lila/600` |
 | `texto/acento` | `--accent` | `teal/600` | `lila/200` |
 | `texto/sobre-acento` | `--accent-contrast` | `gris/0` | `navy/900` |
-| `texto/deshabilitado` | `--text-disabled` (nuevo) | `gris/400` | `navy/500` |
+| `texto/deshabilitado` | `--text-disabled` | `gris/400` | `navy/500` |
 | `borde/sutil` | `--border` | `gris/300` | `navy/600` |
-| `borde/fuerte` | `--border-strong` (nuevo) | `gris/400` | `navy/500` |
+| `borde/fuerte` | `--border-strong` | `gris/400` | `navy/500` |
 | `acento/base` | `--accent` | `teal/600` | `lila/200` |
 | `acento/hover` | `--accent-strong` | `teal/700` | `lila/100` |
 | `acento/suave` | `--accent-soft` (ahora sólido) | `teal/100` | `navy/700` |
-| `marca/logo` | `--brand` (nuevo) | `teal/500` | `lila/200` |
-| `foco/anillo` | `--focus` (nuevo) | `teal/600` | `lila/200` |
+| `marca/logo` | `--brand` | `teal/500` | `lila/200` |
+| `foco/anillo` | `--focus` | `teal/600` | `lila/200` |
 | `cursor/analisis` · `cursor/texto-analisis` | `--cursor-analysis` · `--cursor-analysis-text` | `teal/500` · `gris/0` | `teal/300` · `navy/900` |
 | `cursor/diseno` · `cursor/texto-diseno` | `--cursor-design` · `--cursor-design-text` | `lila/200` · `navy/900` | `lila/200` · `navy/900` |
 | `cursor/desarrollo` · `cursor/texto-desarrollo` | `--cursor-dev` · `--cursor-dev-text` | `navy/900` · `gris/0` | `gris/200` · `navy/900` |
@@ -166,22 +162,22 @@ Figma, así que algunos nombres cambian de valor:
 | `espacio/5` | `--space-5` | 20 | (nuevo; antes `--space-5` era 24) |
 | `espacio/6` | `--space-6` | 24 | `--space-5` |
 | `espacio/8` | `--space-8` | 32 | `--space-6` |
-| `espacio/10` | `--space-10` | 40 | (nuevo) |
+| `espacio/10` | `--space-10` | 40 | |
 | `espacio/12` | `--space-12` | 48 | `--space-7` |
 | `espacio/16` | `--space-16` | 64 | `--space-8` |
-| `espacio/20` | `--space-20` | 80 | (nuevo) |
+| `espacio/20` | `--space-20` | 80 | |
 | `espacio/24` | `--space-24` | 96 | `--space-9` |
-| `espacio/30` | `--space-30` | 120 | (nuevo) |
+| `espacio/30` | `--space-30` | 120 | |
 
 | Figma | CSS | px | Uso |
 |-------|-----|----|-----|
-| `radio/xs` | `--radius-xs` (nuevo) | 4 | Etiquetas, anotaciones, foco de links |
+| `radio/xs` | `--radius-xs` | 4 | Etiquetas, anotaciones, foco de links |
 | `radio/sm` | `--radius-sm` | 8 (antes 6) | Botones de icono, controles del header |
 | `radio/md` | `--radius-md` | 10 | Botones y campos |
 | `radio/lg` | `--radius-lg` | 14 (antes 16) | Barra de modos |
-| `radio/xl` | `--radius-xl` (nuevo) | 16 | Tarjetas, foto, bloques |
+| `radio/xl` | `--radius-xl` | 16 | Tarjetas, foto, bloques |
 | `radio/pill` | `--radius-pill` | 999 | Filtros y cursores |
-| `borde/ancho` | `--border-width` (nuevo) | 1 | Todos los bordes |
+| `borde/ancho` | `--border-width` | 1 | Todos los bordes |
 | `foco/ancho` · `foco/separacion` | en `:focus-visible` | 2 · 2 | Anillo de foco |
 
 ## Elevación y foco
@@ -267,118 +263,3 @@ presentación.
 Los textos viven en `src/i18n/ui.ts`, en castellano rioplatense con voseo y en inglés, a la
 par. Las descripciones de proyectos salen de GitHub; si hace falta matizarlas por idioma, se
 usa `.portfolio.json`.
-
-## Plan de implementación del rediseño
-
-Orden propuesto para la etapa de código. Cada bloque sale en una rama `feature/*` desde
-`develop` y sigue el flujo `feature/*` → PR con squash → `develop` → PR con squash →
-`staging` → PR con «Create a merge commit» → `main`. Los commits van en Conventional Commits
-con la identidad de Florencia, sin `Co-authored-by` ni firmas. Esta sección se borra cuando
-el rediseño esté implementado.
-
-### P0. Lo que se ve en los primeros 10 segundos
-
-1. **Tokens y fuentes** (`tokens.css`, `global.css`, `BaseLayout.astro`)
-   - Reescribir primitivos, tema y dimensiones según las tablas de arriba, con alias para los
-     nombres de marca actuales.
-   - Renombrar el espaciado en todos los componentes (`--space-5` → `--space-6` y siguientes).
-   - Cambiar el `@import` de Google Fonts a Geist, Geist Mono e Instrument Serif.
-   - `:focus-visible` con `--focus`.
-   - Breakpoints a 768 y 1024 px; `--container-max: 75rem`.
-2. **Header** (`Header.astro`, `LangSwitcher.astro`, `ThemeToggle.astro`)
-   - Enlace activo según la sección visible, con `aria-current`.
-   - Selector «ES / EN», ícono de tema y «CV» como botón fantasma.
-   - Menú mobile de pantalla completa, con `aria-expanded` y bloqueo del scroll.
-   - Fondo transparente sobre el hero; al hacer scroll pasa a `--bg` con borde inferior.
-3. **Hero** (`Hero.astro`, `ui.ts`)
-   - Titular «Del requerimiento a producción.», con «producción.» en `--font-accent`. En mobile
-     el corte es «Del requerimiento / a producción.».
-   - Texto nuevo y botones «Ver proyectos» y «Escribime».
-   - Lienzo con grilla de puntos (`--canvas-dot`), caja de selección, anotación, cuatro
-     cursores y barra de modos, según la ficha de interacción: `radiogroup`, flechas,
-     `aria-live`, sin JS queda el modo Diseño y la barra se oculta.
-4. **Proyectos** (`Projects.astro`, `ProjectCard.astro`, `manual-projects.json`, `ui.ts`)
-   - Banda con `--bg-band`.
-   - Audenpass sale de la grilla y va en un bloque «Caso destacado» de 12 columnas, sobre el
-     lienzo con grilla de puntos: «Cliente · Desarrollado en Guia», descripción, tres cifras
-     (`highlights` de `case-studies.json`), «Ver caso de estudio» y enlace al sitio. A la
-     derecha, el par de capturas dentro de una caja de selección con la etiqueta
-     «audenpass.com». Hace falta un campo nuevo en `manual-projects.json` (por ejemplo
-     `"client": true`).
-   - Debajo, una fila pareja de 3 tarjetas estándar (2 en mobile).
-   - Tarjeta estándar: categoría, institución, hasta 3 tecnologías y links como botones de
-     icono con `aria-label`. El título es un enlace extendido (stretched link) que cubre
-     la tarjeta y lleva al destino principal; los botones de icono quedan por encima, sin
-     anidar enlaces.
-   - Se muestran 4 proyectos (el destacado y 3 tarjetas) y el botón «Ver los {n} proyectos» despliega el resto. Con un
-     filtro activo se ven todos los de esa categoría.
-
-### P1. El resto de la home y el caso de estudio
-
-5. **Sobre mí** (`About.astro`, `profile.json`, `public/assets/img/`, `ui.ts`)
-   - Foto nueva: la de graduación con los verdes llevados al teal, recortada en 4:5 (800 ×
-     1000). Va como `public/assets/img/me-2026.jpg` (o `.webp`) y se actualiza
-     `profile.photo`.
-   - Segundo párrafo: «…y en diciembre de 2024 me recibí de Técnica Universitaria en
-     Programación de Sistemas en UCES.» / «…and in December 2024 I graduated as a Systems
-     Programming Technician from UCES.».
-   - «Cómo trabajo» con las cuatro facetas (Análisis, Diseño, Desarrollo, Calidad), cada una
-     con el color de su cursor del hero (`--cursor-*`), y las
-     tecnologías como listas compactas por grupo, en lugar de chips.
-6. **Experiencia** (`Experience.astro`)
-   - Fecha y modalidad en una columna, y el detalle en la otra.
-   - Chips de facetas debajo del rol, con los colores de los cursores: Guia (Análisis, Diseño,
-     Desarrollo, Calidad), SMG (Análisis, Calidad) y Enivel7 (Desarrollo). Hace falta un campo `facets`
-     por puesto en `ui.ts`.
-   - El puesto de recepcionista pasa a formato compacto, sin bullets.
-7. **Caso de estudio** (`CaseStudyPage.astro`)
-   - Ruta «Proyectos / Audenpass» en lugar del pretítulo y del «Volver».
-   - Etiqueta «Cliente · Desarrollado en Guia».
-   - Ficha, portada con el par de capturas y cifras en tarjetas.
-   - Bloques de texto en dos columnas, «Qué incluye» con checks en dos columnas, tarjetas de
-     decisión numeradas y stack.
-8. **Contacto y footer** (`Contact.astro`, `Footer.astro`)
-   - Título «Hablemos.» con `--text-h2-accent` en `--accent`.
-   - Dos columnas: texto y enlaces directos (mail, LinkedIn y GitHub) a la izquierda, y el
-     formulario actual de formsubmit en una tarjeta a la derecha.
-   - Campos con etiqueta visible y foco de acento.
-   - Footer con logo, legales y enlaces sociales. Se quita «Hecho con Astro» (`footer.built` deja de usarse).
-
-### P2. Calidad
-
-9. **Estados**: hover, foco, activo y deshabilitado en botones, links, filtros, tarjetas y
-   campos, según la página Componentes.
-10. **Tema oscuro**: revisar cada sección con `data-theme='dark'`, sombras incluidas.
-11. **Tests**:
-    - Actualizar `tests/e2e/home.spec.ts` y `case-study.spec.ts` con los nuevos selectores, el
-      botón «Ver los {n} proyectos» y la barra de modos (teclado y `aria-live`).
-    - Mantener los chequeos de axe en los dos temas.
-    - Ajustar `tests/unit/projects.test.ts` si cambia el modelo de proyecto.
-
-### P3. Coherencia fuera del sitio
-
-12. `scripts/generate-og.mjs` y `scripts/generate-cv.mjs` usan hex y fuentes propios: pasarlos
-    a los valores nuevos y a Geist.
-13. Al terminar, borrar esta sección y la de «Cambios respecto de la versión anterior».
-
-### Textos nuevos para `ui.ts`
-
-Son propuestas en castellano e inglés, para validar antes de implementar:
-
-| Clave sugerida | Castellano | Inglés |
-|----------------|------------|--------|
-| `hero.title` | Del requerimiento a producción. | From requirement to production. |
-| `hero.intro` | Soy Florencia Morelli, desarrolladora full stack y analista técnico-funcional. Me interesa el desarrollo de productos digitales de principio a fin: del análisis y el diseño al frontend, la integración y la calidad. | I'm Florencia Morelli, a full stack developer and technical-functional analyst. I'm interested in building digital products from start to finish: from analysis and design to frontend, integration and quality. |
-| `hero.contact` | Escribime | Get in touch |
-| `hero.modes.label` | Ver el titular desde | View the headline as |
-| `hero.modes.*` | Análisis, Diseño, Desarrollo, Calidad | Analysis, Design, Development, Quality |
-| `hero.notes.analysis` | Que en 10 segundos entiendas qué hago y cómo trabajo. | In 10 seconds, you know what I do and how I work. |
-| `hero.notes.quality` | Contraste AA · Navegable con teclado · Respeta reduced motion | AA contrast · Keyboard accessible · Respects reduced motion |
-| `about.howTitle` | Cómo trabajo | How I work |
-| `about.how.analysis` | Requerimientos, historias de usuario y criterios de aceptación. | Requirements, user stories and acceptance criteria. |
-| `about.how.design` | Sistemas de diseño y pantallas desktop y mobile en Figma. | Design systems and desktop and mobile screens in Figma. |
-| `about.how.dev` | Frontends conectados a APIs e integraciones entre sistemas. | Frontends connected to APIs and integrations between systems. |
-| `about.how.quality` | Pruebas, validaciones automatizadas y tests E2E. | Testing, automated validations and E2E tests. |
-| `projects.client` | Cliente | Client |
-| `projects.builtAt` | Desarrollado en {studio} | Built at {studio} |
-| `projects.showAll` | Ver los {n} proyectos | See all {n} projects |

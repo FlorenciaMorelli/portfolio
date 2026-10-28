@@ -39,7 +39,7 @@ const t = useTranslations(locale);
 <style>
   .hero {
     position: relative;
-    padding-block: clamp(4rem, 12vh, 8rem) var(--space-8);
+    padding-block: clamp(4rem, 12vh, 8rem) var(--space-16);
     overflow: hidden;
   }
   .hero::before {
@@ -58,26 +58,26 @@ const t = useTranslations(locale);
   }
   .hero__name {
     margin-top: var(--space-2);
-    font-size: clamp(2.5rem, 8vw, var(--text-4xl));
+    font-size: var(--text-display);
     color: var(--accent);
   }
   .hero__role {
     font-family: var(--font-mono);
-    font-size: var(--text-lg);
+    font-size: var(--text-h4);
     color: var(--text-muted);
     margin-top: var(--space-2);
   }
   .hero__intro {
-    margin-top: var(--space-5);
-    font-size: var(--text-md);
+    margin-top: var(--space-6);
+    font-size: var(--text-lead);
     max-width: 38rem;
     color: var(--text-muted);
   }
   .hero__actions {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
-    margin-top: var(--space-6);
+    gap: var(--space-6);
+    margin-top: var(--space-8);
   }
   .hero__socials {
     display: flex;
@@ -93,7 +93,7 @@ const t = useTranslations(locale);
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    margin-top: var(--space-8);
+    margin-top: var(--space-16);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--text-muted);

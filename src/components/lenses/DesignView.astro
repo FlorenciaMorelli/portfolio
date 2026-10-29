@@ -1,0 +1,178 @@
+---
+// Design lens: the site's real primary button on a canvas, as in Figma. Decorative (aria-hidden).
+// Steps: Reposo (nothing selected), Activo (selected, with its measure and the first properties)
+// and Completo (every property). The properties come from tokens.css and global.css.
+import Icon from '../Icon.astro';
+import { useTranslations, type Locale } from '../../i18n/utils';
+import { buttonSpec } from '../../lib/button-spec';
+import tokens from '../../styles/tokens.css?raw';
+import global from '../../styles/global.css?raw';
+import './lens.css';
+
+interface Props {
+  locale: Locale;
+}
+const t = useTranslations(Astro.props.locale);
+const d = t.lenses.design;
+const spec = buttonSpec(tokens, global);
+const rows: { label: string; value: string; swatch?: boolean; step: number }[] = [
+  { label: d.layer, value: 'Botón / Primario', step: 1 },
+  { label: d.corners, value: String(spec.corners), step: 1 },
+  { label: d.padding, value: `${spec.padding[0]} · ${spec.padding[1]}`, step: 1 },
+  { label: d.gap, value: String(spec.gap), step: 2 },
+  { label: d.text, value: spec.text, step: 2 },
+  { label: d.fill, value: 'acento/base', swatch: true, step: 2 },
+];
+---
+
+<div class="lens design-view" aria-hidden="true" style="--steps: 3" data-design-view>
+  <p class="lens__bar"><span class="lens__dot design-view__dot"></span>{d.file}</p>
+  <div class="design-view__canvas">
+    <span class="design-view__target">
+      <span class="btn btn--primary design-view__button">{t.hero.viewProjects}<Icon name="arrow-right" size={18} /></span>
+      <span class="design-view__selection" data-step style="--from: 0">
+        <span class="design-view__handle design-view__handle--tl"></span>
+        <span class="design-view__handle design-view__handle--tr"></span>
+        <span class="design-view__handle design-view__handle--bl"></span>
+        <span class="design-view__handle design-view__handle--br"></span>
+        <span class="design-view__measure" data-measure></span>
+      </span>
+      <span class="lens__pointer" data-pointer><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z"/></svg></span>
+
+    </span>
+  </div>
+  <div class="design-view__panel">
+    <p class="lens__label">{d.panel}</p>
+    <div class="design-view__props">
+      <p class="design-view__empty" data-step style="--to: 1">{d.empty}</p>
+      <dl>
+        {rows.map((row) => (
+          <div data-step style={`--from: ${row.step}`}>
+            <dt>{row.label}</dt>
+            <dd>
+              {row.swatch && <span class="design-view__swatch"></span>}
+              {row.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</div>
+
+<style>
+  .design-view__dot {
+    color: var(--cursor-design);
+  }
+  .design-view__canvas {
+    display: grid;
+    place-items: center;
+    padding: var(--space-3) var(--space-4) var(--space-6);
+    background: var(--surface-alt);
+  }
+  /* The canvas is zoomed out, as in Figma; the measure is still the button's real size. */
+  .design-view__target {
+    /* The mouse drags the corner handle: from half the scroll progress the button grows to 1.2x. */
+    --grow: clamp(0, calc((var(--progress, var(--p, 1)) - 0.45) * 2.2), 1);
+    position: relative;
+    transform: scale(calc(0.8 * (1 + 0.2 * var(--grow))));
+  }
+  .design-view__target > :global(.lens__pointer) {
+    right: -0.75rem;
+    bottom: -0.75rem;
+    opacity: clamp(0, calc((var(--progress, var(--p, 1)) - 0.2) * 5), 1);
+    transform: translate(calc((1 - var(--grow)) * -28px), calc((1 - var(--grow)) * -22px)) scale(calc(1 / (0.8 * (1 + 0.2 * var(--grow)))));
+    transform-origin: 0 0;
+  }
+  .design-view__button {
+    pointer-events: none;
+  }
+  /* Selection box with handles and the measure, as on the Figma canvas */
+  .design-view__selection {
+    position: absolute;
+    inset: 0;
+    border: var(--border-width) solid var(--accent);
+  }
+  .design-view__handle {
+    position: absolute;
+    width: 0.375rem;
+    height: 0.375rem;
+    background: var(--surface);
+    border: var(--border-width) solid var(--accent);
+  }
+  .design-view__handle--tl { top: -0.25rem; left: -0.25rem; }
+  .design-view__handle--tr { top: -0.25rem; right: -0.25rem; }
+  .design-view__handle--bl { bottom: -0.25rem; left: -0.25rem; }
+  .design-view__handle--br { bottom: -0.25rem; right: -0.25rem; }
+  .design-view__measure {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-xs);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    white-space: nowrap;
+  }
+  /* Measured in the browser: without JS there is no measure */
+  .design-view__measure:empty {
+    display: none;
+  }
+
+  .design-view__panel {
+    padding: var(--space-3) var(--space-4);
+    border-top: var(--border-width) solid var(--border);
+  }
+  .design-view__props {
+    display: grid;
+    margin-top: var(--space-1);
+  }
+  .design-view__props > * {
+    grid-area: 1 / 1;
+  }
+  .design-view__empty {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-faint);
+  }
+  .design-view__props dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: 1.375rem;
+  }
+  .design-view__props dt {
+    color: var(--text-faint);
+  }
+  .design-view__props dd {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin: 0;
+    color: var(--text);
+  }
+  .design-view__swatch {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+</style>
+
+<script>
+  // The measure is the button's real size, as the hero measures its headline.
+  for (const view of document.querySelectorAll<HTMLElement>('[data-design-view]')) {
+    const button = view.querySelector<HTMLElement>('.design-view__button');
+    const measure = view.querySelector<HTMLElement>('[data-measure]');
+    if (!button || !measure) continue;
+    new ResizeObserver(() => {
+      measure.textContent = `${Math.round(button.offsetWidth)} × ${Math.round(button.offsetHeight)}`;
+    }).observe(button);
+  }
+</script>

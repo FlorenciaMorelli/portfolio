@@ -62,6 +62,7 @@ export type IconName =
   | 'arrow-right'
   | 'arrow-left'
   | 'arrow-up-right'
+  | 'check'
   | 'sun'
   | 'moon'
   | 'external'
@@ -74,7 +75,10 @@ export type IconName =
   | 'pen-tool'
   | 'code-xml'
   | 'check-check'
-  | 'clipboard-list';
+  | 'clipboard-list'
+  | 'mail'
+  | 'linkedin-outline'
+  | 'circle-alert';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {
@@ -103,6 +107,8 @@ export interface CaseStudy {
   name: string;
   summary: LocalizedText;
   website?: string;
+  /** Day of the first commit (YYYY-MM-DD): a milestone of the work calendar. */
+  firstCommit?: string;
   studio?: { name: string; url: string };
   facts: { label: LocalizedText; value: LocalizedText }[];
   /** `short` is the label used on the home; `home` marks the figures shown there. */

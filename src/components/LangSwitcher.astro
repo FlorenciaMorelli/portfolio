@@ -35,7 +35,14 @@ const href = Astro.props.href ?? localizedPath(target, '');
     background: var(--surface-alt);
     color: var(--text-faint);
   }
-  .lang-switch__code.is-current {
+  .lang-switch:active {
+    background: var(--accent-soft);
+  }
+  .lang-switch__code {
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .lang-switch__code.is-current,
+  .lang-switch:hover .lang-switch__code {
     color: var(--text);
   }
 </style>

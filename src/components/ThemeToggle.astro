@@ -37,14 +37,21 @@ const t = useTranslations(locale);
     background: var(--surface-alt);
     color: var(--text);
   }
+  .theme-toggle:active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  /* The icons cross: the one leaving fades out and turns 90°. */
   .theme-toggle__icon {
     grid-area: 1 / 1;
     display: inline-grid;
     place-items: center;
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
   }
   :global([data-theme='light']) .theme-toggle__icon--sun,
   :global([data-theme='dark']) .theme-toggle__icon--moon {
-    display: none;
+    opacity: 0;
+    transform: rotate(90deg);
   }
 </style>
 
@@ -66,8 +73,12 @@ const t = useTranslations(locale);
     syncLabel(btn);
     btn.addEventListener('click', () => {
       const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
+      // The page changes theme at once: colour transitions stay off for this frame.
+      const root = document.documentElement;
+      root.classList.add('theme-switching');
+      root.dataset.theme = next;
       localStorage.setItem('theme', next);
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')));
       document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(syncLabel);
     });
   });

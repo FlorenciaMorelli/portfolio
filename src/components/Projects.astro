@@ -18,9 +18,9 @@ const featured = getClientCase(projects);
 const rest = projects.filter((p) => p !== featured);
 ---
 
-<section id="projects" class="section projects">
+<section id="projects" class="section projects" data-lens="design">
   <div class="container">
-    <SectionHeading title={t.projects.title} intro={t.projects.intro} />
+    <SectionHeading title={t.projects.title} intro={t.projects.intro} lens="design" />
 
     <div class="projects__filters" role="group" aria-label={t.projects.title} data-filters>
       {categories.map((category, i) => (
@@ -67,10 +67,10 @@ const rest = projects.filter((p) => p !== featured);
   .filter {
     height: 2.25rem;
     padding: 0 var(--space-4);
-    border: var(--border-width) solid var(--border-strong);
+    border: var(--border-width) solid var(--border);
     border-radius: var(--radius-pill);
     background: var(--surface);
-    color: var(--text);
+    color: var(--text-muted);
     font-family: var(--font-sans);
     font-size: var(--text-nav);
     line-height: var(--text-nav-lh);
@@ -79,13 +79,19 @@ const rest = projects.filter((p) => p !== featured);
       color var(--dur-fast) var(--ease);
   }
   .filter:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--border-strong);
+    color: var(--text);
   }
   .filter[aria-pressed='true'] {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--accent-contrast);
+  }
+  .filter:disabled {
+    background: var(--surface-alt);
+    border-color: var(--border);
+    color: var(--text-disabled);
+    cursor: not-allowed;
   }
   .projects__grid {
     display: grid;
@@ -145,10 +151,13 @@ const rest = projects.filter((p) => p !== featured);
     const wide = window.matchMedia('(min-width: 1024px)');
     let category = 'All';
     let expanded = false;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    function apply() {
+    /** `stagger`: the cards that appear come in one after another, this many ms apart. */
+    function apply(stagger = 0, keepMore = false) {
       const limit = wide.matches ? 3 : 2;
       let visible = 0;
+      let entering = 0;
 
       if (featured) {
         const show = category === 'All' || featured.dataset.category === category;
@@ -158,15 +167,23 @@ const rest = projects.filter((p) => p !== featured);
       cards.forEach((card) => {
         const matches = category === 'All' || card.dataset.category === category;
         const inRange = category !== 'All' || expanded || Number(card.dataset.rank) <= limit;
+        const wasHidden = card.hidden;
         card.hidden = !(matches && inRange);
+        card.classList.remove('is-entering');
         if (!card.hidden) {
           visible += 1;
           card.classList.add('is-visible');
+          if (stagger && wasHidden) {
+            card.style.setProperty('--i', String(entering++));
+            card.style.setProperty('--stagger', `${stagger}ms`);
+            void card.offsetWidth; // restart the entrance if it was already running
+            card.classList.add('is-entering');
+          }
         }
       });
 
       if (empty) empty.hidden = visible !== 0;
-      if (more) more.hidden = category !== 'All' || expanded || cards.length <= limit;
+      if (more && !keepMore) more.hidden = category !== 'All' || expanded || cards.length <= limit;
     }
 
     filters.addEventListener('click', (event) => {
@@ -176,13 +193,21 @@ const rest = projects.filter((p) => p !== featured);
         b.setAttribute('aria-pressed', String(b === btn)),
       );
       category = btn.dataset.filter ?? 'All';
-      apply();
+      apply(30);
     });
 
     showAll?.addEventListener('click', () => {
       const limit = wide.matches ? 3 : 2;
       expanded = true;
-      apply();
+      // The new cards come in 40ms apart while the button fades out and goes away.
+      const fade = more && !reduced.matches ? more.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease-out', fill: 'forwards' }) : null;
+      apply(40, Boolean(fade));
+      if (fade) {
+        setTimeout(() => {
+          if (more) more.hidden = true;
+          fade.cancel();
+        }, 240);
+      }
       // The button goes away, so keep the keyboard where the new content starts.
       cards.find((card) => Number(card.dataset.rank) === limit + 1)?.querySelector<HTMLElement>('.card__link')?.focus();
     });

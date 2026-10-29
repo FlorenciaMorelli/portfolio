@@ -7,12 +7,17 @@ import { chromium } from '@playwright/test';
 import { readFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { readTokens } from './lib/tokens.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = resolve(__dirname, '../src/data/cv.json');
 const OUT_DIR = resolve(__dirname, '../public/assets/documents');
 
 const cv = JSON.parse(await readFile(DATA, 'utf8'));
+
+// Colours come from the site's own tokens (src/styles/tokens.css). The font stays Arial on
+// purpose: it embeds as TrueType, which is what applicant tracking systems read best.
+const c = await readTokens();
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -26,11 +31,11 @@ const linkify = (text, links = []) =>
 function buildHtml(locale) {
   const S = cv.sections[locale];
   const techLabel = locale === 'es' ? 'Tecnologías' : 'Technologies';
-  const c = cv.contact;
+  const contact = cv.contact;
   const contactLines = [
-    `${esc(c.location[locale])} | ${esc(c.availability[locale])}`,
-    `${link({ label: c.email, url: `mailto:${c.email}` })} | ${esc(c.phone)}`,
-    c.links.map(link).join(' | '),
+    `${esc(contact.location[locale])} | ${esc(contact.availability[locale])}`,
+    `${link({ label: contact.email, url: `mailto:${contact.email}` })} | ${esc(contact.phone)}`,
+    contact.links.map(link).join(' | '),
   ];
 
   const skills = cv.skills[locale]
@@ -75,18 +80,18 @@ function buildHtml(locale) {
   * { margin: 0; box-sizing: border-box; }
   body {
     font-family: Arial, Helvetica, sans-serif;
-    color: #1a1a1a;
+    color: ${c['navy-900']};
     font-size: 10.5px;
     line-height: 1.42;
   }
   h1 { font-size: 22px; letter-spacing: 0.5px; }
-  .title { font-size: 12px; color: #007788; font-weight: bold; margin-top: 2px; }
-  .contact { font-size: 9.5px; color: #333; margin-top: 2px; }
+  .title { font-size: 12px; color: ${c['teal-600']}; font-weight: bold; margin-top: 2px; }
+  .contact { font-size: 9.5px; color: ${c['gray-700']}; margin-top: 2px; }
   .title + .contact { margin-top: 6px; }
-  a { color: #007788; text-decoration: none; }
+  a { color: ${c['teal-600']}; text-decoration: none; }
   h2 {
     font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px;
-    color: #000033; border-bottom: 1.5px solid #007788;
+    color: ${c['navy-900']}; border-bottom: 1.5px solid ${c['teal-600']};
     padding-bottom: 3px; margin: 13px 0 7px;
     break-after: avoid;
   }
@@ -97,9 +102,9 @@ function buildHtml(locale) {
   .job { margin-bottom: 11px; }
   .job-head { display: flex; justify-content: space-between; align-items: baseline; }
   .job-role { font-weight: bold; font-size: 11px; }
-  .job-period { font-size: 9.5px; color: #555; white-space: nowrap; }
-  .job-note { font-size: 9.5px; color: #555; margin-top: 1px; }
-  .job-tech { font-size: 9.5px; color: #007788; margin-top: 2px; }
+  .job-period { font-size: 9.5px; color: ${c['gray-600']}; white-space: nowrap; }
+  .job-note { font-size: 9.5px; color: ${c['gray-600']}; margin-top: 1px; }
+  .job-tech { font-size: 9.5px; color: ${c['teal-600']}; margin-top: 2px; }
 </style>
 </head>
 <body>

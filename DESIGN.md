@@ -277,14 +277,16 @@ fichas con fotogramas de 0, 50 y 100 % y la tabla de 27 microinteracciones.
 - Cada movimiento cuenta algo (un criterio que se cumple, un día trabajado, una línea que se
   escribe); no es adorno.
 
-**Un solo mecanismo.** Se extiende el `.reveal` de `global.css` y `BaseLayout.astro` (un
-`IntersectionObserver`), no se arma otro:
+**Un solo mecanismo.** `src/lib/motion.ts` (observers compartidos, `watch` y `reveal`) y
+las reglas de `global.css`. Cada componente lo importa; no se arma otro:
 
 - «Una vez al entrar»: `.reveal`, con variantes por atributo (escalonado, retraso y pasos
   internos).
-- «Ligado al progreso del scroll»: CSS con `animation-timeline: view()` dentro de
-  `@supports`. Sin soporte, queda el estado final. No hay JavaScript que lea el layout en cada
-  frame.
+- «Ligado al progreso del scroll»: `[data-scroll]` anima `--p` de 0 a 1 con
+  `animation-timeline: view()` dentro de `@supports`, en el tramo de `--scroll-range`. Los
+  hijos lo traducen a `opacity` y `transform` con `var(--p, 1)`. Sin soporte, queda el estado
+  final. No hay JavaScript que lea el layout en cada frame. Soporte: Chrome 115, Safari 26 y
+  Firefox 159.
 - El indicador de sección del header usa el mismo observer.
 
 **Fichas**

@@ -537,6 +537,7 @@ test.describe('Contact and footer', () => {
     await expect(footer.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
     await expect(footer.getByRole('link', { name: 'Volver arriba' })).toHaveAttribute('href', '#top');
     await expect(footer).not.toContainText('Astro');
+    await expect(footer).toContainText('Buenos Aires, Argentina');
   });
 
   test('shows the English version of the title', async ({ page }) => {
@@ -592,6 +593,43 @@ test.describe('Contact form', () => {
     await expect(error.getByRole('link')).toHaveAttribute('href', /^mailto:/);
     await expect(error).toHaveCSS('border-top-width', '2px');
     await expect(form.locator('[data-status]')).toHaveAttribute('aria-live', 'polite');
+  });
+});
+
+test.describe('Footer canvas', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('labels the selection box with its real size, once in view', async ({ page }) => {
+    const box = page.locator('[data-footer-box]');
+    const label = page.locator('.site-footer__label');
+    await expect(label).toHaveAttribute('aria-hidden', 'true');
+    await expect(label).toHaveCSS('opacity', '0');
+    await box.scrollIntoViewIfNeeded();
+    const size = await box.evaluate((el: HTMLElement) => `${el.offsetWidth} × ${el.offsetHeight}`);
+    await expect(label).toHaveText(`footer · ${size}`);
+    await expect(label).toHaveCSS('opacity', '1');
+    await expect(page.locator('.site-footer__handle').first()).toHaveCSS('transform', 'none');
+  });
+
+  test('has a decorative cursor per lens at the corners, only on wide screens', async ({ page }) => {
+    const cursors = page.locator('.site-footer__cursors');
+    await expect(cursors).toHaveAttribute('aria-hidden', 'true');
+    const wide = (page.viewportSize()?.width ?? 0) >= 1280;
+    if (wide) await expect(cursors.locator('[data-footer-cursor]')).toHaveCount(4);
+    await expect(cursors).toBeVisible({ visible: wide });
+  });
+
+  test('back to top: the arrow rises on hover and the page goes up', async ({ page }) => {
+    const top = page.getByRole('link', { name: 'Volver arriba' });
+    await top.scrollIntoViewIfNeeded();
+    if (await page.evaluate(() => matchMedia('(hover: hover)').matches)) {
+      await top.hover();
+      await expect(top.locator('svg')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, -2)');
+    }
+    await top.click();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   });
 });
 
@@ -757,6 +795,12 @@ test.describe('Reduced motion', () => {
     const weeks = page.locator('.cal__view:visible .cal__week');
     await expect(weeks.first()).toHaveCSS('opacity', '1');
     await expect(weeks.last()).toHaveCSS('opacity', '1');
+  });
+
+  test('shows the footer label and handles in place', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.site-footer__label')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.site-footer__handle').first()).toHaveCSS('transform', 'none');
   });
 
   test('shows the featured case note and handles in place', async ({ page }) => {

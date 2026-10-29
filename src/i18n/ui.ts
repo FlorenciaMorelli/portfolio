@@ -7,26 +7,53 @@ export const localeNames: Record<Locale, string> = {
   en: 'English',
 };
 
+/** Parts of the work a job covers; each has the name and color of a hero mode. */
+type Facet = 'analysis' | 'design' | 'development' | 'quality';
+
 interface Job {
   role: string;
   org: string;
   orgUrl?: string;
-  mode?: string;
   period: string;
+  facets?: Facet[];
   tech?: string;
-  points: string[];
+  /** Jobs without points are shown in the compact format. */
+  points?: string[];
   caseStudy?: { slug: string; label: string };
 }
 
 type Dict = {
   meta: { title: string; description: string };
-  nav: { about: string; experience: string; projects: string; contact: string; resume: string };
+  nav: {
+    about: string;
+    experience: string;
+    projects: string;
+    contact: string;
+    resume: string;
+    resumeLong: string;
+    menuOpen: string;
+    menuClose: string;
+    label: string;
+  };
   hero: {
-    greeting: string;
+    /** The headline in three parts: on small screens the connector moves to the accent line. */
+    title: { lead: string; connector: string; accent: string };
+    /** Not shown on the page; feeds the JSON-LD jobTitle. */
     role: string;
     intro: string;
-    cta: string;
     viewProjects: string;
+    contact: string;
+    modes: {
+      label: string;
+      analysis: string;
+      design: string;
+      development: string;
+      quality: string;
+    };
+    /** `{mode}` is replaced by the active mode name. */
+    modeName: string;
+    notes: { analysis: string; quality: string };
+    tags: { quality: string };
   };
   about: {
     title: string;
@@ -34,10 +61,34 @@ type Dict = {
     skillsTitle: string;
     skillsCategories: Record<string, string>;
     photoAlt: string;
+    howTitle: string;
+    /** One line per facet; the facet names are in `hero.modes`. */
+    how: { analysis: string; design: string; development: string; quality: string };
+  };
+  /** Decorative pieces of «Cómo trabajo» (aria-hidden): a ticket, a design view and a task. */
+  lenses: {
+    ticket: { kind: string; criteriaTitle: string; criteria: string[] };
+    /** The QA task of the hero (decorative): its criteria are about the headline; `{title}` is the headline. */
+    scene: { criteria: [string, string, string, string] };
+    design: { file: string; panel: string; empty: string; layer: string; corners: string; padding: string; gap: string; text: string; fill: string };
+    /** `count`: `{n}` and `{total}`; `unitTests`: the same, from the last `npm test` run. */
+    task: { title: string; status: [string, string, string]; count: string; unitTests: string; details: string; assignee: string; labels: string; tags: string[] };
   };
   experience: {
     title: string;
     jobs: Job[];
+    /** Work calendar (decorative). `date` uses {wd}, {d}, {m} and {y}. */
+    calendar: {
+      title: string;
+      lastSix: string;
+      less: string;
+      more: string;
+      months: string[];
+      weekdays: string[];
+      date: string;
+      jobs: { maipu: string; smg: string; enivel7: string; guia: string };
+      firstCommit: string;
+    };
   };
   projects: {
     title: string;
@@ -47,14 +98,24 @@ type Dict = {
     links: Record<string, string>;
     caseStudy: string;
     sourcedNote: string;
+    /** Note of the featured case; `{n}` is its number of E2E suites. */
+    e2eNote: string;
+    client: string;
+    /** `{studio}` is replaced by the studio name. */
+    builtAt: string;
+    /** `{n}` is replaced by the number of projects. */
+    showAll: string;
   };
   caseStudy: {
     eyebrow: string;
-    back: string;
+    /** Accessible name of the breadcrumb (Projects / name). */
+    breadcrumb: string;
     visit: string;
     studio: string;
     highlights: string;
     more: string;
+    /** Counter of «Qué incluye» (decorative): `count` uses {n} and {total}. */
+    criteria: { count: string; label: string };
   };
   contact: {
     title: string;
@@ -63,8 +124,12 @@ type Dict = {
     email: string;
     message: string;
     send: string;
+    /** States of the send button, announced by a live region. `error` uses {email}. */
+    sending: string;
+    sent: string;
+    error: string;
   };
-  footer: { built: string; rights: string };
+  footer: { rights: string };
   theme: { toLight: string; toDark: string };
   lang: { switchTo: string };
   a11y: { skip: string; toTop: string };
@@ -83,22 +148,38 @@ export const ui: Record<Locale, Dict> = {
       projects: 'Proyectos',
       contact: 'Contacto',
       resume: 'CV',
+      resumeLong: 'Descargar CV',
+      menuOpen: 'Abrir menú',
+      menuClose: 'Cerrar menú',
+      label: 'Principal',
     },
     hero: {
-      greeting: 'Hola, soy',
+      title: { lead: 'Del requerimiento', connector: 'a', accent: 'producción.' },
       role: 'Desarrolladora y analista técnico-funcional',
       intro:
-        'Trabajo en integración de sistemas, APIs y testing, y construyo proyectos web, mobile y de videojuegos. Cofundé Guia, un estudio de soluciones digitales, y me interesa el desarrollo de productos digitales de principio a fin.',
-      cta: 'Conocé mi trabajo',
+        'Soy Florencia Morelli, desarrolladora full stack y analista técnico-funcional. Me interesa el desarrollo de productos digitales de principio a fin: del análisis y el diseño al desarrollo, la integración y la calidad.',
       viewProjects: 'Ver proyectos',
+      contact: 'Escribime',
+      modes: {
+        label: 'Ver el titular desde',
+        analysis: 'Análisis',
+        design: 'Diseño',
+        development: 'Desarrollo',
+        quality: 'Calidad',
+      },
+      modeName: 'Modo {mode}',
+      notes: {
+        analysis: 'Como cliente, quiero tener mi sitio web, para que más gente me conozca.',
+        quality: 'Contraste AA · Navegable con teclado · Respeta reduced motion',
+      },
+      tags: { quality: '3 de 3' },
     },
     about: {
       title: 'Sobre mí',
       body: [
         'Soy desarrolladora y analista técnico-funcional. Trabajo en integración de sistemas, APIs REST/SOAP, análisis de requerimientos y testing, con metodologías Agile/Scrum.',
-        'Llegué a la programación desde el diseño UX/UI en 2021 y me formé en la Tecnicatura Universitaria en Programación de Sistemas en UCES.',
+        'Llegué a la programación desde el diseño UX/UI en 2021 y en diciembre de 2024 me recibí de Técnica Universitaria en Programación de Sistemas en UCES.',
         'Con Juan Tomás Martínez cofundé Guia, donde hice el diseño y el frontend de Audenpass, nuestro primer proyecto. Hoy busco sumarme al desarrollo de productos digitales en general: del diseño y el frontend a la integración y la calidad. También me apasiona el desarrollo de videojuegos.',
-        'Acá hay una selección de proyectos académicos, personales y para clientes. Mirá los que te interesen.',
       ],
       skillsTitle: 'Tecnologías',
       skillsCategories: {
@@ -109,17 +190,81 @@ export const ui: Record<Locale, Dict> = {
         data: 'Bases de datos',
         tools: 'Herramientas',
       },
-      photoAlt: 'Florencia Morelli',
+      photoAlt: 'Florencia Morelli con toga y birrete, en su graduación',
+      howTitle: 'Cómo trabajo',
+      how: {
+        analysis: 'Requerimientos, historias de usuario y criterios de aceptación.',
+        design: 'Sistemas de diseño y pantallas desktop y mobile en Figma.',
+        development: 'Frontends conectados a APIs e integraciones entre sistemas.',
+        quality: 'Pruebas, validaciones automatizadas y tests E2E.',
+      },
+    },
+    lenses: {
+      scene: {
+        criteria: [
+          'El titular dice «{title}»',
+          'Un lector de pantalla lo lee completo',
+          'Contraste AA en claro y oscuro',
+          'Respeta reduced motion',
+        ],
+      },
+      ticket: {
+        kind: 'Historia de usuario',
+        criteriaTitle: 'Criterios de aceptación',
+        criteria: [
+          'Pasan las pruebas unitarias antes de publicar',
+          'Contraste AA en todos los pares, en claro y oscuro',
+          'Navegable con teclado, con foco visible',
+          'Respeta reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · Rediseño 2026',
+        panel: 'Diseño',
+        empty: 'Sin selección',
+        layer: 'Capa',
+        corners: 'Esquinas',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Texto',
+        fill: 'Relleno',
+      },
+      task: {
+        title: 'Pruebas UAT satisfactorias',
+        status: ['Por hacer', 'En curso', 'Finalizado'],
+        count: '{n} de {total}',
+        unitTests: 'Pruebas unitarias en verde ({n} de {total})',
+        details: 'Detalles',
+        assignee: 'Responsable',
+        labels: 'Etiquetas',
+        tags: ['pruebas', 'accesibilidad'],
+      },
     },
     experience: {
       title: 'Experiencia',
+      calendar: {
+        title: 'Días trabajados',
+        lastSix: 'Últimos 6 meses',
+        less: 'Menos',
+        more: 'Más',
+        months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+        weekdays: ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'],
+        date: '{wd} {d} {m} {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Recepcionista y administrativa',
+          smg: 'SMG · Analista técnico-funcional',
+          enivel7: 'Enivel7 · Desarrolladora web front-end',
+          guia: 'Guia · Cofundadora y desarrolladora',
+        },
+        firstCommit: 'Primer commit de Audenpass',
+      },
       jobs: [
         {
           role: 'Cofundadora · Desarrolladora frontend y diseñadora UX/UI',
           org: 'Guia (Desarrollos Guia)',
           orgUrl: 'https://desarrollosguia.com/',
-          mode: 'Remoto',
           period: 'Sep 2026 – Actualidad',
+          facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
           points: [
             'Audenpass, el primer proyecto del estudio: una plataforma de venta de entradas para eventos, en producción para un cliente.',
@@ -134,6 +279,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Analista técnico-funcional',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dic 2024 – Actualidad',
+          facets: ['analysis', 'quality'],
           tech: 'JSON, XML, APIs REST/SOAP, Postman, Agile',
           points: [
             'Análisis funcional y técnico de requerimientos para módulos críticos del sistema.',
@@ -147,6 +293,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Desarrolladora web front-end',
           org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Ago 2023 – Sep 2023',
+          facets: ['development'],
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [
             'Desarrollo de la interfaz web con HTML5, CSS3 y JavaScript.',
@@ -157,11 +304,7 @@ export const ui: Record<Locale, Dict> = {
         {
           role: 'Recepcionista y administrativa',
           org: 'Diagnóstico Maipú',
-          period: 'Jul 2021 – Dic 2024',
-          points: [
-            'Optimización de procesos administrativos y documentación operativa.',
-            'Coordinación interáreas, gestión de datos y capacitación de personal.',
-          ],
+          period: 'May 2020 – Dic 2024',
         },
       ],
     },
@@ -185,27 +328,34 @@ export const ui: Record<Locale, Dict> = {
         figma: 'Ver en Figma',
       },
       caseStudy: 'Ver caso de estudio',
-      sourcedNote: 'Actualizado automáticamente desde GitHub.',
+      sourcedNote: 'Catálogo actualizado automáticamente desde GitHub.',
+      e2eNote: '{n} suites con Playwright',
+      client: 'Cliente',
+      builtAt: 'Desarrollado en {studio}',
+      showAll: 'Ver los {n} proyectos',
     },
     caseStudy: {
       eyebrow: 'Caso de estudio',
-      back: 'Volver a proyectos',
+      breadcrumb: 'Ruta de navegación',
       visit: 'Ver sitio',
       studio: 'Conocé Guia',
       highlights: 'En números',
       more: 'Ver todos los proyectos',
+      criteria: { count: '{n} de {total}', label: 'criterios cumplidos' },
     },
     contact: {
-      title: 'Hablemos',
+      title: 'Hablemos.',
       intro:
         'Escribime si querés que trabajemos juntos o si tenés alguna consulta. Respondo todo.',
       name: 'Nombre',
       email: 'Email',
       message: 'Mensaje',
       send: 'Enviar',
+      sending: 'Enviando',
+      sent: 'Enviado',
+      error: 'No se pudo enviar. Probá de nuevo o escribime a {email}.',
     },
     footer: {
-      built: 'Hecho con Astro',
       rights: 'Todos los derechos reservados.',
     },
     theme: { toLight: 'Cambiar a tema claro', toDark: 'Cambiar a tema oscuro' },
@@ -224,22 +374,38 @@ export const ui: Record<Locale, Dict> = {
       projects: 'Projects',
       contact: 'Contact',
       resume: 'Resume',
+      resumeLong: 'Download CV',
+      menuOpen: 'Open menu',
+      menuClose: 'Close menu',
+      label: 'Main',
     },
     hero: {
-      greeting: "Hi, I'm",
+      title: { lead: 'From requirement', connector: 'to', accent: 'production.' },
       role: 'Developer and technical-functional analyst',
       intro:
-        "I work on systems integration, APIs and testing, and I build web, mobile and game projects. I co-founded Guia, a digital solutions studio, and I'm interested in building digital products from start to finish.",
-      cta: 'See my work',
+        "I'm Florencia Morelli, a full stack developer and technical-functional analyst. I'm interested in building digital products from start to finish: from analysis and design to development, integration and quality.",
       viewProjects: 'View projects',
+      contact: 'Get in touch',
+      modes: {
+        label: 'View the headline as',
+        analysis: 'Analysis',
+        design: 'Design',
+        development: 'Development',
+        quality: 'Quality',
+      },
+      modeName: '{mode} mode',
+      notes: {
+        analysis: 'As a client, I want my own website, so that more people get to know me.',
+        quality: 'AA contrast · Keyboard accessible · Respects reduced motion',
+      },
+      tags: { quality: '3 of 3' },
     },
     about: {
       title: 'About me',
       body: [
         "I'm a developer and technical-functional analyst. I work on systems integration, REST/SOAP APIs, requirements analysis and testing, using Agile/Scrum.",
-        'I came into programming through UX/UI design in 2021 and trained as a Systems Programming Technician at UCES.',
+        'I came into programming through UX/UI design in 2021 and in December 2024 I earned a Technical Degree in Systems Programming from UCES.',
         "With Juan Tomás Martínez I co-founded Guia, where I did the design and frontend of Audenpass, our first project. These days I want to work on digital products as a whole: from design and frontend to integration and quality. I'm also passionate about game development.",
-        'Below is a selection of academic, personal and client projects. Have a look at whatever catches your eye.',
       ],
       skillsTitle: 'Technologies',
       skillsCategories: {
@@ -250,17 +416,81 @@ export const ui: Record<Locale, Dict> = {
         data: 'Databases',
         tools: 'Tools',
       },
-      photoAlt: 'Florencia Morelli',
+      photoAlt: 'Florencia Morelli in cap and gown at her graduation',
+      howTitle: 'How I work',
+      how: {
+        analysis: 'Requirements, user stories and acceptance criteria.',
+        design: 'Design systems and desktop and mobile screens in Figma.',
+        development: 'Frontends connected to APIs and integrations between systems.',
+        quality: 'Testing, automated validations and E2E tests.',
+      },
+    },
+    lenses: {
+      scene: {
+        criteria: [
+          'The headline reads “{title}”',
+          'A screen reader reads it in full',
+          'AA contrast in light and dark',
+          'Respects reduced motion',
+        ],
+      },
+      ticket: {
+        kind: 'User story',
+        criteriaTitle: 'Acceptance criteria',
+        criteria: [
+          'Unit tests pass before publishing',
+          'AA contrast on every pair, in light and dark',
+          'Keyboard accessible, with visible focus',
+          'Respects reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · 2026 redesign',
+        panel: 'Design',
+        empty: 'Nothing selected',
+        layer: 'Layer',
+        corners: 'Corners',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Text',
+        fill: 'Fill',
+      },
+      task: {
+        title: 'UAT tests passed',
+        status: ['To do', 'In progress', 'Done'],
+        count: '{n} of {total}',
+        unitTests: 'Unit tests passing ({n} of {total})',
+        details: 'Details',
+        assignee: 'Assignee',
+        labels: 'Labels',
+        tags: ['tests', 'accessibility'],
+      },
     },
     experience: {
       title: 'Experience',
+      calendar: {
+        title: 'Days worked',
+        lastSix: 'Last 6 months',
+        less: 'Less',
+        more: 'More',
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        date: '{wd} {m} {d}, {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Receptionist and administrative assistant',
+          smg: 'SMG · Technical-functional analyst',
+          enivel7: 'Enivel7 · Front-end web developer',
+          guia: 'Guia · Co-founder and developer',
+        },
+        firstCommit: 'First Audenpass commit',
+      },
       jobs: [
         {
           role: 'Co-founder · Frontend developer and UX/UI designer',
           org: 'Guia (Desarrollos Guia)',
           orgUrl: 'https://desarrollosguia.com/',
-          mode: 'Remote',
           period: 'Sep 2026 – Present',
+          facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
           points: [
             "Audenpass, the studio's first project: an event ticketing platform, live in production for a client.",
@@ -275,6 +505,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Technical-functional analyst',
           org: 'Diagnóstico Maipú - SMG · Laboratory Information Systems (LIS)',
           period: 'Dec 2024 – Present',
+          facets: ['analysis', 'quality'],
           tech: 'JSON, XML, REST/SOAP APIs, Postman, Agile',
           points: [
             'Functional and technical analysis of requirements for critical system modules.',
@@ -288,6 +519,7 @@ export const ui: Record<Locale, Dict> = {
           role: 'Front-end web developer',
           org: 'Enivel7 - Máximo Pinasco / Ford',
           period: 'Aug 2023 – Sep 2023',
+          facets: ['development'],
           tech: 'HTML5, CSS3, JavaScript, Responsive',
           points: [
             'Built the web interface with HTML5, CSS3 and JavaScript.',
@@ -298,11 +530,7 @@ export const ui: Record<Locale, Dict> = {
         {
           role: 'Receptionist and administrative assistant',
           org: 'Diagnóstico Maipú',
-          period: 'Jul 2021 – Dec 2024',
-          points: [
-            'Streamlined administrative processes and operational documentation.',
-            'Cross-team coordination, data management and staff training.',
-          ],
+          period: 'May 2020 – Dec 2024',
         },
       ],
     },
@@ -326,27 +554,34 @@ export const ui: Record<Locale, Dict> = {
         figma: 'View on Figma',
       },
       caseStudy: 'Read the case study',
-      sourcedNote: 'Updated automatically from GitHub.',
+      sourcedNote: 'Catalog updated automatically from GitHub.',
+      e2eNote: '{n} suites with Playwright',
+      client: 'Client',
+      builtAt: 'Built at {studio}',
+      showAll: 'See all {n} projects',
     },
     caseStudy: {
       eyebrow: 'Case study',
-      back: 'Back to projects',
+      breadcrumb: 'Breadcrumb',
       visit: 'Visit site',
       studio: 'About Guia',
       highlights: 'By the numbers',
       more: 'See all projects',
+      criteria: { count: '{n} of {total}', label: 'criteria met' },
     },
     contact: {
-      title: "Let's talk",
+      title: "Let's talk.",
       intro:
         "Get in touch if you'd like to work together or have a question. I read everything.",
       name: 'Name',
       email: 'Email',
       message: 'Message',
       send: 'Send',
+      sending: 'Sending',
+      sent: 'Sent',
+      error: "It couldn't be sent. Try again or email me at {email}.",
     },
     footer: {
-      built: 'Built with Astro',
       rights: 'All rights reserved.',
     },
     theme: { toLight: 'Switch to light theme', toDark: 'Switch to dark theme' },

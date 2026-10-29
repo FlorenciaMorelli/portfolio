@@ -1,116 +1,303 @@
 /*
   Design tokens. Single source of truth for colour, type, spacing and motion.
-  Theming is driven by [data-theme] on <html>; the default follows the OS via
-  the .theme-dark / light values resolved at runtime in BaseLayout.
+  Three layers, as in Figma: primitives (raw values, never used by components),
+  theme (semantic variables, one value per theme) and dimensions.
+  Theming is driven by [data-theme] on <html>, set before first paint in BaseLayout.
+  See DESIGN.md for the Figma to CSS name table.
 */
 
 :root {
-  /* Brand palette */
-  --brand-navy: #000033;
-  --brand-teal: #007788;
-  /* Same teal, a touch darker so text on the paper background passes AA (4.7:1). */
-  --brand-teal-text: #006d7c;
-  --brand-teal-strong: #00606e;
-  --brand-lilac: #bbbbf8;
-  --paper: #e3e3e3;
+  /* Primitives */
+  --navy-900: #000033;
+  --navy-850: #06063a;
+  --navy-800: #0c0c3a;
+  --navy-750: #182a4f;
+  --navy-700: #1e1e5a;
+  --navy-600: #2c2c5c;
+  --navy-500: #4a4a86;
 
-  /* Neutral ramp */
-  --white: #ffffff;
+  --lilac-100: #d2d2ff;
+  --lilac-200: #bbbbf8;
+  --lilac-400: #b9b9d6;
+  --lilac-600: #8a8ab0;
+  --lilac-700: #5c4fa0;
+
+  --teal-100: #e0f0f2;
+  --teal-200: #8fe3d6;
+  --teal-300: #5fd4c4;
+  --teal-500: #007788;
+  --teal-600: #006d7c;
+  --teal-700: #00606e;
+
+  --gray-0: #ffffff;
   --gray-50: #f5f5f7;
-  --gray-100: #e7e7ec;
-  --gray-300: #c4c4cf;
-  --gray-500: #6f6f80;
+  --gray-100: #ececf0;
+  --gray-200: #e3e3e3;
+  --gray-300: #d9d9e1;
+  --gray-400: #b4b4c4;
   --gray-600: #616173;
   --gray-700: #3a3a52;
-  --gray-900: #15152b;
 
-  /* Type */
-  --font-mono: 'Fira Mono', ui-monospace, 'SFMono-Regular', monospace;
-  --font-sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Brand aliases */
+  --brand-navy: var(--navy-900);
+  --brand-teal: var(--teal-500);
+  --brand-teal-text: var(--teal-600);
+  --brand-teal-strong: var(--teal-700);
+  --brand-lilac: var(--lilac-200);
+  --paper: var(--gray-200);
+  --white: var(--gray-0);
 
-  /* Modular type scale (1.200) */
-  --text-xs: 0.79rem;
-  --text-sm: 0.889rem;
+  /* Transparent primitives, only for shadows */
+  --shadow-navy-08: rgb(0 0 51 / 0.08);
+  --shadow-navy-12: rgb(0 0 51 / 0.12);
+  --shadow-navy-16: rgb(0 0 51 / 0.16);
+  --shadow-black-40: rgb(0 0 0 / 0.4);
+  --shadow-black-55: rgb(0 0 0 / 0.55);
+  --shadow-black-65: rgb(0 0 0 / 0.65);
+  --glow-teal-30: rgb(0 109 124 / 0.3);
+  --glow-lilac-35: rgb(187 187 248 / 0.35);
+
+  /* Type families */
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-accent: 'Instrument Serif', Georgia, serif;
+
+  /* Type scale, Base (same on every screen): size, line height, tracking */
   --text-base: 1rem;
-  --text-md: 1.125rem;
-  --text-lg: 1.35rem;
-  --text-xl: 1.62rem;
-  --text-2xl: 1.944rem;
-  --text-3xl: 2.488rem;
-  --text-4xl: 3.157rem;
+  --text-base-lh: 1.625rem;
+  --text-sm: 0.875rem;
+  --text-sm-lh: 1.375rem;
+  --text-button: 0.9375rem;
+  --text-button-lh: 1.25rem;
+  --text-nav: 0.875rem;
+  --text-nav-lh: 1.25rem;
+  --text-label: 0.8125rem;
+  --text-label-lh: 1.125rem;
+  --text-mono: 0.8125rem;
+  --text-mono-lh: 1.25rem;
+  --text-mono-sm: 0.6875rem;
+  --text-mono-sm-lh: 1rem;
 
-  --leading-tight: 1.2;
-  --leading-snug: 1.4;
-  --leading-normal: 1.65;
+  /* Type scale, Desktop (from 768px) */
+  --text-display: 5rem;
+  --text-display-lh: 5.5rem;
+  --text-display-ls: -0.02em;
+  --text-display-accent: 6rem;
+  --text-display-accent-lh: 6.25rem;
+  --text-h2: 3rem;
+  --text-h2-lh: 3.5rem;
+  --text-h2-ls: -0.015em;
+  --text-h2-accent: 3.75rem;
+  --text-h2-accent-lh: 4rem;
+  --text-h3: 1.75rem;
+  --text-h3-lh: 2.25rem;
+  --text-h3-ls: -0.01em;
+  --text-h4: 1.25rem;
+  --text-h4-lh: 1.75rem;
+  --text-stat: 3.5rem;
+  --text-stat-lh: 3.75rem;
+  --text-stat-ls: -0.02em;
+  --text-lead: 1.125rem;
+  --text-lead-lh: 1.8125rem;
 
-  /* Spacing scale (4px base) */
+  /* Spacing, 4px base. The number is the multiple of 4. */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-30: 7.5rem;
 
-  /* Radii */
-  --radius-sm: 6px;
+  /* Radii and borders */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
   --radius-pill: 999px;
+  --border-width: 1px;
 
-  /* Layout */
-  --container-max: 72rem;
-  --container-pad: clamp(1rem, 5vw, 3rem);
+  /* Focus ring */
+  --focus-width: 2px;
+  --focus-offset: 2px;
+
+  /* Layout: content is 1200px wide inside 120px margins on desktop */
+  --container-max: 75rem;
+  --container-pad: clamp(1.25rem, 8.33vw, 7.5rem);
+  --header-h: 4.5rem;
 
   /* Motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur-fast: 140ms;
   --dur: 240ms;
   --dur-slow: 420ms;
+}
 
-  /* Elevation */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 51, 0.08);
-  --shadow-md: 0 8px 24px rgba(0, 0, 51, 0.12);
-  --shadow-lg: 0 18px 48px rgba(0, 0, 51, 0.18);
-
-  --focus-ring: 0 0 0 3px var(--accent-soft);
+/* Mobile (below 768px): 20px margins and the mobile type scale */
+@media (max-width: 767.98px) {
+  :root {
+    --container-pad: 1.25rem;
+    --header-h: 4.25rem;
+    --text-display: 2.75rem;
+    --text-display-lh: 3.125rem;
+    --text-display-accent: 3.25rem;
+    --text-display-accent-lh: 3.5rem;
+    --text-h2: 2rem;
+    --text-h2-lh: 2.5rem;
+    --text-h2-ls: -0.01em;
+    --text-h2-accent: 2.625rem;
+    --text-h2-accent-lh: 2.875rem;
+    --text-h3: 1.5rem;
+    --text-h3-lh: 2rem;
+    --text-h3-ls: -0.005em;
+    --text-h4: 1.125rem;
+    --text-h4-lh: 1.625rem;
+    --text-stat: 2.5rem;
+    --text-stat-lh: 2.75rem;
+    --text-lead: 1.0625rem;
+    --text-lead-lh: 1.6875rem;
+  }
 }
 
 /* Light theme (default) */
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --bg: var(--paper);
-  --bg-elevated: var(--white);
-  --bg-sunken: #d9d9dd;
-  --surface: var(--white);
+  --bg: var(--gray-100);
+  --surface: var(--gray-0);
   --surface-alt: var(--gray-50);
-  --border: rgba(0, 0, 51, 0.12);
-  --text: var(--brand-navy);
+  --bg-band: var(--gray-50);
+  --canvas-dot: var(--gray-400);
+  --text: var(--navy-900);
   --text-muted: var(--gray-700);
   --text-faint: var(--gray-600);
-  --accent: var(--brand-teal-text);
-  --accent-strong: var(--brand-teal-strong);
-  --accent-contrast: var(--white);
-  --accent-soft: rgba(0, 119, 136, 0.18);
+  --text-disabled: var(--gray-400);
+  --accent: var(--teal-600);
+  --accent-strong: var(--teal-700);
+  --accent-soft: var(--teal-100);
+  --accent-contrast: var(--gray-0);
+  --border: var(--gray-300);
+  --border-strong: var(--gray-400);
+  --brand: var(--teal-500);
+  --focus: var(--teal-600);
+  /* Colour of a lens for thin lines and marks over the page background (the section marker) */
+  --lens-ink-analysis: var(--teal-600);
+  --lens-ink-design: var(--lilac-700);
+  --lens-ink-development: var(--navy-900);
+  --lens-ink-quality: var(--gray-600);
+  --cursor-analysis: var(--teal-500);
+  --cursor-analysis-text: var(--gray-0);
+  --cursor-design: var(--lilac-200);
+  --cursor-design-text: var(--navy-900);
+  --cursor-dev: var(--navy-900);
+  --cursor-dev-text: var(--gray-0);
+  --cursor-qa: var(--gray-600);
+  --cursor-qa-text: var(--gray-0);
+  /* Idle cursors: the cursor at 35% over the page background, solid so they pass AA.
+     Raw values, as in Figma. */
+  --cursor-analysis-idle: #99c3cc;
+  --cursor-analysis-idle-text: var(--navy-900);
+  --cursor-design-idle: #dbdbf3;
+  --cursor-design-idle-text: var(--navy-900);
+  --cursor-dev-idle: #9999ae;
+  --cursor-dev-idle-text: var(--navy-900);
+  --cursor-qa-idle: #bbbbc4;
+  --cursor-qa-idle-text: var(--navy-900);
+  /* Code: editor, diff and test output */
+  --code-bg: var(--gray-50);
+  --code-line-active: var(--gray-100);
+  --code-text: var(--navy-900);
+  --code-comment: var(--gray-600);
+  --code-keyword: var(--teal-700);
+  --code-string: var(--navy-500);
+  --code-function: var(--lilac-700);
+  --code-number: var(--gray-700);
+  --code-property: var(--teal-600);
+  --code-line-number: var(--gray-600);
+  --code-diff-add-bg: var(--teal-100);
+  --code-diff-add-text: var(--teal-700);
+  --code-diff-del-bg: var(--gray-100);
+  --code-diff-del-text: var(--gray-700);
+  /* Work calendar: 0 no work, 2 one job, 4 two jobs (1 and 3 are defined but unused) */
+  --contrib-0: var(--gray-300);
+  --contrib-1: #b2d3d8;
+  --contrib-2: #80b6be;
+  --contrib-3: #40929d;
+  --contrib-4: var(--teal-600);
+  --shadow-1: 0 1px 2px var(--shadow-navy-08);
+  --shadow-2: 0 8px 24px var(--shadow-navy-12);
+  --shadow-3: 0 16px 40px var(--shadow-navy-16);
+  --glow-accent: 0 8px 24px var(--glow-teal-30);
 }
 
 /* Dark theme */
 [data-theme='dark'] {
   color-scheme: dark;
-  --bg: var(--brand-navy);
-  --bg-elevated: #0a0a40;
-  --bg-sunken: #00001f;
-  --surface: #0c0c3a;
-  --surface-alt: #11114a;
-  --border: rgba(187, 187, 248, 0.18);
-  --text: var(--paper);
-  --text-muted: #b9b9d6;
-  --text-faint: #8a8ab0;
-  --accent: var(--brand-lilac);
-  --accent-strong: #d2d2ff;
-  --accent-contrast: var(--brand-navy);
-  --accent-soft: rgba(187, 187, 248, 0.22);
+  --bg: var(--navy-900);
+  --surface: var(--navy-800);
+  --surface-alt: var(--navy-700);
+  --bg-band: var(--navy-850);
+  --canvas-dot: var(--navy-600);
+  --text: var(--gray-200);
+  --text-muted: var(--lilac-400);
+  --text-faint: var(--lilac-600);
+  --text-disabled: var(--navy-500);
+  --accent: var(--lilac-200);
+  --accent-strong: var(--lilac-100);
+  --accent-soft: var(--navy-700);
+  --accent-contrast: var(--navy-900);
+  --border: var(--navy-600);
+  --border-strong: var(--navy-500);
+  --brand: var(--lilac-200);
+  --focus: var(--lilac-200);
+  --lens-ink-analysis: var(--teal-300);
+  --lens-ink-design: var(--lilac-200);
+  --lens-ink-development: var(--gray-200);
+  --lens-ink-quality: var(--lilac-600);
+  --cursor-analysis: var(--teal-300);
+  --cursor-analysis-text: var(--navy-900);
+  --cursor-design: var(--lilac-200);
+  --cursor-design-text: var(--navy-900);
+  --cursor-dev: var(--gray-200);
+  --cursor-dev-text: var(--navy-900);
+  --cursor-qa: var(--lilac-600);
+  --cursor-qa-text: var(--navy-900);
+  --cursor-analysis-idle: #214a66;
+  --cursor-analysis-idle-text: var(--gray-0);
+  --cursor-design-idle: #414178;
+  --cursor-design-idle-text: var(--gray-0);
+  --cursor-dev-idle: #4f4f71;
+  --cursor-dev-idle-text: var(--gray-0);
+  --cursor-qa-idle: #30305f;
+  --cursor-qa-idle-text: var(--gray-0);
+  --code-bg: var(--navy-800);
+  --code-line-active: var(--navy-700);
+  --code-text: var(--gray-200);
+  --code-comment: var(--lilac-600);
+  --code-keyword: var(--lilac-200);
+  --code-string: var(--teal-300);
+  --code-function: var(--lilac-100);
+  --code-number: var(--lilac-400);
+  --code-property: var(--teal-200);
+  --code-line-number: var(--lilac-600);
+  --code-diff-add-bg: var(--navy-750);
+  --code-diff-add-text: var(--teal-300);
+  --code-diff-del-bg: var(--navy-700);
+  --code-diff-del-text: var(--lilac-400);
+  --contrib-0: var(--navy-700);
+  --contrib-1: #404073;
+  --contrib-2: #646499;
+  --contrib-3: #8f8fc8;
+  --contrib-4: var(--lilac-200);
+  --shadow-1: 0 1px 2px var(--shadow-black-40);
+  --shadow-2: 0 8px 24px var(--shadow-black-55);
+  --shadow-3: 0 16px 40px var(--shadow-black-65);
+  --glow-accent: 0 0 28px var(--glow-lilac-35);
 }

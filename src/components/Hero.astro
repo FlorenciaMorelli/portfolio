@@ -1,111 +1,818 @@
 ---
 import Icon from './Icon.astro';
+import Ticket from './lenses/Ticket.astro';
+import EditorPanel from './lenses/EditorPanel.astro';
+import TaskDetail from './lenses/TaskDetail.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
-import profile from '../data/profile.json';
+import type { IconName } from '../lib/types';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+
+type Mode = 'analysis' | 'design' | 'development' | 'quality';
+const modes: { id: Mode; icon: IconName; label: string }[] = [
+  { id: 'analysis', icon: 'clipboard-list', label: t.hero.modes.analysis },
+  { id: 'design', icon: 'pen-tool', label: t.hero.modes.design },
+  { id: 'development', icon: 'code-xml', label: t.hero.modes.development },
+  { id: 'quality', icon: 'check-check', label: t.hero.modes.quality },
+];
+const initial: Mode = 'design';
+// The section each lens belongs to: its cursor travels there and its label takes the name.
+const sectionNames: Record<Mode, string> = {
+  analysis: t.nav.about,
+  development: t.nav.experience,
+  design: t.nav.projects,
+  quality: t.nav.contact,
+};
+
+// Annotation shown for each mode. The design mode is measured in the browser; the
+// values below are what the page shows without JavaScript (desktop sizes).
+const copy = {
+  analysis: { tag: 'REQ-01', note: t.hero.notes.analysis },
+  design: { tag: 'H1 · 900 × 216', note: 'Geist SemiBold 80/88 · Instrument Serif Italic 96/100' },
+  development: { tag: '<h1>', note: 'class="hero__title"' },
+  quality: { tag: t.hero.tags.quality, note: t.hero.notes.quality },
+};
+const modeName = (label: string) =>
+  t.hero.modeName.replace('{mode}', locale === 'es' ? label.toLowerCase() : label);
+const title = t.hero.title;
 ---
 
-<section class="hero">
+<section class="hero" data-hero data-mode={initial} data-copy={JSON.stringify(copy)}
+  data-mode-names={JSON.stringify(Object.fromEntries(modes.map((m) => [m.id, modeName(m.label)])))}>
   <div class="container hero__inner">
-    <p class="eyebrow">{t.hero.greeting}</p>
-    <h1 class="hero__name">Florencia Morelli</h1>
-    <p class="hero__role">{t.hero.role}</p>
+    <div class="hero__frame">
+      <div class="hero__annot" aria-hidden="true" data-annot>
+        <span class="hero__tag">
+          <span class="hero__tag-icon">
+            {modes.map((m) => <Icon name={m.icon} size={14} class="hero__tag-svg" />)}
+          </span>
+          <span data-tag>{copy[initial].tag}</span>
+        </span>
+        <p class="hero__note" data-note aria-live="polite">{copy[initial].note}</p>
+      </div>
+
+      <div class="hero__box" data-box>
+        <span class="hero__handle hero__handle--tl" aria-hidden="true"></span>
+        <span class="hero__handle hero__handle--tr" aria-hidden="true"></span>
+        <span class="hero__handle hero__handle--bl" aria-hidden="true"></span>
+        <span class="hero__handle hero__handle--br" aria-hidden="true"></span>
+        <h1 class="hero__title">
+          <span class="hero__lead">{title.lead}<span class="hero__conn hero__conn--lead"> {title.connector}</span></span>
+          <span class="hero__accent"><span class="hero__conn hero__conn--accent">{title.connector} </span>{title.accent}</span>
+        </h1>
+      </div>
+      <!-- The same canvas seen from each lens: the headline gives way to the piece of work of that
+             part of the job. Decorative; the h1 stays in the page and is read as always. -->
+      <div class="hero__scene hero__scene--analysis" aria-hidden="true"><Ticket locale={locale} scene /></div>
+      <div class="hero__scene hero__scene--development" aria-hidden="true"><EditorPanel hero={locale} /></div>
+      <div class="hero__scene hero__scene--quality" aria-hidden="true"><TaskDetail locale={locale} scene /></div>
+    </div>
+
     <p class="hero__intro">{t.hero.intro}</p>
 
     <div class="hero__actions">
-      <a class="btn btn--primary" href="#projects">{t.hero.viewProjects}</a>
-      <div class="hero__socials">
-        <a href={profile.socials.github} target="_blank" rel="noopener" aria-label="GitHub">
-          <Icon name="github" size={22} />
-        </a>
-        <a href={profile.socials.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
-          <Icon name="linkedin" size={22} />
-        </a>
-      </div>
+      <a class="btn btn--primary" href="#projects">
+        {t.hero.viewProjects}<Icon name="arrow-right" size={18} />
+      </a>
+      <a class="btn btn--secondary" href="#contact">{t.hero.contact}</a>
     </div>
+  </div>
 
-    <a class="hero__scroll" href="#about">
-      <Icon name="arrow-down" size={20} />
-      <span>{t.hero.cta}</span>
-    </a>
+  <div class="hero__cursors" aria-hidden="true">
+    {modes.map((m) => (
+      <div class={`hero__cursor hero__cursor--${m.id}`} data-cursor={m.id} data-away-label={sectionNames[m.id]}>
+        <span class="hero__cursor-float">
+          <svg class="hero__cursor-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z" />
+          </svg>
+          <svg class="hero__cursor-hand" width="18" height="18" viewBox="2 1 21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 14a8 8 0 0 1-8 8" />
+            <path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+            <path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1" />
+            <path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10" />
+            <path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+          </svg>
+          <span class="hero__cursor-label">{m.label}</span>
+        </span>
+      </div>
+    ))}
+  </div>
+
+  <div class="hero__bar" role="radiogroup" aria-label={t.hero.modes.label} data-bar>
+    <span class="hero__bar-thumb" aria-hidden="true" data-thumb></span>
+    {modes.map((m) => (
+      <button
+        type="button"
+        role="radio"
+        class="hero__mode"
+        data-mode={m.id}
+        aria-checked={m.id === initial ? 'true' : 'false'}
+        tabindex={m.id === initial ? 0 : -1}
+        aria-label={m.label}
+        title={m.label}
+      >
+        <Icon name={m.icon} size={20} />
+        <span class="hero__mode-name" aria-hidden="true">{m.label}</span>
+      </button>
+    ))}
+    <span class="hero__bar-sep" aria-hidden="true"></span>
+    <span class="hero__bar-label" aria-hidden="true" data-mode-label>{modeName(modes.find((m) => m.id === initial)!.label)}</span>
   </div>
 </section>
 
 <style>
   .hero {
+    /* Measures from the hero interaction sheet (hero.md), 1440 × 900 */
+    --hero-h: 56.25rem;
+    --hero-box-w: 56.25rem;
+    --hero-box-h: 13.5rem;
+    --hero-box-top: 6.875rem;
+    --hero-bar-bottom: 3.5rem;
+
     position: relative;
-    padding-block: clamp(4rem, 12vh, 8rem) var(--space-8);
+    padding-block: calc(var(--header-h) + var(--space-8)) var(--space-16);
+    background-image: radial-gradient(circle, var(--canvas-dot) 1px, transparent 1.5px);
+    background-size: var(--space-6) var(--space-6);
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 38rem;
-    height: 38rem;
-    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
-    z-index: -1;
-    pointer-events: none;
-  }
   .hero__inner {
-    max-width: 46rem;
+    position: relative;
+    z-index: 1;
+    text-align: center;
   }
-  .hero__name {
-    margin-top: var(--space-2);
-    font-size: clamp(2.5rem, 8vw, var(--text-4xl));
+
+  /* Selection box with its annotation */
+  .hero__frame {
+    position: relative;
+    width: min(var(--hero-box-w), 100%);
+    margin-inline: auto;
+  }
+  .hero__annot {
+    display: flex;
+    align-items: stretch;
+    text-align: left;
+    margin-bottom: calc(var(--border-width) * -1);
+  }
+  .hero__tag {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    font-weight: 500;
+  }
+  .hero__tag-icon {
+    display: inline-grid;
+  }
+  .hero__tag-icon :global(.hero__tag-svg) {
+    display: none;
+    grid-area: 1 / 1;
+  }
+  .hero[data-mode='analysis'] .hero__tag-icon :global(.hero__tag-svg:nth-child(1)),
+  .hero[data-mode='design'] .hero__tag-icon :global(.hero__tag-svg:nth-child(2)),
+  .hero[data-mode='development'] .hero__tag-icon :global(.hero__tag-svg:nth-child(3)),
+  .hero[data-mode='quality'] .hero__tag-icon :global(.hero__tag-svg:nth-child(4)) {
+    display: block;
+  }
+  .hero__note {
+    display: flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+  }
+  .hero[data-mode='design'] .hero__note,
+  .hero[data-mode='development'] .hero__note {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+  }
+
+  .hero__box {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: var(--hero-box-h);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width) solid var(--accent);
+  }
+  /* Scenes (one per lens, except Design, which shows the headline itself). The headline fades out
+     but keeps its place, so the box never changes size; the scene fades in over it and its steps
+     play from 0 to 1 (--p), as in «Cómo trabajo». Without JS the page stays in Design mode. */
+  .hero__scene {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease), visibility 0s var(--dur-fast);
+    /* No box around it: the piece fades out at the bottom instead of being cut. */
+    mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  }
+  .hero__scene > :global(.lens) {
+    width: min(34rem, 100%);
+    height: max-content;
+    box-shadow: var(--shadow-2);
+  }
+  /* The scene takes the whole space of the Design mode: the annotation band and the box. From
+     1024px the annotation floats above the box, so the scene reaches up to where it is. */
+  @media (min-width: 1024px) {
+    .hero__scene {
+      top: calc(var(--annot-h, 1.75rem) * -1);
+    }
+  }
+  /* The annotation is not shown over a scene (its text stays for screen readers, as the live
+     region that announces the change of mode). */
+  .hero__annot {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__annot,
+  .hero[data-mode='development'] .hero__annot,
+  .hero[data-mode='quality'] .hero__annot {
+    opacity: 0;
+  }
+  /* The line of the translations is long: the editor gets more room than the other pieces. */
+  .hero__scene--development > :global(.lens) {
+    width: min(42rem, 100%);
+  }
+  /* The selection box only belongs to the Design mode, where the headline is the subject. */
+  .hero__box {
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__box,
+  .hero[data-mode='development'] .hero__box,
+  .hero[data-mode='quality'] .hero__box {
+    border-color: transparent;
+  }
+  .hero__title {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__scene--analysis,
+  .hero[data-mode='development'] .hero__scene--development,
+  .hero[data-mode='quality'] .hero__scene--quality {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: var(--dur-fast), 0s;
+  }
+  .hero[data-mode='analysis'] .hero__title,
+  .hero[data-mode='development'] .hero__title,
+  .hero[data-mode='quality'] .hero__title {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero[data-mode='analysis'] .hero__scene--analysis,
+    .hero[data-mode='development'] .hero__scene--development,
+    .hero[data-mode='quality'] .hero__scene--quality {
+      animation: hero-scene var(--dur-slow) var(--ease) 80ms both, hero-scene-steps 1400ms ease-in-out 120ms both;
+    }
+    /* The headline is typed first (about 1.8s); the rest of the piece follows. */
+    .hero[data-mode='analysis'] .hero__scene--analysis,
+    .hero[data-mode='quality'] .hero__scene--quality {
+      animation-name: hero-scene, hero-scene-steps;
+      animation-delay: 80ms, 1700ms;
+    }
+  }
+  @keyframes hero-scene {
+    from {
+      transform: translateY(12px) scale(0.97);
+    }
+  }
+  @keyframes hero-scene-steps {
+    from {
+      --p: 0;
+    }
+    to {
+      --p: 1;
+    }
+  }
+  .hero__handle {
+    position: absolute;
+    width: var(--space-2);
+    height: var(--space-2);
+    background: var(--surface);
+    border: var(--border-width) solid var(--accent);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='design'] .hero__handle {
+    opacity: 1;
+    transform: none;
+  }
+  .hero__handle--tl { top: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .hero__handle--tr { top: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .hero__handle--bl { bottom: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .hero__handle--br { bottom: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+
+  /* Headline: on small screens the connector moves to the accent line. */
+  .hero__title {
+    font-size: var(--text-display);
+    line-height: var(--text-display-lh);
+    letter-spacing: var(--text-display-ls);
+  }
+  .hero__lead,
+  .hero__accent {
+    display: block;
+  }
+  .hero__accent {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--text-display-accent);
+    line-height: var(--text-display-accent-lh);
+    letter-spacing: 0;
     color: var(--accent);
   }
-  .hero__role {
-    font-family: var(--font-mono);
-    font-size: var(--text-lg);
-    color: var(--text-muted);
-    margin-top: var(--space-2);
+  .hero__conn--accent {
+    display: none;
   }
+
   .hero__intro {
-    margin-top: var(--space-5);
-    font-size: var(--text-md);
-    max-width: 38rem;
+    max-width: 40rem;
+    margin: var(--space-10) auto 0;
+    font-size: var(--text-lead);
+    line-height: var(--text-lead-lh);
     color: var(--text-muted);
   }
   .hero__actions {
     display: flex;
-    align-items: center;
-    gap: var(--space-5);
-    margin-top: var(--space-6);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
   }
-  .hero__socials {
+
+  /* One cursor per mode. The idle ones use the solid idle colours (they pass AA); the active one
+     uses the full colour. Clicking one switches to its mode. They duplicate the mode bar for the
+     mouse, so they stay out of the accessibility tree. */
+  .hero__cursors {
+    display: none;
+  }
+  .hero__cursor {
+    position: absolute;
+    cursor: pointer;
+    pointer-events: auto;
+    will-change: transform;
+  }
+  .hero__cursor-float {
     display: flex;
-    gap: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--space-1) / 2);
+    transition: scale var(--dur-fast) var(--ease);
   }
-  .hero__socials a {
-    color: var(--text-muted);
+  .hero__cursor:hover .hero__cursor-float {
+    scale: 1.08;
   }
-  .hero__socials a:hover {
-    color: var(--accent);
+  /* The arrow turns into a pointing hand under the mouse, as a hint that it can be clicked. */
+  .hero__cursor-hand {
+    display: none;
   }
-  .hero__scroll {
+  .hero__cursor:hover .hero__cursor-arrow {
+    display: none;
+  }
+  .hero__cursor:hover .hero__cursor-hand {
+    display: block;
+  }
+  .hero__cursor:active .hero__cursor-float {
+    scale: 0.94;
+  }
+  /* Each cursor drifts ±3px on its own rhythm while it waits (cycles of 6, 8, 9 and 11s). */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__cursor-float {
+      animation: hero-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate;
+    }
+  }
+  @keyframes hero-drift {
+    from {
+      translate: calc(var(--drift-x) * -1) calc(var(--drift-y) * -1);
+    }
+    to {
+      translate: var(--drift-x) var(--drift-y);
+    }
+  }
+  /* Travelling (src/lib/journey.ts): fixed to the window, in the colour of its lens, and out of
+     the way of the mouse. The clicking cursor presses down a little. */
+  .hero__cursor.is-journey {
+    position: fixed;
+    z-index: 3;
+  }
+  .hero__cursor.is-away {
+    pointer-events: none;
+  }
+  .hero__cursors .hero__cursor--analysis.is-away { --c: var(--cursor-analysis); --c-text: var(--cursor-analysis-text); }
+  .hero__cursors .hero__cursor--design.is-away { --c: var(--cursor-design); --c-text: var(--cursor-design-text); }
+  .hero__cursors .hero__cursor--development.is-away { --c: var(--cursor-dev); --c-text: var(--cursor-dev-text); }
+  .hero__cursors .hero__cursor--quality.is-away { --c: var(--cursor-qa); --c-text: var(--cursor-qa-text); }
+  /* Over the content the arrow is solid, with a light edge so it reads over any text. */
+  .hero__cursor.is-away .hero__cursor-arrow {
+    fill: var(--c);
+    filter: drop-shadow(1.5px 0 0 var(--surface)) drop-shadow(-1.5px 0 0 var(--surface)) drop-shadow(0 1.5px 0 var(--surface)) drop-shadow(0 -1.5px 0 var(--surface));
+  }
+  /* The click: the arrow presses down and a ring spreads from its tip. */
+  .hero__cursor.is-press .hero__cursor-float {
+    scale: 0.74;
+    transition-duration: 80ms;
+  }
+  .hero__cursor::after {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: 0.125rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: -1.125rem 0 0 -1.125rem;
+    border: 2px solid var(--ink, var(--c));
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 0 1px var(--surface), inset 0 0 0 1px var(--surface);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hero__cursor.is-ripple::after {
+    animation: hero-ripple 560ms var(--ease) both;
+  }
+  @keyframes hero-ripple {
+    from {
+      opacity: 0.9;
+      transform: scale(0.25);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .hero__cursor--analysis { --ink: var(--lens-ink-analysis); }
+  .hero__cursor--design { --ink: var(--lens-ink-design); }
+  .hero__cursor--development { --ink: var(--lens-ink-development); }
+  .hero__cursor--quality { --ink: var(--lens-ink-quality); }
+  .hero__cursor-label {
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .hero__cursor--analysis { left: 13.89%; top: 27.78%; --drift-x: 3px; --drift-y: -3px; --drift-time: 3s; --drift-delay: 0s; }
+  .hero__cursor--design { left: 79.86%; top: 21.11%; --drift-x: -3px; --drift-y: 3px; --drift-time: 4s; --drift-delay: -2s; }
+  .hero__cursor--development { left: 77.08%; top: 56.67%; --drift-x: -3px; --drift-y: -3px; --drift-time: 4.5s; --drift-delay: -3s; }
+  .hero__cursor--quality { left: 15.97%; top: 60%; --drift-x: 3px; --drift-y: 3px; --drift-time: 5.5s; --drift-delay: -1s; }
+  .hero__cursor--analysis { --c: var(--cursor-analysis-idle); --c-text: var(--cursor-analysis-idle-text); }
+  .hero__cursor--design { --c: var(--cursor-design-idle); --c-text: var(--cursor-design-idle-text); }
+  .hero__cursor--development { --c: var(--cursor-dev-idle); --c-text: var(--cursor-dev-idle-text); }
+  .hero__cursor--quality { --c: var(--cursor-qa-idle); --c-text: var(--cursor-qa-idle-text); }
+  .hero[data-mode='analysis'] .hero__cursor--analysis { --c: var(--cursor-analysis); --c-text: var(--cursor-analysis-text); }
+  .hero[data-mode='design'] .hero__cursor--design { --c: var(--cursor-design); --c-text: var(--cursor-design-text); }
+  .hero[data-mode='development'] .hero__cursor--development { --c: var(--cursor-dev); --c-text: var(--cursor-dev-text); }
+  .hero[data-mode='quality'] .hero__cursor--quality { --c: var(--cursor-qa); --c-text: var(--cursor-qa-text); }
+  .hero__cursor {
+    color: var(--c);
+  }
+  .hero__cursor-label {
+    background: var(--c);
+    color: var(--c-text);
+  }
+
+  /* Mode bar: needs JS, so it stays hidden without it (the headline stays in Design mode). */
+  .hero__bar {
+    display: none;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    gap: var(--space-1);
+    margin: var(--space-8) auto 0;
+    padding: 0.375rem;
+    width: fit-content;
+    background: var(--surface);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2);
+  }
+  :global(.js) .hero__bar {
+    display: flex;
+  }
+  .hero__mode {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-top: var(--space-8);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
+    justify-content: center;
+    width: 3rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-faint);
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
   }
-  .hero__scroll :global(svg) {
-    animation: nudge 1.8s var(--ease) infinite;
+  .hero__mode:hover {
+    background: var(--surface-alt);
+    color: var(--text);
   }
-  .hero__scroll:hover {
+  .hero__mode {
+    position: relative;
+    z-index: 1;
+  }
+  .hero__mode[aria-checked='true'] {
+    background: var(--accent-soft);
     color: var(--accent);
   }
-  @keyframes nudge {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
+  /* With JS, the active background is one layer that slides to the new mode (translateX). */
+  .hero__bar-thumb {
+    display: none;
+  }
+  :global(.js) .hero__bar-thumb[data-ready] {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--thumb-w);
+    height: var(--thumb-h);
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+    transform: translate(var(--thumb-x), var(--thumb-y));
+    transition: transform var(--dur) var(--ease);
+  }
+  :global(.js) .hero__bar-thumb[data-ready] ~ .hero__mode[aria-checked='true'] {
+    background: transparent;
+  }
+  .hero__bar-thumb[data-instant] {
+    transition: none;
+  }
+  .hero__mode-name {
+    display: none;
+  }
+  .hero__bar-sep {
+    width: var(--border-width);
+    height: var(--space-6);
+    margin-inline: var(--space-2) 0;
+    background: var(--border);
+  }
+  .hero__bar-label {
+    padding-inline: var(--space-3) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  /* Below 1024px the layout stacks: connector on the accent line. */
+  @media (max-width: 1023.98px) {
+    .hero__conn--lead {
+      display: none;
+    }
+    .hero__conn--accent {
+      display: inline;
+    }
+  }
+
+  /* Tablet (Hero · 820 in Figma): headline in two lines, sizes of the hero only (not tokens). */
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .hero {
+      padding-top: calc(var(--header-h) + var(--space-16));
+    }
+    .hero__box {
+      min-height: 10.5rem;
+      padding-block: var(--space-2);
+    }
+    .hero__title {
+      font-size: 4rem;
+      line-height: 4.5rem;
+    }
+    .hero__accent {
+      font-size: 4.75rem;
+      line-height: 5rem;
+    }
+    .hero__actions {
+      margin-top: var(--space-10);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-top: calc(var(--header-h) + var(--hero-box-top));
+    }
+    .hero__annot {
+      position: absolute;
+      bottom: 100%;
+      left: calc(var(--border-width) * -1);
+    }
+  }
+  /* The cursors need the side margins: below 1280px they would cover the headline and the intro. */
+  @media (min-width: 1280px) {
+    .hero__cursors {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+  }
+
+  /* Short screens: less air above the box so the bar still fits in the first screen. */
+  @media (min-width: 1024px) and (max-height: 46.99rem) {
+    .hero {
+      padding-top: calc(var(--header-h) + var(--space-12));
+    }
+  }
+
+  /* With room to spare, the hero fills the first screen and the bar sits at its bottom.
+     On short screens the bar stays under the buttons so it is never pushed below the fold. */
+  @media (min-width: 1024px) and (min-height: 47rem) {
+    .hero {
+      min-height: min(var(--hero-h), 100svh);
+    }
+    :global(.js) .hero__bar {
+      position: absolute;
+      left: 50%;
+      bottom: var(--hero-bar-bottom);
+      margin: 0;
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .hero__inner {
+      text-align: left;
+    }
+    .hero__annot {
+      margin-bottom: var(--space-6);
+    }
+    .hero__box {
+      min-height: 13.125rem;
+      place-items: center start;
+    }
+    .hero__intro {
+      margin-top: var(--space-6);
+    }
+    .hero__actions {
+      justify-content: flex-start;
+      margin-top: var(--space-6);
+    }
+    .hero__bar {
+      width: auto;
+      margin-inline: var(--container-pad);
+    }
+    .hero__mode {
+      flex: 1;
+      flex-direction: column;
+      gap: var(--space-1);
+      width: auto;
+      height: 3.25rem;
+    }
+    .hero__mode-name {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--text-mono-sm);
+      line-height: var(--text-mono-sm-lh);
+    }
+    .hero__bar-sep,
+    .hero__bar-label {
+      display: none;
+    }
   }
 </style>
+
+<script>
+  import { followPointer } from '../lib/cursors';
+  import { startJourney } from '../lib/journey';
+
+  type Mode = 'analysis' | 'design' | 'development' | 'quality';
+  const order: Mode[] = ['analysis', 'design', 'development', 'quality'];
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    const copy = JSON.parse(hero.dataset.copy ?? '{}') as Record<Mode, { tag: string; note: string }>;
+    const names = JSON.parse(hero.dataset.modeNames ?? '{}') as Record<Mode, string>;
+    const bar = hero.querySelector<HTMLElement>('[data-bar]')!;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-mode]')];
+    const tag = hero.querySelector<HTMLElement>('[data-tag]')!;
+    const note = hero.querySelector<HTMLElement>('[data-note]')!;
+    const label = hero.querySelector<HTMLElement>('[data-mode-label]')!;
+    const thumb = hero.querySelector<HTMLElement>('[data-thumb]')!;
+    const box = hero.querySelector<HTMLElement>('[data-box]')!;
+    const lead = hero.querySelector<HTMLElement>('.hero__lead')!;
+    const accent = hero.querySelector<HTMLElement>('.hero__accent')!;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // The design mode shows the real measures of the headline box and its type.
+    const px = (el: HTMLElement, prop: 'fontSize' | 'lineHeight') => Math.round(parseFloat(getComputedStyle(el)[prop]));
+    const measured = () => ({
+      tag: `H1 · ${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}`,
+      note: `Geist SemiBold ${px(lead, 'fontSize')}/${px(lead, 'lineHeight')} · Instrument Serif Italic ${px(accent, 'fontSize')}/${px(accent, 'lineHeight')}`,
+    });
+    const content = (mode: Mode) => (mode === 'design' ? measured() : copy[mode]);
+
+    let current = (hero.dataset.mode as Mode) ?? 'design';
+
+    function render(mode: Mode, animate: boolean) {
+      const { tag: tagText, note: noteText } = content(mode);
+      if (tag.textContent !== tagText) tag.textContent = tagText;
+      if (note.textContent !== noteText) note.textContent = noteText;
+      label.textContent = names[mode];
+      // The tag, the note and the bar label cross-fade (--dur-fast); the live region announces the note.
+      if (animate && !reduced.matches) {
+        for (const el of [tag, note, label]) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 140, easing: 'ease-out' });
+      }
+      placeThumb(animate);
+    }
+
+    // The active background slides to the button of the new mode. Measured on mode changes and
+    // when the bar changes size, never while animating.
+    function placeThumb(animate: boolean) {
+      const btn = buttons.find((b) => b.dataset.mode === current);
+      if (!btn) return;
+      if (!animate) thumb.setAttribute('data-instant', '');
+      thumb.style.setProperty('--thumb-x', `${btn.offsetLeft}px`);
+      thumb.style.setProperty('--thumb-y', `${btn.offsetTop}px`);
+      thumb.style.setProperty('--thumb-w', `${btn.offsetWidth}px`);
+      thumb.style.setProperty('--thumb-h', `${btn.offsetHeight}px`);
+      thumb.setAttribute('data-ready', '');
+      if (!animate) requestAnimationFrame(() => thumb.removeAttribute('data-instant'));
+    }
+
+    // The headline is typed into the field of the ticket and of the task, once each time the mode
+    // is chosen (the full text is in the page: without JS or with reduced motion it just shows).
+    let typing = 0;
+    function typeScene(mode: Mode) {
+      window.clearInterval(typing);
+      const target = hero!.querySelector<HTMLElement>(`.hero__scene--${mode} [data-typed]`);
+      if (!target || reduced.matches) return;
+      const full = target.dataset.full ?? (target.dataset.full = target.textContent ?? '');
+      let n = 0;
+      target.textContent = '';
+      typing = window.setInterval(() => {
+        n += 1;
+        target.textContent = full.slice(0, n);
+        if (n >= full.length) window.clearInterval(typing);
+      }, 55);
+    }
+
+    function select(mode: Mode, focus = false) {
+      current = mode;
+      hero!.dataset.mode = mode;
+      buttons.forEach((b) => {
+        const on = b.dataset.mode === mode;
+        b.setAttribute('aria-checked', String(on));
+        b.tabIndex = on ? 0 : -1;
+        if (on && focus) b.focus();
+      });
+      render(mode, true);
+      typeScene(mode);
+    }
+
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-mode]');
+      if (btn) select(btn.dataset.mode as Mode);
+    });
+    bar.addEventListener('keydown', (e) => {
+      const i = order.indexOf(current);
+      const next: Record<string, number> = {
+        ArrowRight: (i + 1) % order.length,
+        ArrowDown: (i + 1) % order.length,
+        ArrowLeft: (i - 1 + order.length) % order.length,
+        ArrowUp: (i - 1 + order.length) % order.length,
+        Home: 0,
+        End: order.length - 1,
+      };
+      if (e.key in next) {
+        e.preventDefault();
+        select(order[next[e.key]], true);
+      }
+    });
+
+    // The annotation is a live region only once the bar is usable.
+    hero.querySelector('[data-annot]')?.removeAttribute('aria-hidden');
+    render(current, false);
+    new ResizeObserver(() => current === 'design' && render('design', false)).observe(box);
+    // The scenes reach up to where the annotation of the Design mode is: its height, measured in that mode.
+    const annot = hero.querySelector<HTMLElement>('[data-annot]')!;
+    const measureAnnot = () => current === 'design' && hero.style.setProperty('--annot-h', `${annot.offsetHeight}px`);
+    new ResizeObserver(measureAnnot).observe(annot);
+    measureAnnot();
+    new ResizeObserver(() => placeThumb(false)).observe(bar);
+
+    // The cursors lean toward the mouse (src/lib/cursors.ts). Clicking one switches to its mode.
+    const cursorEls = [...hero.querySelectorAll<HTMLElement>('[data-cursor]')];
+    const follow = followPointer(hero, cursorEls);
+    // Then they leave the hero and travel the page (src/lib/journey.ts).
+    startJourney(hero, cursorEls, follow);
+    cursorEls.forEach((el) => el.addEventListener('click', () => select(el.dataset.cursor as Mode)));
+  }
+</script>

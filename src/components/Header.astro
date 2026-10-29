@@ -18,182 +18,423 @@ const t = useTranslations(locale);
 const home = localizedPath(locale, '');
 const anchor = (id: string) => (onHome ? `#${id}` : `${home}/#${id}`);
 const resume = assetUrl(profile.resume[locale]);
+const links = [
+  // Each section belongs to a lens; the marker takes its colour.
+  { id: 'about', label: t.nav.about, lens: 'analysis' },
+  { id: 'experience', label: t.nav.experience, lens: 'development' },
+  { id: 'projects', label: t.nav.projects, lens: 'design' },
+  { id: 'contact', label: t.nav.contact, lens: 'quality' },
+];
 ---
 
-<header class="site-header">
+<header class="site-header" data-header data-home={onHome}>
   <div class="container site-header__inner">
     <a class="brand" href={home}>
-      <span class="brand__mark">FM</span>
+      <span class="brand__mark" aria-hidden="true">FM</span>
       <span class="brand__name">Florencia Morelli</span>
     </a>
 
-    <button
-      type="button"
-      class="nav-toggle"
-      data-nav-toggle
-      aria-expanded="false"
-      aria-controls="primary-nav"
-      aria-label="Menu"
-    >
-      <Icon name="menu" />
-    </button>
+    <div class="site-header__group">
+      <nav id="primary-nav" class="site-nav" data-nav aria-label={t.nav.label}>
+        <ul class="site-nav__list">
+          {links.map((link) => (
+            <li style={`--i: ${links.indexOf(link)}`}><a href={anchor(link.id)} data-section={link.id} data-lens={link.lens}>{link.label}</a></li>
+          ))}
+        </ul>
+        <span class="site-nav__marker" aria-hidden="true" data-nav-marker></span>
+        <div class="site-nav__foot" style={`--i: ${links.length}`}>
+          <LangSwitcher locale={locale} href={altHref} />
+          <a class="btn btn--secondary" href={resume} download>{t.nav.resumeLong}</a>
+        </div>
+      </nav>
 
-    <nav id="primary-nav" class="site-nav" data-nav>
-      <ul class="site-nav__list">
-        <li><a href={anchor('about')}>{t.nav.about}</a></li>
-        <li><a href={anchor('experience')}>{t.nav.experience}</a></li>
-        <li><a href={anchor('projects')}>{t.nav.projects}</a></li>
-        <li><a href={anchor('contact')}>{t.nav.contact}</a></li>
-        <li>
-          <a class="site-nav__resume" href={resume} download>
-            <Icon name="download" size={18} />{t.nav.resume}
-          </a>
-        </li>
-      </ul>
-      <div class="site-nav__tools">
-        <LangSwitcher locale={locale} href={altHref} />
+      <span class="site-header__divider" aria-hidden="true"></span>
+
+      <div class="site-header__tools">
+        <div class="only-desktop"><LangSwitcher locale={locale} href={altHref} /></div>
         <ThemeToggle locale={locale} />
+        <a class="header-cv only-desktop" href={resume} download>
+          <span class="header-cv__icon"><Icon name="download" size={18} /></span>{t.nav.resume}
+        </a>
+        <button
+          type="button"
+          class="nav-toggle"
+          data-nav-toggle
+          data-label-open={t.nav.menuOpen}
+          data-label-close={t.nav.menuClose}
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label={t.nav.menuOpen}
+        >
+          <span class="nav-toggle__open"><Icon name="menu" /></span>
+          <span class="nav-toggle__close"><Icon name="close" /></span>
+        </button>
       </div>
-    </nav>
+    </div>
   </div>
 </header>
 
 <style>
+  /* Overlaps the content that follows (negative margin) so the hero can sit behind it. */
   .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
+    height: var(--header-h);
+    margin-bottom: calc(var(--header-h) * -1);
+  }
+  /* Transparent over the hero; once the page scrolls, the background and its bottom line fade in. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--bg);
+    border-bottom: var(--border-width) solid var(--border);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+  .site-header.is-scrolled::before {
+    opacity: 1;
   }
   .site-header__inner {
+    position: relative;
+    z-index: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    min-height: 4.25rem;
+    height: 100%;
   }
+  .site-header__group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
   .brand {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
     color: var(--text);
-    font-family: var(--font-mono);
-    font-weight: 700;
+    font-size: var(--text-h4);
+    line-height: var(--text-h4-lh);
+    font-weight: 600;
+  }
+  .brand:hover {
+    color: var(--text);
   }
   .brand__mark {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-md);
-    background: var(--accent);
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
     color: var(--accent-contrast);
-    font-size: var(--text-sm);
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    font-weight: 500;
   }
-  .brand__name {
-    font-size: var(--text-md);
-  }
-  .site-nav {
+
+  .site-nav__list {
     display: flex;
     align-items: center;
     gap: var(--space-6);
   }
-  .site-nav__list {
+  .site-nav__list a {
+    position: relative;
+    display: inline-block;
+    padding: 0.375rem var(--space-1) 0;
+    font-size: var(--text-nav);
+    line-height: var(--text-nav-lh);
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .site-nav__list a:hover,
+  .site-nav__list a:focus-visible,
+  .site-nav__list a[aria-current] {
+    color: var(--text);
+  }
+  /* Room for the section marker under each link. */
+  .site-nav__list a::after {
+    content: '';
+    display: block;
+    height: 2px;
+    margin-top: var(--space-1);
+  }
+  /* Section marker (Movimiento v2, ficha 9): one accent line under the link of the section in
+     view. It slides to the next link (translateX) and stretches to its width (scaleX). */
+  .site-nav {
+    position: relative;
+  }
+  .site-nav__marker {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    height: 2px;
+    background: var(--marker-ink, var(--accent));
+    transform-origin: left;
+    transform: translateX(var(--marker-x, 0)) scaleX(var(--marker-w, 0));
+    opacity: 0;
+    transition: transform var(--dur) var(--ease), opacity var(--dur-fast) var(--ease);
+  }
+  .site-nav__marker[data-shown] {
+    opacity: 1;
+  }
+  .site-nav__marker[data-instant] {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .site-nav__foot {
+    display: none;
+  }
+
+  .site-header__divider {
+    width: var(--border-width);
+    height: var(--space-6);
+    background: var(--border-strong);
+  }
+  .site-header__tools {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    gap: var(--space-2);
   }
-  .site-nav__list a {
-    color: var(--text-muted);
-  }
-  .site-nav__list a:hover {
-    color: var(--accent);
-  }
-  .site-nav__resume {
+  .header-cv {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-pill);
-    color: var(--accent) !important;
+    height: 2.25rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-button);
+    line-height: var(--text-button-lh);
+    font-weight: 600;
+    color: var(--text);
+    transition: background var(--dur-fast) var(--ease);
   }
-  .site-nav__resume:hover {
-    background: var(--accent);
-    color: var(--accent-contrast) !important;
+  .header-cv:hover {
+    background: var(--surface-alt);
+    color: var(--text);
   }
-  .site-nav__tools {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+  .header-cv:active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .header-cv__icon {
+    display: inline-grid;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .header-cv:hover .header-cv__icon {
+      transform: translateY(2px);
+    }
   }
   .nav-toggle {
     display: none;
     width: 2.5rem;
     height: 2.5rem;
+    padding: 0;
     place-items: center;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text);
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .nav-toggle:hover {
+    background: var(--surface-alt);
+  }
+  .nav-toggle:active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .nav-toggle__close,
+  .nav-toggle[aria-expanded='true'] .nav-toggle__open {
+    display: none;
+  }
+  .nav-toggle[aria-expanded='true'] .nav-toggle__close {
+    display: block;
   }
 
-  @media (max-width: 860px) {
-    .brand__name {
+  @media (max-width: 1023.98px) {
+    .site-header__divider,
+    .only-desktop {
       display: none;
     }
-    .nav-toggle {
+    /* Full-screen menu. It needs JS, so without it the links are left out. */
+    .site-nav {
+      display: none;
+    }
+    :global(.js) .nav-toggle {
       display: grid;
     }
-    .site-nav {
+    :global(.js) .site-nav {
       position: fixed;
-      inset: 4.25rem 0 auto 0;
+      inset: 0;
+      z-index: -1;
+      display: flex;
       flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-5);
-      padding: var(--space-5) var(--container-pad) var(--space-6);
-      background: var(--bg-elevated);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-130%);
-      transition: transform var(--dur) var(--ease);
+      padding: calc(var(--header-h) + var(--space-8)) var(--container-pad) var(--space-6);
+      background: var(--bg);
+      transition: opacity var(--dur) var(--ease), visibility 0s;
     }
-    .site-nav[data-open='true'] {
-      transform: translateY(0);
+    /* Hide after the fade; show at once so the first link can take focus. */
+    :global(.js) .site-nav:not([data-open='true']) {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease), visibility 0s var(--dur);
     }
-    .site-nav__list {
+    :global(.js) .site-nav__list {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-4);
-      font-size: var(--text-md);
     }
+    .site-nav__marker {
+      display: none;
+    }
+    :global(.js) .site-nav__list a[aria-current]::after {
+      width: var(--space-4);
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+    }
+    /* The links come down 8px into place, one after another. */
+    :global(.js) .site-nav__list li,
+    :global(.js) .site-nav__foot {
+      transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+      transition-delay: calc(var(--i, 0) * 40ms);
+    }
+    :global(.js) .site-nav:not([data-open='true']) .site-nav__list li,
+    :global(.js) .site-nav:not([data-open='true']) .site-nav__foot {
+      opacity: 0;
+      transform: translateY(calc(var(--space-2) * -1));
+      transition-delay: 0s;
+    }
+    :global(.js) .site-nav__list a {
+      font-size: var(--text-h3);
+      line-height: var(--text-h3-lh);
+      letter-spacing: var(--text-h3-ls);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    :global(.js) .site-nav__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    :global(.js) .site-nav__foot :global(.lang-switch) {
+      padding-inline: 0;
+    }
+  }
+  :global(html.menu-open) {
+    overflow: hidden;
   }
 </style>
 
 <script>
+  import { watch } from '../lib/motion';
+
+  const header = document.querySelector<HTMLElement>('[data-header]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const desktop = window.matchMedia('(min-width: 1024px)');
 
-  function closeNav() {
-    nav?.removeAttribute('data-open');
-    toggle?.setAttribute('aria-expanded', 'false');
+  function setOpen(open: boolean) {
+    if (!nav || !toggle) return;
+    if (open) nav.setAttribute('data-open', 'true');
+    else nav.removeAttribute('data-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '');
+    document.documentElement.classList.toggle('menu-open', open);
   }
 
   toggle?.addEventListener('click', () => {
-    const open = nav?.getAttribute('data-open') === 'true';
-    if (open) {
-      closeNav();
-    } else {
-      nav?.setAttribute('data-open', 'true');
-      toggle.setAttribute('aria-expanded', 'true');
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    setOpen(open);
+    if (open) nav?.querySelector<HTMLElement>('a')?.focus();
+  });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
     }
   });
+  desktop.addEventListener('change', () => desktop.matches && setOpen(false));
 
-  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
-  window.addEventListener('keydown', (e) => e.key === 'Escape' && closeNav());
+  // Transparent over the hero; solid with a bottom border once the page scrolls.
+  const syncScrolled = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  let queued = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        syncScrolled();
+        queued = false;
+      });
+    },
+    { passive: true },
+  );
+  syncScrolled();
+
+  // Section in view (home only): the one crossing a line at 40% of the window (a band of 0.5%,
+  // since an observer area of zero height reports nothing). Its link gets
+  // aria-current and the marker slides under it. Nothing is announced on each change.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-section]')].filter((link) =>
+    nav?.contains(link),
+  );
+  const marker = document.querySelector<HTMLElement>('[data-nav-marker]');
+  const crossing = new Set<string>();
+  let syncQueued = false;
+
+  function placeMarker(link?: HTMLAnchorElement) {
+    if (!marker) return;
+    if (!link) {
+      marker.removeAttribute('data-shown');
+      return;
+    }
+    // Coming from nothing, it appears in place instead of sliding in from the side.
+    if (!marker.hasAttribute('data-shown')) marker.setAttribute('data-instant', '');
+    marker.style.setProperty('--marker-x', `${link.offsetLeft}px`);
+    marker.style.setProperty('--marker-w', String(link.offsetWidth));
+    marker.style.setProperty('--marker-ink', `var(--lens-ink-${link.dataset.lens})`);
+    marker.setAttribute('data-shown', '');
+    requestAnimationFrame(() => marker.removeAttribute('data-instant'));
+  }
+
+  function syncActive() {
+    const current = links.filter((link) => crossing.has(link.dataset.section ?? '')).at(-1);
+    links.forEach((link) => {
+      if (link === current) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+    placeMarker(current);
+  }
+
+  if (header?.dataset.home === 'true') {
+    for (const link of links) {
+      const section = document.getElementById(link.dataset.section ?? '');
+      if (!section) continue;
+      watch(section, { rootMargin: '-40% 0px -59.5% 0px' }, (change) => {
+        if (change.isIntersecting) crossing.add(section.id);
+        else crossing.delete(section.id);
+        // One section leaving and the next one entering arrive as separate entries of the same
+        // batch: settle them together once the batch is done.
+        if (!syncQueued) {
+          syncQueued = true;
+          queueMicrotask(() => {
+            syncQueued = false;
+            syncActive();
+          });
+        }
+      });
+    }
+    // The links change width when the web font loads or the window changes: measure again only then.
+    const list = nav?.querySelector('ul');
+    if (list) new ResizeObserver(() => placeMarker(links.find((link) => link.hasAttribute('aria-current')))).observe(list);
+  }
 </script>

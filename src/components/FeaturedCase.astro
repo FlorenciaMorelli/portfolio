@@ -1,0 +1,327 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Locale } from '../i18n/utils';
+import { assetUrl } from '../lib/url';
+import { getCaseStudy, caseStudyPath } from '../lib/case-studies';
+import type { Project } from '../lib/types';
+
+interface Props {
+  project: Project;
+  locale: Locale;
+}
+const { project, locale } = Astro.props;
+const t = useTranslations(locale);
+
+const study = getCaseStudy(project.slug);
+const website = study?.website ?? project.links.find((l) => l.type === 'website')?.url;
+const host = website ? new URL(website).hostname.replace(/^www\./, '') : undefined;
+const stats = (study?.highlights ?? []).filter((h) => h.home);
+const cover = study?.cover;
+const studio = project.institution ?? study?.studio?.name;
+const caseHref = study ? caseStudyPath(locale, project.slug) : undefined;
+const description = project.description[locale] || project.description.en || project.description.es;
+// The note next to the screenshots: the E2E suites of the case figures, tested with Playwright.
+const e2e = study?.highlights.find((h) => h.label.en.includes('E2E'))?.value[locale];
+const playwright = study?.sections.find((s) => s.id === 'stack')?.tags?.includes('Playwright');
+---
+
+<article class="featured reveal" data-featured data-category={project.category} aria-labelledby="featured-title">
+  <div class="featured__text">
+    <p class="featured__meta">
+      <span class="tag">{t.projects.client}</span>
+      {studio && <span class="featured__studio">{t.projects.builtAt.replace('{studio}', studio)}</span>}
+    </p>
+    <h3 class="featured__title" id="featured-title">{project.name}</h3>
+    <p class="featured__desc">{description}</p>
+
+    {stats.length > 0 && (
+      <ul class="featured__stats">
+        {stats.map((stat) => (
+          <li>
+            <strong>{stat.value[locale]}</strong>
+            <span>{(stat.short ?? stat.label)[locale]}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="featured__actions">
+      {caseHref && (
+        <a class="btn btn--primary" href={caseHref}>
+          {t.projects.caseStudy}<Icon name="arrow-right" size={18} />
+        </a>
+      )}
+      {website && (
+        <a
+          class="icon-btn icon-btn--accent"
+          href={website}
+          target="_blank"
+          rel="noopener"
+          aria-label={`${t.projects.links.website}: ${project.name}`}
+          title={t.projects.links.website}
+        >
+          <Icon name="arrow-up-right" size={18} />
+        </a>
+      )}
+    </div>
+  </div>
+
+  {cover && (
+    <div class="featured__frame reveal reveal--still" data-reveal-at="0.4">
+      {host && (
+        <span class="featured__label" aria-hidden="true">
+          <Icon name="globe" size={12} />{host}
+        </span>
+      )}
+      <span class="featured__handle featured__handle--tl" aria-hidden="true"></span>
+      <span class="featured__handle featured__handle--tr" aria-hidden="true"></span>
+      <span class="featured__handle featured__handle--bl" aria-hidden="true"></span>
+      <span class="featured__handle featured__handle--br" aria-hidden="true"></span>
+      {e2e && playwright && (
+        <span class="featured__note" aria-hidden="true">
+          <span class="featured__note-key">E2E</span>{t.projects.e2eNote.replace('{n}', e2e)}
+        </span>
+      )}
+      <div class="featured__shots">
+        <img
+          class="featured__desktop"
+          src={assetUrl(cover.desktop.src)}
+          alt={cover.desktop.alt[locale]}
+          width={cover.desktop.width}
+          height={cover.desktop.height}
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="featured__mobile"
+          src={assetUrl(cover.mobile.src)}
+          alt={cover.mobile.alt[locale]}
+          width={cover.mobile.width}
+          height={cover.mobile.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  )}
+</article>
+
+<style>
+  .featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.47fr);
+    gap: var(--space-10);
+    align-items: center;
+    padding: var(--space-16) var(--space-12) var(--space-12);
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--canvas-dot) 1px, transparent 1.5px);
+    background-size: var(--space-6) var(--space-6);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+  .featured__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .featured__studio {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
+  }
+  .featured__title {
+    margin-top: var(--space-4);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2-lh);
+    letter-spacing: var(--text-h2-ls);
+  }
+  .featured__desc {
+    margin-top: var(--space-4);
+    font-size: var(--text-lead);
+    line-height: var(--text-lead-lh);
+    color: var(--text-muted);
+  }
+  .featured__stats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-4) var(--space-8);
+    margin-top: var(--space-8);
+  }
+  .featured__stats li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .featured__stats strong {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3-lh);
+    letter-spacing: var(--text-h3-ls);
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .featured__stats span {
+    max-width: 7.5rem;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
+  }
+  .featured__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+
+  /* Selection box around the screenshots, with the site's address as its label */
+  .featured__frame {
+    /* Figma: frame 634 × 380; screenshots placed inside it as percentages of that box */
+    --shot-desktop-left: 1.9%;
+    --shot-desktop-top: 6.3%;
+    --shot-desktop-width: 82%;
+    --shot-mobile-right: 4.3%;
+    --shot-mobile-bottom: 1.6%;
+    --shot-mobile-width: 23.3%;
+
+    position: relative;
+    aspect-ratio: 634 / 380;
+    border: var(--border-width) solid var(--accent);
+  }
+  .featured__label {
+    position: absolute;
+    bottom: 100%;
+    left: calc(var(--border-width) * -1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: var(--space-1) var(--space-2);
+    margin-bottom: calc(var(--border-width) * -1);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+  }
+  .featured__handle {
+    position: absolute;
+    width: var(--space-2);
+    height: var(--space-2);
+    background: var(--surface);
+    border: var(--border-width) solid var(--accent);
+  }
+  .featured__handle--tl { top: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .featured__handle--tr { top: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .featured__handle--bl { bottom: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .featured__handle--br { bottom: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .featured__shots {
+    position: absolute;
+    inset: 0;
+    /* The same name as the cover of the case: the pair travels between the two pages. */
+    view-transition-name: pair;
+  }
+
+  /* Annotation under the selection box (Movimiento v2, ficha 3): this was also tested. */
+  .featured__note {
+    position: absolute;
+    top: calc(100% + var(--space-3));
+    right: var(--space-4);
+    z-index: 1;
+    display: inline-flex;
+    overflow: hidden;
+    background: var(--surface);
+    border: var(--border-width) solid var(--text-muted);
+    border-radius: var(--radius-xs);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text);
+    white-space: nowrap;
+    gap: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  .featured__note-key {
+    padding-inline: var(--space-2);
+    background: var(--cursor-qa);
+    color: var(--cursor-qa-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+  }
+  /* Once 40% of the box is in view: the handles grow from .6 to 1 and, 120ms later, the
+     annotation comes up 8px. Without JS or with reduced motion both are already in place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .featured__frame.reveal .featured__handle {
+      transform: scale(0.6);
+      transition: transform var(--dur-fast) var(--ease);
+    }
+    :global(.js) .featured__frame.reveal .featured__note {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--dur) var(--ease) 120ms, transform var(--dur) var(--ease) 120ms;
+    }
+    :global(.js) .featured__frame.reveal.is-visible .featured__handle,
+    :global(.js) .featured__frame.reveal.is-visible .featured__note {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .featured__desktop {
+    position: absolute;
+    left: var(--shot-desktop-left);
+    top: var(--shot-desktop-top);
+    width: var(--shot-desktop-width);
+    height: auto;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-2);
+  }
+  .featured__mobile {
+    position: absolute;
+    right: var(--shot-mobile-right);
+    bottom: var(--shot-mobile-bottom);
+    width: var(--shot-mobile-width);
+    height: auto;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+  }
+
+  @media (max-width: 1023.98px) {
+    .featured {
+      grid-template-columns: 1fr;
+      padding: var(--space-12) var(--space-5) var(--space-5);
+    }
+    /* On small screens the screenshots come first, as in Figma. */
+    .featured__frame {
+      order: -1;
+    }
+  }
+  @media (max-width: 767.98px) {
+    .featured {
+      gap: var(--space-8);
+    }
+    /* Figma mobile: frame 264 × 197 with the phone larger and flush to the corner */
+    .featured__frame {
+      --shot-desktop-left: 3.8%;
+      --shot-desktop-top: 11.2%;
+      --shot-desktop-width: 80%;
+      --shot-mobile-right: 0.8%;
+      --shot-mobile-bottom: 0.5%;
+      --shot-mobile-width: 34%;
+
+      aspect-ratio: 264 / 197;
+    }
+    .featured__stats {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .featured__stats span {
+      max-width: none;
+    }
+    /* Mobile: the note sits on the bottom edge of the box */
+    .featured__note {
+      top: calc(100% - var(--space-3));
+      right: var(--space-2);
+    }
+  }
+</style>

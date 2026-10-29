@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap');
 @import './tokens.css';
 
 *,
@@ -19,13 +19,17 @@ html {
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  line-height: var(--text-base-lh);
   color: var(--text);
   background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
-  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+/* Changing the theme does not animate colours (only the toggle's own icons move). */
+.theme-switching *:not(.theme-toggle__icon) {
+  transition: none !important;
 }
 
 h1,
@@ -34,21 +38,32 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-mono);
-  line-height: var(--leading-tight);
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: 600;
   color: var(--text);
   text-wrap: balance;
 }
 
 h1 {
-  font-size: var(--text-4xl);
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+  letter-spacing: var(--text-display-ls);
 }
 h2 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  letter-spacing: var(--text-h2-ls);
 }
 h3 {
-  font-size: var(--text-lg);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  letter-spacing: var(--text-h3-ls);
+}
+h4,
+h5,
+h6 {
+  font-size: var(--text-h4);
+  line-height: var(--text-h4-lh);
 }
 
 p {
@@ -57,12 +72,26 @@ p {
 
 a {
   color: var(--accent);
+  border-radius: var(--radius-xs);
   text-decoration: none;
   transition: color var(--dur-fast) var(--ease);
 }
 
 a:hover {
   color: var(--accent-strong);
+}
+
+a:active {
+  color: var(--text);
+}
+
+/* Inline link (Enlace en línea): where a link is underlined, the line thickens on hover and press. */
+a {
+  text-decoration-thickness: 1px;
+}
+a:hover,
+a:active {
+  text-decoration-thickness: 2px;
 }
 
 img {
@@ -87,42 +116,29 @@ ul {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
 }
 
 /* Layout helpers */
+/* Content is --container-max wide, never narrower than the page minus the margins. */
 .container {
-  width: 100%;
-  max-width: var(--container-max);
+  width: min(100% - 2 * var(--container-pad), var(--container-max));
   margin-inline: auto;
-  padding-inline: var(--container-pad);
 }
 
 .section {
-  padding-block: var(--space-9);
+  position: relative;
+  padding-block: var(--space-24);
+}
+/* The content box is the reference for the section's decorative cursor. */
+.section > .container {
+  position: relative;
 }
 
 /* Keep anchored sections clear of the sticky header */
 :where(section[id], [id]:target) {
-  scroll-margin-top: 5rem;
-}
-
-.section-title {
-  font-size: var(--text-2xl);
-  margin-bottom: var(--space-6);
-}
-
-.section-title::before {
-  content: '';
-  display: inline-block;
-  width: 1.5ch;
-  height: 0.12em;
-  margin-right: 0.6ch;
-  vertical-align: middle;
-  background: var(--accent);
-  border-radius: var(--radius-pill);
+  scroll-margin-top: var(--space-20);
 }
 
 .eyebrow {
@@ -138,17 +154,17 @@ ul {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-pill);
-  border: 1px solid transparent;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-}
-.btn:hover {
-  transform: translateY(-1px);
+  min-height: 2.875rem;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-md);
+  border: var(--border-width) solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-button);
+  line-height: var(--text-button-lh);
+  font-weight: 600;
+  transition: box-shadow var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 .btn--primary {
   background: var(--accent);
@@ -157,14 +173,60 @@ ul {
 .btn--primary:hover {
   background: var(--accent-strong);
   color: var(--accent-contrast);
+  box-shadow: var(--glow-accent);
 }
-.btn--ghost {
-  border-color: var(--border);
+.btn--secondary {
+  background: var(--surface);
+  border-color: var(--border-strong);
   color: var(--text);
 }
-.btn--ghost:hover {
+.btn--primary:active {
+  background: var(--accent-strong);
+  color: var(--accent-contrast);
+  box-shadow: none;
+  transform: translateY(1px);
+}
+.btn--secondary:hover {
+  background: var(--surface-alt);
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--text);
+}
+.btn--secondary:active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+/* Disabled: flat, muted and without the hover effects (it comes after them on purpose) */
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  background: var(--surface-alt);
+  border-color: var(--border);
+  color: var(--text-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn--primary:disabled,
+.btn--primary[aria-disabled='true'] {
+  border-color: transparent;
+}
+
+/* Navigation (Movimiento v2, ficha 8): native cross-document view transitions, no library and
+   no router, so every page keeps its own scripts. The screenshot pair travels from the home
+   to the case cover (it has the same view-transition-name on both pages) in --dur-slow and
+   the rest of the page cross-fades in --dur. Browsers without support, and reduced motion,
+   navigate as usual. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-group(root) {
+    animation-duration: var(--dur);
+    animation-timing-function: var(--ease);
+  }
+  ::view-transition-group(pair) {
+    animation-duration: var(--dur-slow);
+    animation-timing-function: var(--ease);
+  }
 }
 
 /* Accessibility: skip link */
@@ -196,22 +258,141 @@ ul {
   border: 0;
 }
 
-/* Entrance reveal - only when JS is active and motion is welcome */
+/* Entrance reveal (src/lib/motion.ts), only when JS is active and motion is welcome.
+   - .reveal comes in once: from transparent and 32px lower.
+   - .reveal--still keeps the element in place; only its [data-reveal-item] children move.
+   - [data-reveal-item] children come in one after another: --i is their index (set in the
+     markup), --reveal-step the gap between them and --reveal-delay the wait before the first.
+   Without JS or with reduced motion everything is in its final place. */
 @media (prefers-reduced-motion: no-preference) {
-  .js .reveal {
+  .js .reveal:not(.reveal--still) {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(32px);
     transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
   }
-  .js .reveal.is-visible {
+  .js .reveal.is-visible:not(.reveal--still) {
     opacity: 1;
     transform: none;
+  }
+  .js .reveal [data-reveal-item] {
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--reveal-step, 40ms));
+  }
+  /* Hidden while any .reveal around it is still waiting (a block inside a revealed section
+     waits for its own turn). */
+  .js .reveal:not(.is-visible) [data-reveal-item] {
+    opacity: 0;
+  }
+}
+
+/* Scroll-linked progress (Movimiento v2, fichas 1, 2 and 4). On an element with [data-scroll],
+   --p goes from 0 to 1 while it crosses --scroll-range; its children turn --p into opacity and
+   transform (always with var(--p, 1)). Pure CSS: nothing reads the layout while scrolling.
+   Without support for scroll timelines, without JS or with reduced motion, --p stays at 1:
+   the final, static state. */
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+@keyframes scroll-progress {
+  from {
+    --p: 0;
+  }
+  to {
+    --p: 1;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-scroll] {
+      animation: scroll-progress ease-in-out both;
+      animation-timeline: view();
+      animation-range: var(--scroll-range, cover 15vh cover 50%);
+    }
+  }
+}
+
+/* A step inside a scroll-linked piece (Reposo → Activo → Completo). With --steps steps in the
+   piece, it is shown from step --from until step --to (99: it stays). --progress defaults to --p,
+   and a piece can raise it (on hover, for example). Without progress it is at the end. */
+[data-step] {
+  --at: calc(var(--progress, var(--p, 1)) * var(--steps, 1));
+  /* 0 → 1 as the step arrives, for pieces that also grow (transform) */
+  --step-in: clamp(0, var(--at) - var(--from, -1), 1);
+  opacity: calc(var(--step-in) - clamp(0, var(--at) - var(--to, 99), 1));
+}
+
+/* Depth (the thread of the whole site): the content does not slide up the page, it comes toward
+   you. Each block grows from a little smaller, rising and fading in as it enters the window, and
+   moves back, a little smaller and dimmer, as it leaves. The hero recedes the same way with the
+   first screen of scroll. Pure CSS tied to the scroll (view() and scroll() timelines), only
+   transform and opacity. Where there is no support, without JS or with reduced motion, the
+   .reveal fade above (or the static page) applies instead. */
+@keyframes depth {
+  0% {
+    opacity: 0;
+    transform: translateY(72px) scale(0.9);
+  }
+  28% {
+    opacity: 1;
+    transform: none;
+  }
+  86% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0.35;
+    transform: translateY(-36px) scale(0.96);
+  }
+}
+@keyframes depth-in {
+  from {
+    opacity: 0;
+    transform: translateY(72px) scale(0.9);
+  }
+}
+@keyframes depth-hero {
+  to {
+    opacity: 0.2;
+    transform: translateY(-6vh) scale(0.9);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js .reveal:not(.reveal--still):not(.is-entering) {
+      transition: none;
+      animation: depth var(--ease) both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+      transform-origin: 50% 70%;
+    }
+    /* Titles (and the intro of About) only come in: once there they stay still and sharp until they
+       leave, so they can be read at the top of the window. */
+    .js .depth {
+      transition: none;
+      animation: depth-in var(--ease) both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 30%;
+      transform-origin: 50% 70%;
+    }
+    .js .hero__inner {
+      animation: depth-hero var(--ease) both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 80vh;
+      transform-origin: 50% 40%;
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* Only the colour changes: the pressed primary button does not move. */
+  .btn--primary:active {
+    transform: none;
   }
   *,
   *::before,
@@ -222,10 +403,110 @@ ul {
   }
 }
 
-@media (max-width: 768px) {
-  :root {
-    --text-4xl: 2.4rem;
-    --text-3xl: 2rem;
-    --text-2xl: 1.6rem;
+/* Tags (Etiqueta): category, technology */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: 500;
+}
+.tag--tech {
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  line-height: var(--text-mono-lh);
+  font-weight: 400;
+}
+
+/* Icon button (Botón icono): always needs an aria-label */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.icon-btn:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+.icon-btn:active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.icon-btn--accent {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.icon-btn--accent:hover,
+.icon-btn--accent:active {
+  background: var(--accent-strong);
+  border-color: transparent;
+  color: var(--accent-contrast);
+}
+.icon-btn:disabled,
+.icon-btn[aria-disabled='true'] {
+  background: var(--surface-alt);
+  border-color: var(--border);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+.icon-btn--accent:disabled,
+.icon-btn--accent[aria-disabled='true'] {
+  border-color: transparent;
+}
+
+/* A title the cursor of its lens has clicked (src/lib/journey.ts): selected, as on the design
+   canvas, with a box and four handles in the colour of the lens. Decorative. */
+[data-lens-title] {
+  position: relative;
+  width: fit-content;
+}
+[data-lens-title]::before,
+[data-lens-title]::after {
+  content: '';
+  position: absolute;
+  inset: -0.375rem -0.75rem;
+  pointer-events: none;
+  opacity: 0;
+}
+[data-lens-title]::before {
+  border: var(--border-width) solid var(--ink, var(--accent));
+}
+[data-lens-title]::after {
+  --h: 0.375rem;
+  background:
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) left top / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) right top / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) left bottom / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) right bottom / var(--h) var(--h) no-repeat;
+  inset: calc(-0.375rem - var(--h) / 2) calc(-0.75rem - var(--h) / 2);
+}
+[data-lens-title='analysis'] { --ink: var(--lens-ink-analysis); }
+[data-lens-title='design'] { --ink: var(--lens-ink-design); }
+[data-lens-title='development'] { --ink: var(--lens-ink-development); }
+[data-lens-title='quality'] { --ink: var(--lens-ink-quality); }
+[data-lens-title][data-selected]::before,
+[data-lens-title][data-selected]::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-lens-title]::before,
+  [data-lens-title]::after {
+    transition: opacity var(--dur-fast) var(--ease);
   }
 }

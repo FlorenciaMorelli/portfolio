@@ -1,7 +1,5 @@
 ---
-import Icon from './Icon.astro';
 import { localizedPath, otherLocale, useTranslations, type Locale } from '../i18n/utils';
-import { localeNames } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -14,9 +12,9 @@ const href = Astro.props.href ?? localizedPath(target, '');
 ---
 
 <a class="lang-switch" href={href} hreflang={target} aria-label={t.lang.switchTo} data-lang-switch>
-  <Icon name="globe" size={18} />
-  <span>{target.toUpperCase()}</span>
-  <span class="visually-hidden">{localeNames[target]}</span>
+  <span class:list={['lang-switch__code', locale === 'es' && 'is-current']} aria-hidden="true">ES</span>
+  <span class="lang-switch__sep" aria-hidden="true">/</span>
+  <span class:list={['lang-switch__code', locale === 'en' && 'is-current']} aria-hidden="true">EN</span>
 </a>
 
 <style>
@@ -24,18 +22,28 @@ const href = Astro.props.href ?? localizedPath(target, '');
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    height: 2.5rem;
-    padding-inline: var(--space-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
-    color: var(--text);
+    height: 2.25rem;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    color: var(--text-faint);
+    transition: background var(--dur-fast) var(--ease);
   }
   .lang-switch:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    background: var(--surface-alt);
+    color: var(--text-faint);
+  }
+  .lang-switch:active {
+    background: var(--accent-soft);
+  }
+  .lang-switch__code {
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .lang-switch__code.is-current,
+  .lang-switch:hover .lang-switch__code {
+    color: var(--text);
   }
 </style>
 

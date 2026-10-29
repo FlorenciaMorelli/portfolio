@@ -41,7 +41,7 @@ const alternates = [
 
     <meta name="author" content="Florencia Morelli" />
     <meta name="theme-color" content="#000033" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#ececf0" media="(prefers-color-scheme: light)" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
@@ -95,21 +95,8 @@ const alternates = [
     <slot />
 
     <script>
-      const items = document.querySelectorAll<HTMLElement>('.reveal');
-      if (items.length) {
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                obs.unobserve(entry.target);
-              }
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px' },
-        );
-        items.forEach((el) => observer.observe(el));
-      }
+      import { reveal } from '../lib/motion';
+      reveal();
     </script>
   </body>
 </html>

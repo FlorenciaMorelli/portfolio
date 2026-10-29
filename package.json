@@ -9,6 +9,7 @@
     "fetch:projects": "node scripts/fetch-github-projects.mjs",
     "og": "node scripts/generate-og.mjs",
     "cv": "node scripts/generate-cv.mjs",
+    "work-days": "node scripts/work-days.mjs",
     "prebuild": "node scripts/fetch-github-projects.mjs",
     "build": "astro build",
     "preview": "astro preview",

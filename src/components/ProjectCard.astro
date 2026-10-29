@@ -3,173 +3,229 @@ import Icon from './Icon.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { assetUrl } from '../lib/url';
 import { getCaseStudy, caseStudyPath } from '../lib/case-studies';
-import type { Project, ProjectLinkType, IconName } from '../lib/types';
+import type { Project, ProjectLink, ProjectLinkType, IconName } from '../lib/types';
 
 interface Props {
   project: Project;
   locale: Locale;
+  /** Position in the grid, starting at 1. The home shows only the first few at first. */
+  rank: number;
 }
-const { project, locale } = Astro.props;
+const { project, locale, rank } = Astro.props;
 const t = useTranslations(locale);
 
 const iconFor: Record<ProjectLinkType, IconName> = {
-  repo: 'github',
+  repo: 'github-outline',
   download: 'download',
-  website: 'globe',
-  demo: 'external',
+  website: 'arrow-up-right',
+  demo: 'arrow-up-right',
   presentation: 'presentation',
   figma: 'figma',
 };
 
-const image = assetUrl(project.image);
-const description = project.description[locale] || project.description.en || project.description.es;
-const imageAlt = project.imageAlt?.[locale] ?? project.name;
+// The main destination is the live site or demo; the repository is the fallback.
+const priority: ProjectLinkType[] = ['website', 'demo', 'download', 'presentation', 'figma', 'repo'];
+const rankOf = (link: ProjectLink) => priority.indexOf(link.type);
+const primary = [...project.links].sort((a, b) => rankOf(a) - rankOf(b))[0];
+const secondary = project.links.filter((link) => link !== primary);
+
 const caseStudy = getCaseStudy(project.slug) ? caseStudyPath(locale, project.slug) : undefined;
+const main = caseStudy ?? assetUrl(primary?.url);
+const external = !caseStudy;
+
+const image = assetUrl(project.image);
+const imageAlt = project.imageAlt?.[locale] ?? project.name;
+const description = project.description[locale] || project.description.en || project.description.es;
+const category = t.projects.filters[project.category] ?? project.category;
 ---
 
-<article class="card reveal" data-category={project.category}>
+<article class="card reveal" data-card data-category={project.category} data-rank={rank}>
+  <span class="card__handle card__handle--tl" aria-hidden="true"></span>
+  <span class="card__handle card__handle--tr" aria-hidden="true"></span>
+  <span class="card__handle card__handle--bl" aria-hidden="true"></span>
+  <span class="card__handle card__handle--br" aria-hidden="true"></span>
+
   {image && (
     <div class="card__media">
       <img src={image} alt={imageAlt} loading="lazy" decoding="async" width="640" height="400" />
     </div>
   )}
+
   <div class="card__body">
-    <div class="card__head">
-      <div>
-        <h3 class="card__title">{project.name}</h3>
-        {project.institution && <p class="card__institution">{project.institution}</p>}
+    <div class="card__meta">
+      <div class="card__kind">
+        <span class="tag">{category}</span>
+        {project.institution && <span class="card__institution">{project.institution}</span>}
       </div>
-      <div class="card__links">
-        {project.links.map((link) => (
+      <div class="card__actions">
+        {[...secondary, ...(primary ? [primary] : [])].map((link) => (
           <a
             href={assetUrl(link.url)}
             target="_blank"
             rel="noopener"
-            class="card__link"
-            aria-label={t.projects.links[link.type]}
+            class:list={['icon-btn', link === primary && 'icon-btn--accent']}
+            aria-label={`${t.projects.links[link.type]}: ${project.name}`}
             title={t.projects.links[link.type]}
           >
-            <Icon name={iconFor[link.type]} size={18} />
+            <Icon name={iconFor[link.type]} size={18} class={`icon-${iconFor[link.type]}`} />
           </a>
         ))}
       </div>
     </div>
 
+    <h3 class="card__title">
+      {main ? (
+        <a class="card__link" href={main} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>{project.name}</a>
+      ) : (
+        project.name
+      )}
+    </h3>
+
     {description && <p class="card__desc">{description}</p>}
 
     <ul class="card__tech">
-      {project.technologies.map((tech) => <li>{tech}</li>)}
+      {project.technologies.slice(0, 3).map((tech) => <li class="tag tag--tech">{tech}</li>)}
     </ul>
-
-    {caseStudy && (
-      <a class="card__case" href={caseStudy}>
-        {t.projects.caseStudy}
-        <Icon name="arrow-right" size={16} />
-      </a>
-    )}
   </div>
 </article>
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
+    padding: var(--space-2);
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
-      border-color var(--dur) var(--ease);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-1);
+    transition: border-color var(--dur) var(--ease);
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+  /* Selection handles, as in Figma: they appear on hover and keyboard focus. */
+  .card__handle {
+    position: absolute;
+    width: var(--space-2);
+    height: var(--space-2);
+    background: var(--surface);
+    border: var(--border-width) solid var(--accent);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+    pointer-events: none;
+  }
+  .card__handle--tl { top: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .card__handle--tr { top: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .card__handle--bl { bottom: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .card__handle--br { bottom: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .card:hover,
+  .card:has(.card__link:focus-visible) {
     border-color: var(--accent);
   }
+  .card:hover .card__handle,
+  .card:has(.card__link:focus-visible) .card__handle {
+    opacity: 1;
+    transform: none;
+  }
+  .card:has(.card__link:focus-visible) {
+    outline: var(--focus-width) solid var(--focus);
+    outline-offset: var(--focus-offset);
+  }
+  /* The diagonal arrow leans 2px toward where it goes; with reduced motion only the background changes. */
+  .card__actions a :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card__actions a:hover :global(svg.icon-arrow-up-right) {
+      transform: translate(2px, -2px);
+    }
+  }
+  /* Cards that appear after a filter or «Ver los n proyectos» come up 8px, one after another. */
+  @media (prefers-reduced-motion: no-preference) {
+    .card.is-entering {
+      animation: card-enter var(--dur) var(--ease) both;
+      animation-delay: calc(var(--i, 0) * var(--stagger, 30ms));
+    }
+  }
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
   .card__media {
-    aspect-ratio: 16 / 10;
+    /* Figma: 368 × 200 */
+    aspect-ratio: 368 / 200;
     background: var(--surface-alt);
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
   .card__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease);
-  }
-  .card:hover .card__media img {
-    transform: scale(1.04);
   }
   .card__body {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-5);
     flex: 1;
+    padding: var(--space-4) var(--space-3) var(--space-3);
   }
-  .card__head {
+  .card__meta {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: start;
     gap: var(--space-3);
   }
-  .card__title {
-    font-size: var(--text-md);
-  }
-  .card__institution {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--text-faint);
-    margin-top: var(--space-1);
-  }
-  .card__links {
+  .card__kind {
     display: flex;
-    gap: var(--space-1);
-    flex-shrink: 0;
-  }
-  .card__link {
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-  }
-  .card__link:hover {
-    background: var(--accent-soft);
-    color: var(--accent);
-  }
-  .card__desc {
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    flex: 1;
-  }
-  .card__case {
-    display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    align-self: flex-start;
-    margin-top: var(--space-1);
-    font-family: var(--font-mono);
+    min-width: 0;
+  }
+  .card__institution {
+    font-size: var(--text-label);
+    line-height: var(--text-label-lh);
+    color: var(--text-faint);
+  }
+  .card__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+  .card__title {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4-lh);
+  }
+  /* The title link covers the whole card; the icon buttons sit above it. */
+  .card__link {
+    color: var(--text);
+  }
+  .card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-xl);
+  }
+  .card__link:hover {
+    color: var(--text);
+  }
+  .card__link:focus-visible {
+    outline: none;
+  }
+  .card__desc {
+    flex: 1;
     font-size: var(--text-sm);
-  }
-  .card__case :global(svg) {
-    transition: transform var(--dur-fast) var(--ease);
-  }
-  .card__case:hover :global(svg) {
-    transform: translateX(3px);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
   }
   .card__tech {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-  }
-  .card__tech li {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--accent);
-    background: var(--accent-soft);
-    padding: 2px var(--space-2);
-    border-radius: var(--radius-sm);
   }
 </style>

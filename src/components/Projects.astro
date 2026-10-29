@@ -1,7 +1,9 @@
 ---
 import ProjectCard from './ProjectCard.astro';
+import FeaturedCase from './FeaturedCase.astro';
+import SectionHeading from './SectionHeading.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
-import { getProjects, getUsedCategories } from '../lib/projects';
+import { getProjects, getUsedCategories, getClientCase } from '../lib/projects';
 
 interface Props {
   locale: Locale;
@@ -12,12 +14,13 @@ const t = useTranslations(locale);
 const projects = getProjects();
 const categories = ['All', ...getUsedCategories(projects)];
 const fromGithub = projects.some((p) => p.source === 'github');
+const featured = getClientCase(projects);
+const rest = projects.filter((p) => p !== featured);
 ---
 
-<section id="projects" class="section projects">
+<section id="projects" class="section projects" data-lens="design">
   <div class="container">
-    <h2 class="section-title">{t.projects.title}</h2>
-    <p class="projects__intro">{t.projects.intro}</p>
+    <SectionHeading title={t.projects.title} intro={t.projects.intro} lens="design" />
 
     <div class="projects__filters" role="group" aria-label={t.projects.title} data-filters>
       {categories.map((category, i) => (
@@ -32,90 +35,184 @@ const fromGithub = projects.some((p) => p.source === 'github');
       ))}
     </div>
 
+    {featured && <FeaturedCase project={featured} locale={locale} />}
+
     <div class="projects__grid" data-grid>
-      {projects.map((project) => <ProjectCard project={project} locale={locale} />)}
+      {rest.map((project, i) => <ProjectCard project={project} locale={locale} rank={i + 1} />)}
     </div>
 
     <p class="projects__empty" data-empty hidden>{t.projects.empty}</p>
+
+    <div class="projects__more" data-more>
+      <button type="button" class="btn btn--secondary" data-show-all>
+        {t.projects.showAll.replace('{n}', String(projects.length))}
+      </button>
+    </div>
 
     {fromGithub && <p class="projects__note">{t.projects.sourcedNote}</p>}
   </div>
 </section>
 
 <style>
-  .projects__intro {
-    color: var(--text-muted);
-    margin-top: calc(var(--space-6) * -1 + var(--space-2));
-    margin-bottom: var(--space-6);
+  .projects {
+    padding-block: var(--space-30);
+    background: var(--bg-band);
   }
   .projects__filters {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-    margin-bottom: var(--space-6);
+    margin-block: var(--space-8);
   }
   .filter {
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid var(--border);
+    height: 2.25rem;
+    padding: 0 var(--space-4);
+    border: var(--border-width) solid var(--border);
     border-radius: var(--radius-pill);
-    background: transparent;
+    background: var(--surface);
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    transition: all var(--dur-fast) var(--ease);
+    font-family: var(--font-sans);
+    font-size: var(--text-nav);
+    line-height: var(--text-nav-lh);
+    font-weight: 500;
+    transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
   }
   .filter:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--border-strong);
+    color: var(--text);
   }
   .filter[aria-pressed='true'] {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--accent-contrast);
   }
+  .filter:disabled {
+    background: var(--surface-alt);
+    border-color: var(--border);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
   .projects__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
-    gap: var(--space-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-6);
   }
   .projects__empty {
     margin-top: var(--space-6);
-    color: var(--text-faint);
-    font-family: var(--font-mono);
     font-size: var(--text-sm);
+    color: var(--text-faint);
+  }
+  /* Needs JS; without it every project is already on the page. */
+  .projects__more {
+    display: none;
+    justify-content: center;
+    margin-top: var(--space-10);
+  }
+  :global(.js) .projects__more:not([hidden]) {
+    display: flex;
   }
   .projects__note {
-    margin-top: var(--space-6);
-    color: var(--text-faint);
+    margin-top: var(--space-8);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--text-faint);
+    text-align: center;
+  }
+
+  @media (max-width: 1023.98px) {
+    .projects__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767.98px) {
+    .projects {
+      padding-block: var(--space-20);
+    }
+    .projects__grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <script>
   const filters = document.querySelector<HTMLElement>('[data-filters]');
   const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const featured = document.querySelector<HTMLElement>('[data-featured]');
   const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const more = document.querySelector<HTMLElement>('[data-more]');
+  const showAll = document.querySelector<HTMLButtonElement>('[data-show-all]');
 
-  filters?.addEventListener('click', (event) => {
-    const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
-    if (!btn || !grid) return;
+  if (filters && grid) {
+    const cards = [...grid.querySelectorAll<HTMLElement>('[data-card]')];
+    // At first the home shows three cards next to the featured case, two on small screens.
+    const wide = window.matchMedia('(min-width: 1024px)');
+    let category = 'All';
+    let expanded = false;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    filters.querySelectorAll('[data-filter]').forEach((b) =>
-      b.setAttribute('aria-pressed', String(b === btn)),
-    );
+    /** `stagger`: the cards that appear come in one after another, this many ms apart. */
+    function apply(stagger = 0, keepMore = false) {
+      const limit = wide.matches ? 3 : 2;
+      let visible = 0;
+      let entering = 0;
 
-    const category = btn.dataset.filter;
-    let visible = 0;
-    grid.querySelectorAll<HTMLElement>('[data-category]').forEach((card) => {
-      const show = category === 'All' || card.dataset.category === category;
-      card.hidden = !show;
-      if (show) {
-        visible += 1;
-        card.classList.add('is-visible');
+      if (featured) {
+        const show = category === 'All' || featured.dataset.category === category;
+        featured.hidden = !show;
+        if (show) visible += 1;
       }
+      cards.forEach((card) => {
+        const matches = category === 'All' || card.dataset.category === category;
+        const inRange = category !== 'All' || expanded || Number(card.dataset.rank) <= limit;
+        const wasHidden = card.hidden;
+        card.hidden = !(matches && inRange);
+        card.classList.remove('is-entering');
+        if (!card.hidden) {
+          visible += 1;
+          card.classList.add('is-visible');
+          if (stagger && wasHidden) {
+            card.style.setProperty('--i', String(entering++));
+            card.style.setProperty('--stagger', `${stagger}ms`);
+            void card.offsetWidth; // restart the entrance if it was already running
+            card.classList.add('is-entering');
+          }
+        }
+      });
+
+      if (empty) empty.hidden = visible !== 0;
+      if (more && !keepMore) more.hidden = category !== 'All' || expanded || cards.length <= limit;
+    }
+
+    filters.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      filters.querySelectorAll('[data-filter]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b === btn)),
+      );
+      category = btn.dataset.filter ?? 'All';
+      apply(30);
     });
 
-    if (empty) empty.hidden = visible !== 0;
-  });
+    showAll?.addEventListener('click', () => {
+      const limit = wide.matches ? 3 : 2;
+      expanded = true;
+      // The new cards come in 40ms apart while the button fades out and goes away.
+      const fade = more && !reduced.matches ? more.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease-out', fill: 'forwards' }) : null;
+      apply(40, Boolean(fade));
+      if (fade) {
+        setTimeout(() => {
+          if (more) more.hidden = true;
+          fade.cancel();
+        }, 240);
+      }
+      // The button goes away, so keep the keyboard where the new content starts.
+      cards.find((card) => Number(card.dataset.rank) === limit + 1)?.querySelector<HTMLElement>('.card__link')?.focus();
+    });
+
+    wide.addEventListener('change', apply);
+    apply();
+  }
 </script>

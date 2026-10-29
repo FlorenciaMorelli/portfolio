@@ -1,0 +1,180 @@
+---
+// Quality lens: a QA task whose first criterion is the real unit test count of the last run
+// (written at build time, src/lib/test-stats.ts). Decorative (aria-hidden). Steps: Por hacer with
+// nothing checked, En curso as the criteria get checked, Finalizado with all of them (a mouse clicks the chip).
+import { useTranslations, type Locale } from '../../i18n/utils';
+import { testStats } from '../../lib/test-stats';
+import './lens.css';
+
+interface Props {
+  locale: Locale;
+  /** The hero's version: the task is about the headline, which is being typed as its title (data-typed). */
+  scene?: boolean;
+}
+const { scene = false } = Astro.props;
+const t = useTranslations(Astro.props.locale);
+const task = t.lenses.task;
+const stats = testStats();
+const fill = (text: string, n: number | string, total: number) => text.replace('{n}', String(n)).replace('{total}', String(total));
+const headline = `${t.hero.title.lead} ${t.hero.title.connector} ${t.hero.title.accent}`;
+const criteria = scene
+  ? t.lenses.scene.criteria.map((c) => c.replace('{title}', headline))
+  : [fill(task.unitTests, stats.passed, stats.total), ...t.lenses.ticket.criteria.slice(1)];
+const total = criteria.length;
+const [before, after] = task.count.split('{n}');
+const [todo, doing, done] = task.status;
+---
+
+<div class:list={['lens task', scene && 'task--scene']} aria-hidden="true" style={`--steps: ${total}`}>
+  <p class="task__key">
+    <span class="lens__box"><span class="lens__tick"></span></span>
+    <span class="lens__label">Portfolio / QA-01</span>
+  </p>
+  {scene ? (
+    <p class="task__title task__title--field"><span data-typed>{headline}</span><span class="lens__caret"></span></p>
+  ) : (
+    <p class="task__title">{task.title}</p>
+  )}
+  <p class="task__status">
+    <span class="lens__pointer" data-pointer><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z"/></svg></span>
+    <span class="task__chip" data-step style="--to: 0">{todo}</span>
+    <span class="task__chip task__chip--doing" data-step style={`--from: 0; --to: ${total - 1}`}>{doing}</span>
+    <span class="task__chip task__chip--done" data-step style={`--from: ${total - 1}`}>✓ {done}</span>
+  </p>
+  <p class="task__criteria-head">
+    <span class="lens__label">{t.lenses.ticket.criteriaTitle}</span>
+    <span class="lens__label">
+      {before}<span class="task__count">
+        {Array.from({ length: total + 1 }, (_, n) => (
+          <span data-step style={`--from: ${n - 1}; --to: ${n === total ? 99 : n}`}>{n}</span>
+        ))}
+      </span>{fill(after, '', total)}
+    </span>
+  </p>
+  <ul class="lens__checks">
+    {criteria.map((criterion, i) => (
+      <li>
+        <span class="lens__box"><span class="lens__tick" data-step style={`--from: ${i}`}></span></span>
+        <span class="lens__ellipsis">{criterion}</span>
+      </li>
+    ))}
+  </ul>
+  <div class="task__details">
+    <p class="lens__label">{task.details}</p>
+    <p class="lens__label">{task.assignee}</p>
+    <p class="task__person"><span class="task__avatar">FM</span>Florencia Morelli</p>
+    <p class="lens__label">{task.labels}</p>
+    <p class="task__tags">{task.tags.map((tag) => <span>{tag}</span>)}</p>
+  </div>
+</div>
+
+<style>
+  .task {
+    padding: var(--space-3) var(--space-4);
+  }
+  .task__key {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .task__key .lens__tick {
+    background: var(--text-faint);
+  }
+  .task__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-base);
+    line-height: var(--text-base-lh);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .task__title--field {
+    padding: var(--space-1) var(--space-2);
+    border: calc(var(--border-width) * 2) solid var(--accent);
+    border-radius: var(--radius-sm);
+  }
+  /* The three states sit on top of each other; the progress shows one */
+  .task__status {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    margin-top: var(--space-2);
+    /* The mouse comes in, clicks «En curso» (a small press) and the chip becomes «Finalizado». */
+    --move: clamp(0, calc(var(--progress, var(--p, 1)) / 0.6), 1);
+    --press: clamp(0, calc(1 - max(var(--progress, var(--p, 1)) - 0.7, 0.7 - var(--progress, var(--p, 1))) * 12), 1);
+  }
+  .task__status > :global(.lens__pointer) {
+    left: 2.25rem;
+    top: 0.5rem;
+    opacity: clamp(0, calc(var(--progress, var(--p, 1)) * 6), 1);
+    transform: translate(calc((1 - var(--move)) * 48px), calc((1 - var(--move)) * 30px)) scale(calc(1 - 0.2 * var(--press)));
+    transform-origin: 0 0;
+  }
+  .task__chip {
+    grid-area: 1 / 1;
+    padding: 0.125rem var(--space-2);
+    border-radius: var(--radius-xs);
+    background: var(--surface-alt);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+  }
+  .task__chip--doing {
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--border-width) var(--text-muted);
+  }
+  .task__chip--done {
+    background: var(--cursor-qa);
+    color: var(--cursor-qa-text);
+  }
+  .task__criteria-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: var(--border-width) solid var(--border);
+  }
+  .task__count {
+    display: inline-grid;
+  }
+  .task__count > * {
+    grid-area: 1 / 1;
+  }
+  .task__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--surface-alt);
+  }
+  .task__person {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text);
+  }
+  .task__avatar {
+    display: grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--radius-pill);
+    background: var(--brand);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+  }
+  .task__tags {
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--text-muted);
+  }
+</style>

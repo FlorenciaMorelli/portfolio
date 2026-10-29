@@ -230,16 +230,57 @@ ul {
   border: 0;
 }
 
-/* Entrance reveal - only when JS is active and motion is welcome */
+/* Entrance reveal (src/lib/motion.ts), only when JS is active and motion is welcome.
+   - .reveal comes in once: from transparent and 14px lower.
+   - .reveal--still keeps the element in place; only its [data-reveal-item] children move.
+   - [data-reveal-item] children come in one after another: --i is their index (set in the
+     markup), --reveal-step the gap between them and --reveal-delay the wait before the first.
+   Without JS or with reduced motion everything is in its final place. */
 @media (prefers-reduced-motion: no-preference) {
-  .js .reveal {
+  .js .reveal:not(.reveal--still) {
     opacity: 0;
     transform: translateY(14px);
     transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
   }
-  .js .reveal.is-visible {
+  .js .reveal.is-visible:not(.reveal--still) {
     opacity: 1;
     transform: none;
+  }
+  .js .reveal [data-reveal-item] {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--reveal-step, 40ms));
+  }
+  .js .reveal.is-visible [data-reveal-item] {
+    opacity: 1;
+  }
+}
+
+/* Scroll-linked progress (Movimiento v2, fichas 1, 2 and 4). On an element with [data-scroll],
+   --p goes from 0 to 1 while it crosses --scroll-range; its children turn --p into opacity and
+   transform (always with var(--p, 1)). Pure CSS: nothing reads the layout while scrolling.
+   Without support for scroll timelines, without JS or with reduced motion, --p stays at 1:
+   the final, static state. */
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+@keyframes scroll-progress {
+  from {
+    --p: 0;
+  }
+  to {
+    --p: 1;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-scroll] {
+      animation: scroll-progress linear both;
+      animation-timeline: view();
+      animation-range: var(--scroll-range, cover 15vh cover 50%);
+    }
   }
 }
 

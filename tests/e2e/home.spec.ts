@@ -114,12 +114,12 @@ test.describe('How I work', () => {
   test('the task shows the real unit test count of the last run', async ({ page }) => {
     const stats = JSON.parse(readFileSync('.astro/test-stats.json', 'utf8'));
     expect(stats.failed).toBe(0);
-    await expect(page.locator('.task')).toContainText(`Pruebas unitarias en verde (${stats.passed} de ${stats.total})`);
+    await expect(page.locator('#about .task')).toContainText(`Pruebas unitarias en verde (${stats.passed} de ${stats.total})`);
   });
 
   test('the editor shows real lines of src/lib/motion.ts with their numbers', async ({ page }) => {
     const source = readFileSync('src/lib/motion.ts', 'utf8').split('\n');
-    const rows = page.locator('.editor__lines li');
+    const rows = page.locator('#about .editor__lines li');
     expect(await rows.count()).toBeGreaterThan(3);
     for (const row of await rows.all()) {
       const n = Number(await row.locator('.editor__n').textContent());
@@ -129,30 +129,30 @@ test.describe('How I work', () => {
   });
 
   test('the design view measures the real button', async ({ page }) => {
-    const button = page.locator('.design-view__button');
+    const button = page.locator('#about .design-view__button');
     await button.scrollIntoViewIfNeeded();
     // Its own size, not the zoomed-out one on the canvas.
     const size = await button.evaluate((el: HTMLElement) => `${el.offsetWidth} × ${el.offsetHeight}`);
-    await expect(page.locator('[data-measure]')).toHaveText(size);
+    await expect(page.locator('#about [data-measure]')).toHaveText(size);
     expect(size).toMatch(/× 46$/);
   });
 
   test('the ticket and the editor have a blinking caret, the design view and the task a mouse', async ({ page }) => {
-    await expect(page.locator('.ticket .lens__caret')).toHaveCount(1);
-    await expect(page.locator('.editor__lines .lens__caret')).toHaveCount(1);
-    await expect(page.locator('.ticket .lens__caret')).toHaveCSS('animation-name', 'lens-blink');
-    await expect(page.locator('.design-view .lens__pointer')).toHaveCount(1);
-    await expect(page.locator('.task .lens__pointer')).toHaveCount(1);
+    await expect(page.locator('#about .ticket .lens__caret')).toHaveCount(1);
+    await expect(page.locator('#about .editor__lines .lens__caret')).toHaveCount(1);
+    await expect(page.locator('#about .ticket .lens__caret')).toHaveCSS('animation-name', 'lens-blink');
+    await expect(page.locator('#about .design-view .lens__pointer')).toHaveCount(1);
+    await expect(page.locator('#about .task .lens__pointer')).toHaveCount(1);
   });
 
   test('the task ends as Finalizado, the one the mouse clicked', async ({ page }) => {
-    await expect(page.locator('.task__chip--done')).toContainText('Finalizado');
-    await expect(page.locator('.task__chip--doing')).toContainText('En curso');
+    await expect(page.locator('#about .task__chip--done')).toContainText('Finalizado');
+    await expect(page.locator('#about .task__chip--doing')).toContainText('En curso');
   });
 
   test('the mouse grows the design view button as the card wakes up', async ({ page }) => {
     test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
-    const target = page.locator('.design-view__target');
+    const target = page.locator('#about .design-view__target');
     const scale = () => target.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
     expect(await scale()).toBeCloseTo(0.8, 1);
     await page.locator('.facet--design').evaluate((el) => {
@@ -185,7 +185,7 @@ test.describe('How I work', () => {
     expect(Number(await thumb.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.6);
     await card.hover();
     await expect.poll(() => thumb.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
-    await expect(page.locator('.task__chip--done')).toHaveCSS('opacity', '1');
+    await expect(page.locator('#about .task__chip--done')).toHaveCSS('opacity', '1');
   });
 });
 
@@ -533,6 +533,36 @@ test.describe('Hero', () => {
     expect(Math.hypot(transform.m41, transform.m42)).toBeGreaterThan(2);
     expect(Math.hypot(transform.m41, transform.m42)).toBeLessThanOrEqual(12.5);
     expect(before).not.toBeNull();
+  });
+
+  test('each lens shows its piece of work in place of the headline, which stays in the page', async ({ page }) => {
+    const h1 = page.getByRole('heading', { level: 1, name: 'Del requerimiento a producción.' });
+    const scenes = { analysis: '.ticket', development: '.editor', quality: '.task' };
+    // Design is the headline itself.
+    await expect(h1).toHaveCSS('opacity', '1');
+    for (const [mode, selector] of Object.entries(scenes)) {
+      await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
+      const scene = page.locator(`.hero__scene--${mode}`);
+      await expect(scene).toHaveAttribute('aria-hidden', 'true');
+      await expect(scene).toHaveCSS('visibility', 'visible');
+      await expect(scene.locator(selector)).toBeVisible();
+      // The headline fades out but keeps its place and its text: nothing moves and a screen reader still reads it.
+      await expect(h1).toHaveCSS('opacity', '0');
+      await expect(h1).toContainText('producción.');
+    }
+    await page.locator('.hero__mode[data-mode="design"]').click();
+    await expect(h1).toHaveCSS('opacity', '1');
+    await expect(page.locator('.hero__scene--quality')).toHaveCSS('visibility', 'hidden');
+  });
+
+  test('the box keeps its size when the mode changes', async ({ page }) => {
+    const box = page.locator('[data-box]');
+    const size = async () => box.evaluate((el) => `${el.offsetWidth}x${el.offsetHeight}`);
+    const before = await size();
+    for (const mode of ['analysis', 'development', 'quality', 'design']) {
+      await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
+      expect(await size()).toBe(before);
+    }
   });
 
   test('hides the cursors below 1280px so they never cover the text', async ({ page }) => {
@@ -962,7 +992,7 @@ test.describe('Reduced motion', () => {
 
   test('stops the carets from blinking', async ({ page }) => {
     await page.goto('/portfolio/');
-    await expect(page.locator('.ticket .lens__caret')).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('#about .ticket .lens__caret')).toHaveCSS('animation-name', 'none');
   });
 
   test('shows the How I work thumbnails complete', async ({ page }) => {
@@ -971,8 +1001,8 @@ test.describe('Reduced motion', () => {
       await expect(thumb).toHaveCSS('opacity', '1');
       await expect(thumb).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
     }
-    await expect(page.locator('.task__chip--done')).toHaveCSS('opacity', '1');
-    await expect(page.locator('.task__chip').first()).toHaveCSS('opacity', '0');
+    await expect(page.locator('#about .task__chip--done')).toHaveCSS('opacity', '1');
+    await expect(page.locator('#about .task__chip').first()).toHaveCSS('opacity', '0');
   });
 
   test('shows the work calendar complete', async ({ page }) => {
@@ -1060,7 +1090,17 @@ test.describe('Without JavaScript', () => {
   test('shows the How I work thumbnails complete', async ({ page }) => {
     await page.goto('/portfolio/');
     for (const thumb of await page.locator('.facet__thumb').all()) await expect(thumb).toHaveCSS('opacity', '1');
-    await expect(page.locator('.ticket .lens__tick').last()).toHaveCSS('opacity', '1');
+    await expect(page.locator('#about .ticket .lens__tick').last()).toHaveCSS('opacity', '1');
+  });
+});
+
+test.describe('Hero scenes with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('the scene is complete at once', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await page.locator('.hero__mode[data-mode="quality"]').click();
+    await expect(page.locator('.hero__scene--quality')).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('.hero__scene--quality .task__chip--done')).toHaveCSS('opacity', '1');
   });
 });
 

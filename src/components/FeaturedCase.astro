@@ -20,6 +20,9 @@ const cover = study?.cover;
 const studio = project.institution ?? study?.studio?.name;
 const caseHref = study ? caseStudyPath(locale, project.slug) : undefined;
 const description = project.description[locale] || project.description.en || project.description.es;
+// The note next to the screenshots: the E2E suites of the case figures, tested with Playwright.
+const e2e = study?.highlights.find((h) => h.label.en.includes('E2E'))?.value[locale];
+const playwright = study?.sections.find((s) => s.id === 'stack')?.tags?.includes('Playwright');
 ---
 
 <article class="featured reveal" data-featured data-category={project.category} aria-labelledby="featured-title">
@@ -64,7 +67,7 @@ const description = project.description[locale] || project.description.en || pro
   </div>
 
   {cover && (
-    <div class="featured__frame">
+    <div class="featured__frame reveal reveal--still" data-reveal-at="0.4">
       {host && (
         <span class="featured__label" aria-hidden="true">
           <Icon name="globe" size={12} />{host}
@@ -74,6 +77,11 @@ const description = project.description[locale] || project.description.en || pro
       <span class="featured__handle featured__handle--tr" aria-hidden="true"></span>
       <span class="featured__handle featured__handle--bl" aria-hidden="true"></span>
       <span class="featured__handle featured__handle--br" aria-hidden="true"></span>
+      {e2e && playwright && (
+        <span class="featured__note" aria-hidden="true">
+          <span class="featured__note-key">E2E</span>{t.projects.e2eNote.replace('{n}', e2e)}
+        </span>
+      )}
       <div class="featured__shots">
         <img
           class="featured__desktop"
@@ -211,6 +219,50 @@ const description = project.description[locale] || project.description.en || pro
     position: absolute;
     inset: 0;
   }
+
+  /* Annotation under the selection box (Movimiento v2, ficha 3): this was also tested. */
+  .featured__note {
+    position: absolute;
+    top: calc(100% + var(--space-3));
+    right: var(--space-4);
+    z-index: 1;
+    display: inline-flex;
+    overflow: hidden;
+    background: var(--surface);
+    border: var(--border-width) solid var(--text-muted);
+    border-radius: var(--radius-xs);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text);
+    white-space: nowrap;
+    gap: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  .featured__note-key {
+    padding-inline: var(--space-2);
+    background: var(--cursor-qa);
+    color: var(--cursor-qa-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+  }
+  /* Once 40% of the box is in view: the handles grow from .6 to 1 and, 120ms later, the
+     annotation comes up 8px. Without JS or with reduced motion both are already in place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .featured__frame.reveal .featured__handle {
+      transform: scale(0.6);
+      transition: transform var(--dur-fast) var(--ease);
+    }
+    :global(.js) .featured__frame.reveal .featured__note {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--dur) var(--ease) 120ms, transform var(--dur) var(--ease) 120ms;
+    }
+    :global(.js) .featured__frame.reveal.is-visible .featured__handle,
+    :global(.js) .featured__frame.reveal.is-visible .featured__note {
+      opacity: 1;
+      transform: none;
+    }
+  }
   .featured__desktop {
     position: absolute;
     left: var(--shot-desktop-left);
@@ -263,6 +315,11 @@ const description = project.description[locale] || project.description.en || pro
     }
     .featured__stats span {
       max-width: none;
+    }
+    /* Mobile: the note sits on the bottom edge of the box */
+    .featured__note {
+      top: calc(100% - var(--space-3));
+      right: var(--space-2);
     }
   }
 </style>

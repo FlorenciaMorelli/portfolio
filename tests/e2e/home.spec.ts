@@ -282,6 +282,40 @@ test.describe('Projects', () => {
     await expect(more).toBeHidden();
   });
 
+  test('the new cards come in one after another and the keyboard lands on the first', async ({ page }) => {
+    const total = await page.locator('[data-card]').count();
+    const limit = (page.viewportSize()?.width ?? 0) >= 1024 ? 3 : 2;
+    await page.getByRole('button', { name: `Ver los ${total + 1} proyectos` }).click();
+    const entering = page.locator('[data-card].is-entering');
+    await expect(entering).toHaveCount(total - limit);
+    await expect(entering.nth(1)).toHaveCSS('animation-delay', '0.04s');
+    await expect(page.locator(`[data-card][data-rank="${limit + 1}"] .card__link`)).toBeFocused();
+  });
+
+  test('a filter brings its cards in, 30ms apart', async ({ page }) => {
+    await page.getByRole('button', { name: 'Juegos' }).click();
+    const entering = page.locator('[data-card].is-entering');
+    expect(await entering.count()).toBeGreaterThan(1);
+    await expect(entering.nth(1)).toHaveCSS('animation-delay', '0.03s');
+  });
+
+  test('the featured case notes its E2E suites once the box is in view', async ({ page }) => {
+    const note = page.locator('.featured__note');
+    await expect(note).toHaveAttribute('aria-hidden', 'true');
+    await expect(note).toHaveText('E2E19 suites con Playwright');
+    await expect(note).toHaveCSS('opacity', '0');
+    await page.locator('.featured__frame').scrollIntoViewIfNeeded();
+    await expect(note).toHaveCSS('opacity', '1');
+    await expect(page.locator('.featured__handle').first()).toHaveCSS('transform', 'none');
+  });
+
+  test('the diagonal arrow of a card leans on hover', async ({ page }) => {
+    test.skip(!(await page.evaluate(() => matchMedia('(hover: hover)').matches)), 'needs a pointer');
+    const button = page.locator('[data-card]:visible .card__actions a:has(svg.icon-arrow-up-right)').first();
+    await button.hover();
+    await expect(button.locator('svg')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 2, -2)');
+  });
+
   test('a filter shows every project of that category and no «Ver los» button', async ({ page }) => {
     await page.locator('[data-filter="Web"]').click();
     await expect(page.getByRole('button', { name: /^Ver los \d+ proyectos$/ })).toBeHidden();
@@ -677,6 +711,18 @@ test.describe('Reduced motion', () => {
     await expect(weeks.last()).toHaveCSS('opacity', '1');
   });
 
+  test('shows the featured case note and handles in place', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.featured__note')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.featured__handle').first()).toHaveCSS('transform', 'none');
+  });
+
+  test('shows filtered cards without an entrance', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await page.getByRole('button', { name: 'Juegos' }).click();
+    await expect(page.locator('[data-card]:visible').first()).toHaveCSS('animation-name', 'none');
+  });
+
   test('keeps the scroll-linked progress at its end', async ({ page }) => {
     await page.goto('/portfolio/');
     expect(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--p').trim())).toBe('1');
@@ -699,6 +745,11 @@ test.describe('Without JavaScript', () => {
   test('shows every revealed block in its final state', async ({ page }) => {
     await page.goto('/portfolio/');
     await expectRevealsSettled(page);
+  });
+
+  test('shows the featured case note', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.featured__note')).toHaveCSS('opacity', '1');
   });
 
   test('shows this year in the work calendar, complete and without year buttons', async ({ page }) => {

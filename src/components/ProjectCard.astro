@@ -67,7 +67,7 @@ const category = t.projects.filters[project.category] ?? project.category;
             aria-label={`${t.projects.links[link.type]}: ${project.name}`}
             title={t.projects.links[link.type]}
           >
-            <Icon name={iconFor[link.type]} size={18} />
+            <Icon name={iconFor[link.type]} size={18} class={`icon-${iconFor[link.type]}`} />
           </a>
         ))}
       </div>
@@ -129,6 +129,28 @@ const category = t.projects.filters[project.category] ?? project.category;
   .card:has(.card__link:focus-visible) {
     outline: var(--focus-width) solid var(--focus);
     outline-offset: var(--focus-offset);
+  }
+  /* The diagonal arrow leans 2px toward where it goes; with reduced motion only the background changes. */
+  .card__actions a :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card__actions a:hover :global(svg.icon-arrow-up-right) {
+      transform: translate(2px, -2px);
+    }
+  }
+  /* Cards that appear after a filter or «Ver los n proyectos» come up 8px, one after another. */
+  @media (prefers-reduced-motion: no-preference) {
+    .card.is-entering {
+      animation: card-enter var(--dur) var(--ease) both;
+      animation-delay: calc(var(--i, 0) * var(--stagger, 30ms));
+    }
+  }
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
   }
 
   .card__media {

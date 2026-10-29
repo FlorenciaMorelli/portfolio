@@ -96,6 +96,8 @@ type Dict = {
     links: Record<string, string>;
     caseStudy: string;
     sourcedNote: string;
+    /** Note of the featured case; `{n}` is its number of E2E suites. */
+    e2eNote: string;
     client: string;
     /** `{studio}` is replaced by the studio name. */
     builtAt: string;
@@ -311,6 +313,7 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Ver caso de estudio',
       sourcedNote: 'Catálogo actualizado automáticamente desde GitHub.',
+      e2eNote: '{n} suites con Playwright',
       client: 'Cliente',
       builtAt: 'Desarrollado en {studio}',
       showAll: 'Ver los {n} proyectos',
@@ -524,6 +527,7 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Read the case study',
       sourcedNote: 'Catalog updated automatically from GitHub.',
+      e2eNote: '{n} suites with Playwright',
       client: 'Client',
       builtAt: 'Built at {studio}',
       showAll: 'See all {n} projects',

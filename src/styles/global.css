@@ -205,6 +205,25 @@ ul {
   border-color: transparent;
 }
 
+/* Navigation (Movimiento v2, ficha 8): native cross-document view transitions, no library and
+   no router, so every page keeps its own scripts. The screenshot pair travels from the home
+   to the case cover (it has the same view-transition-name on both pages) in --dur-slow and
+   the rest of the page cross-fades in --dur. Browsers without support, and reduced motion,
+   navigate as usual. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-group(root) {
+    animation-duration: var(--dur);
+    animation-timing-function: var(--ease);
+  }
+  ::view-transition-group(pair) {
+    animation-duration: var(--dur-slow);
+    animation-timing-function: var(--ease);
+  }
+}
+
 /* Accessibility: skip link */
 .skip-link {
   position: absolute;

@@ -75,6 +75,18 @@ type Dict = {
   experience: {
     title: string;
     jobs: Job[];
+    /** Work calendar (decorative). `date` uses {wd}, {d}, {m} and {y}. */
+    calendar: {
+      title: string;
+      lastSix: string;
+      less: string;
+      more: string;
+      months: string[];
+      weekdays: string[];
+      date: string;
+      jobs: { maipu: string; smg: string; enivel7: string; guia: string };
+      firstCommit: string;
+    };
   };
   projects: {
     title: string;
@@ -212,6 +224,22 @@ export const ui: Record<Locale, Dict> = {
     },
     experience: {
       title: 'Experiencia',
+      calendar: {
+        title: 'Días trabajados',
+        lastSix: 'Últimos 6 meses',
+        less: 'Menos',
+        more: 'Más',
+        months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+        weekdays: ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'],
+        date: '{wd} {d} {m} {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Recepcionista y administrativa',
+          smg: 'SMG · Analista técnico-funcional',
+          enivel7: 'Enivel7 · Desarrolladora web front-end',
+          guia: 'Guia · Cofundadora y desarrolladora',
+        },
+        firstCommit: 'Primer commit de Audenpass',
+      },
       jobs: [
         {
           role: 'Cofundadora · Desarrolladora frontend y diseñadora UX/UI',
@@ -409,6 +437,22 @@ export const ui: Record<Locale, Dict> = {
     },
     experience: {
       title: 'Experience',
+      calendar: {
+        title: 'Days worked',
+        lastSix: 'Last 6 months',
+        less: 'Less',
+        more: 'More',
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        date: '{wd} {m} {d}, {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Receptionist and administrative assistant',
+          smg: 'SMG · Technical-functional analyst',
+          enivel7: 'Enivel7 · Front-end web developer',
+          guia: 'Guia · Co-founder and developer',
+        },
+        firstCommit: 'First Audenpass commit',
+      },
       jobs: [
         {
           role: 'Co-founder · Frontend developer and UX/UI designer',

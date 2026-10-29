@@ -1,5 +1,9 @@
 ---
 import Icon from './Icon.astro';
+import Ticket from './lenses/Ticket.astro';
+import DesignView from './lenses/DesignView.astro';
+import EditorPanel from './lenses/EditorPanel.astro';
+import TaskDetail from './lenses/TaskDetail.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { assetUrl } from '../lib/url';
 import type { IconName } from '../lib/types';
@@ -45,10 +49,16 @@ const [lead, ...rest] = t.about.body;
     <h3 class="about__subtitle">{t.about.howTitle}</h3>
     <ul class="facets">
       {facets.map((facet) => (
-        <li class={`facet facet--${facet.id}`}>
+        <li class={`facet facet--${facet.id}`} data-scroll>
           <span class="facet__icon" aria-hidden="true"><Icon name={facet.icon} size={20} /></span>
           <h4 class="facet__name">{facet.name}</h4>
           <p class="facet__desc">{t.about.how[facet.id]}</p>
+          <div class="facet__thumb">
+            {facet.id === 'analysis' && <Ticket locale={locale} />}
+            {facet.id === 'design' && <DesignView locale={locale} />}
+            {facet.id === 'development' && <EditorPanel />}
+            {facet.id === 'quality' && <TaskDetail locale={locale} />}
+          </div>
         </li>
       ))}
     </ul>
@@ -125,10 +135,44 @@ const [lead, ...rest] = t.about.body;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding: var(--space-5);
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    overflow: hidden;
     background: var(--surface);
     border: var(--border-width) solid var(--border);
     border-radius: var(--radius-xl);
+    transition: border-color var(--dur) var(--ease), --hover var(--dur) var(--ease);
+  }
+
+  /* Each card shows its tool, cut at the bottom of the card (Movimiento v2, ficha 1). The
+     thumbnail «wakes up» as the card nears the middle of the window: from 0 when its top crosses
+     85% of the window to 1 when its centre reaches 50%. With a pointer, hover completes it and
+     adds the accent border. Static (no support, no JS, reduced motion): complete. */
+  @property --hover {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+  .facet {
+    --scroll-range: cover 15vh cover 50%;
+    --progress: max(var(--p, 1), var(--hover));
+  }
+  @media (hover: hover) {
+    .facet:hover {
+      --hover: 1;
+      border-color: var(--accent);
+    }
+  }
+  .facet__thumb {
+    height: 7rem;
+    overflow: hidden;
+    margin-top: var(--space-3);
+    margin-inline: calc(var(--space-1) * -1);
+    opacity: calc(0.35 + 0.65 * var(--progress));
+    transform: translateY(calc((1 - var(--progress)) * 8px));
+  }
+  .facet__thumb > :global(.lens) {
+    border-bottom: 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
   .facet__icon {
     display: grid;

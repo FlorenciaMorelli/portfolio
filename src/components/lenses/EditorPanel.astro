@@ -1,0 +1,74 @@
+---
+// Development lens: real lines of this site's motion module, read at build time, so the line
+// numbers and the code are always the current ones. Decorative (aria-hidden). Steps: Reposo
+// (only the numbers), Activo (the code being written) and Completo (with the active line).
+import { highlightLine, excerpt } from '../../lib/highlight';
+import motion from '../../lib/motion.ts?raw';
+import './lens.css';
+
+const FILE = 'src/lib/motion.ts';
+const lines = excerpt(motion, 'const stop = watch(el', '    });');
+const indent = Math.min(...lines.filter((l) => l.text.trim()).map((l) => l.text.match(/^ */)![0].length));
+const active = lines.findIndex((l) => l.text.includes("classList.add('is-visible')"));
+---
+
+<div class="lens editor" aria-hidden="true" style={`--steps: ${lines.length + 1}`}>
+  <p class="lens__bar"><span class="lens__dot editor__dot"></span>{FILE}</p>
+  <ol class="editor__lines">
+    {lines.map((line, i) => (
+      <li>
+        {i === active && <span class="editor__active" data-step style={`--from: ${lines.length}`}></span>}
+        <span class="editor__n">{line.n}</span>
+        <code class="lens__ellipsis" data-step style={`--from: ${i}`}>
+          {highlightLine(line.text.slice(indent)).map((token) => <span class={`tok tok--${token.kind}`}>{token.text}</span>)}
+        </code>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .editor {
+    background: var(--code-bg);
+  }
+  .editor__dot {
+    color: var(--cursor-dev);
+  }
+  .editor__lines {
+    padding: var(--space-2) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: 1.375rem;
+    color: var(--code-text);
+  }
+  .editor__lines li {
+    position: relative;
+    display: flex;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+  .editor__active {
+    position: absolute;
+    inset: 0;
+    background: var(--code-line-active);
+  }
+  .editor__n {
+    position: relative;
+    flex: none;
+    min-width: 1.5rem;
+    text-align: right;
+    color: var(--code-line-number);
+  }
+  .editor__lines code {
+    position: relative;
+    display: block;
+    font: inherit;
+    white-space: pre;
+  }
+  .tok--keyword { color: var(--code-keyword); }
+  .tok--string { color: var(--code-string); }
+  .tok--function { color: var(--code-function); }
+  .tok--property { color: var(--code-property); }
+  .tok--number { color: var(--code-number); }
+  .tok--comment { color: var(--code-comment); }
+</style>

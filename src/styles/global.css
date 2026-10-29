@@ -288,6 +288,14 @@ ul {
   }
 }
 
+/* A step inside a scroll-linked piece (Reposo → Activo → Completo). With --steps steps in the
+   piece, it is shown from step --from until step --to (99: it stays). --progress defaults to --p,
+   and a piece can raise it (on hover, for example). Without progress it is at the end. */
+[data-step] {
+  --at: calc(var(--progress, var(--p, 1)) * var(--steps, 1));
+  opacity: calc(clamp(0, var(--at) - var(--from, -1), 1) - clamp(0, var(--at) - var(--to, 99), 1));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

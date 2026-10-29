@@ -1,0 +1,87 @@
+/* Shared pieces of the lens components (ticket, design view, editor and task): a small window of
+   a tool, decorative and without focus. Colours come from the theme and the codigo/* tokens. */
+
+.lens {
+  overflow: hidden;
+  background: var(--surface);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+/* Title bar with the file or project name */
+.lens__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-width) solid var(--border);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-sm);
+  line-height: var(--text-mono-sm-lh);
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.lens__dot {
+  flex: none;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.lens__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-sm);
+  line-height: var(--text-mono-sm-lh);
+  color: var(--text-faint);
+}
+
+/* Never wraps inside a panel: long lines end with «…» */
+.lens__ellipsis {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Checklist: an empty box, ticked when its step arrives */
+.lens__checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm-lh);
+  color: var(--text);
+}
+.lens__checks li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.lens__box {
+  position: relative;
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: 3px;
+}
+.lens__tick {
+  position: absolute;
+  inset: calc(var(--border-width) * -1);
+  border-radius: inherit;
+  background: var(--accent);
+}
+.lens__tick::after {
+  content: '';
+  position: absolute;
+  left: 0.3125rem;
+  top: 0.125rem;
+  width: 0.25rem;
+  height: 0.4375rem;
+  border: solid var(--accent-contrast);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}

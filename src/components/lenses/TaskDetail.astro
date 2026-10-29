@@ -1,0 +1,153 @@
+---
+// Quality lens: a QA task whose first criterion is the real unit test count of the last run
+// (written at build time, src/lib/test-stats.ts). Decorative (aria-hidden). Steps: Por hacer with
+// nothing checked, En curso as the criteria get checked, Listo with all of them.
+import { useTranslations, type Locale } from '../../i18n/utils';
+import { testStats } from '../../lib/test-stats';
+import './lens.css';
+
+interface Props {
+  locale: Locale;
+}
+const t = useTranslations(Astro.props.locale);
+const task = t.lenses.task;
+const stats = testStats();
+const fill = (text: string, n: number | string, total: number) => text.replace('{n}', String(n)).replace('{total}', String(total));
+const criteria = [fill(task.unitTests, stats.passed, stats.total), ...t.lenses.ticket.criteria.slice(1)];
+const total = criteria.length;
+const [before, after] = task.count.split('{n}');
+const [todo, doing, done] = task.status;
+---
+
+<div class="lens task" aria-hidden="true" style={`--steps: ${total}`}>
+  <p class="task__key">
+    <span class="lens__box"><span class="lens__tick"></span></span>
+    <span class="lens__label">Portfolio / QA-01</span>
+  </p>
+  <p class="task__title">{task.title}</p>
+  <p class="task__status">
+    <span class="task__chip" data-step style="--to: 0">{todo}</span>
+    <span class="task__chip task__chip--doing" data-step style={`--from: 0; --to: ${total - 1}`}>{doing}</span>
+    <span class="task__chip task__chip--done" data-step style={`--from: ${total - 1}`}>✓ {done}</span>
+  </p>
+  <p class="task__criteria-head">
+    <span class="lens__label">{t.lenses.ticket.criteriaTitle}</span>
+    <span class="lens__label">
+      {before}<span class="task__count">
+        {Array.from({ length: total + 1 }, (_, n) => (
+          <span data-step style={`--from: ${n - 1}; --to: ${n === total ? 99 : n}`}>{n}</span>
+        ))}
+      </span>{fill(after, '', total)}
+    </span>
+  </p>
+  <ul class="lens__checks">
+    {criteria.map((criterion, i) => (
+      <li>
+        <span class="lens__box"><span class="lens__tick" data-step style={`--from: ${i}`}></span></span>
+        <span class="lens__ellipsis">{criterion}</span>
+      </li>
+    ))}
+  </ul>
+  <div class="task__details">
+    <p class="lens__label">{task.details}</p>
+    <p class="lens__label">{task.assignee}</p>
+    <p class="task__person"><span class="task__avatar">FM</span>Florencia Morelli</p>
+    <p class="lens__label">{task.labels}</p>
+    <p class="task__tags">{task.tags.map((tag) => <span>{tag}</span>)}</p>
+  </div>
+</div>
+
+<style>
+  .task {
+    padding: var(--space-3) var(--space-4);
+  }
+  .task__key {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .task__key .lens__tick {
+    background: var(--text-faint);
+  }
+  .task__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-base);
+    line-height: var(--text-base-lh);
+    font-weight: 600;
+    color: var(--text);
+  }
+  /* The three states sit on top of each other; the progress shows one */
+  .task__status {
+    display: grid;
+    justify-items: start;
+    margin-top: var(--space-2);
+  }
+  .task__chip {
+    grid-area: 1 / 1;
+    padding: 0.125rem var(--space-2);
+    border-radius: var(--radius-xs);
+    background: var(--surface-alt);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+  }
+  .task__chip--doing {
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--border-width) var(--text-muted);
+  }
+  .task__chip--done {
+    background: var(--cursor-qa);
+    color: var(--cursor-qa-text);
+  }
+  .task__criteria-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: var(--border-width) solid var(--border);
+  }
+  .task__count {
+    display: inline-grid;
+  }
+  .task__count > * {
+    grid-area: 1 / 1;
+  }
+  .task__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--surface-alt);
+  }
+  .task__person {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text);
+  }
+  .task__avatar {
+    display: grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--radius-pill);
+    background: var(--brand);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+  }
+  .task__tags {
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--text-muted);
+  }
+</style>

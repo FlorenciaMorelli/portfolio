@@ -251,12 +251,13 @@ ul {
     transform: none;
   }
   .js .reveal [data-reveal-item] {
-    opacity: 0;
     transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
     transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--reveal-step, 40ms));
   }
-  .js .reveal.is-visible [data-reveal-item] {
-    opacity: 1;
+  /* Hidden while any .reveal around it is still waiting (a block inside a revealed section
+     waits for its own turn). */
+  .js .reveal:not(.is-visible) [data-reveal-item] {
+    opacity: 0;
   }
 }
 

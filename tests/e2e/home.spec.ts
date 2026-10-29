@@ -588,17 +588,16 @@ test.describe('Hero', () => {
 
   test('each scene takes the space of the Design mode, annotation and box, and the annotation is not shown', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) < 1024, 'the annotation floats above the box from 1024px');
-    const area = async () => {
-      const a = await page.locator('.hero__annot').boundingBox();
-      const b = await page.locator('[data-box]').boundingBox();
-      return { top: Math.round(a!.y), bottom: Math.round(b!.y + b!.height) };
-    };
-    const design = await area();
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator('[data-tag]')).toContainText('H1 ·');
+    // The space of the Design mode: its annotation plus its box. Layout sizes (offsetHeight), not the
+    // rectangles on screen: the hero shrinks a little with the scroll and the click may scroll the page.
+    const design = await page.evaluate(() => (document.querySelector('.hero__annot') as HTMLElement).offsetHeight + (document.querySelector('[data-box]') as HTMLElement).offsetHeight);
     for (const mode of ['analysis', 'development', 'quality']) {
       await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
-      const scene = await page.locator(`.hero__scene--${mode}`).boundingBox();
-      expect(Math.abs(Math.round(scene!.y) - design.top)).toBeLessThanOrEqual(3);
-      expect(Math.abs(Math.round(scene!.y + scene!.height) - design.bottom)).toBeLessThanOrEqual(3);
+      const scene = await page.evaluate((mode) => (document.querySelector(`.hero__scene--${mode}`) as HTMLElement).offsetHeight, mode);
+      // It is as tall as the Design mode's space (annotation band and box).
+      expect(Math.abs(scene - design)).toBeLessThanOrEqual(3);
       await expect(page.locator('.hero__annot')).toHaveCSS('opacity', '0');
       // Still there for screen readers: the live region says what changed.
       await expect(page.locator('[data-note]')).toHaveAttribute('aria-live', 'polite');

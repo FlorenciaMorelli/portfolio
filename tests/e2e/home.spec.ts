@@ -312,6 +312,31 @@ test.describe('Hero', () => {
     await expect(page.getByRole('radio', { name: 'Calidad' })).toHaveAttribute('aria-checked', 'true');
   });
 
+  test('slides the active background to the new mode', async ({ page }) => {
+    const thumb = page.locator('[data-thumb]');
+    const box = async (sel: string) => {
+      const b = await page.locator(sel).boundingBox();
+      return b && [Math.round(b.x), Math.round(b.width)];
+    };
+    await expect.poll(() => box('[data-thumb]')).toEqual(await box('.hero__mode[data-mode="design"]'));
+    await page.getByRole('radio', { name: 'Calidad' }).click();
+    await expect.poll(() => box('[data-thumb]')).toEqual(await box('.hero__mode[data-mode="quality"]'));
+    await expect(thumb).toHaveCSS('transition-duration', '0.24s');
+  });
+
+  test('cursors lean at most 12px toward the mouse', async ({ page }) => {
+    const cursor = page.locator('[data-cursor="design"]');
+    test.skip(!(await cursor.isVisible()), 'the cursors only show from 1280px');
+    const before = await cursor.boundingBox();
+    await page.mouse.move(5, 5);
+    await page.mouse.move(10, 700, { steps: 4 });
+    await page.waitForTimeout(1200);
+    const transform = await cursor.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform));
+    expect(Math.hypot(transform.m41, transform.m42)).toBeGreaterThan(2);
+    expect(Math.hypot(transform.m41, transform.m42)).toBeLessThanOrEqual(12.5);
+    expect(before).not.toBeNull();
+  });
+
   test('hides the cursors below 1280px so they never cover the text', async ({ page }) => {
     await page.setViewportSize({ width: 1180, height: 820 });
     await expect(page.locator('.hero__cursors')).toBeHidden();
@@ -492,6 +517,16 @@ test.describe('Reduced motion', () => {
     test.skip(!(await page.locator('[data-section="about"]').isVisible()), 'the marker is desktop only');
     await page.evaluate(() => document.getElementById('projects')?.scrollIntoView());
     await expect(page.locator('[data-nav-marker]')).toHaveCSS('transition-duration', /^1e-05s/);
+  });
+
+  test('keeps the hero cursors still', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const cursor = page.locator('[data-cursor="design"]');
+    test.skip(!(await cursor.isVisible()), 'the cursors only show from 1280px');
+    await page.mouse.move(10, 700, { steps: 4 });
+    await page.waitForTimeout(400);
+    await expect(cursor).toHaveCSS('transform', 'none');
+    await expect(cursor.locator('.hero__cursor-float')).toHaveCSS('translate', 'none');
   });
 
   test('keeps the scroll-linked progress at its end', async ({ page }) => {

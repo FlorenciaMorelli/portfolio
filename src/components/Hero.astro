@@ -233,7 +233,7 @@ const title = t.hero.title;
      1024px the annotation floats above the box, so the scene reaches up to where it is. */
   @media (min-width: 1024px) {
     .hero__scene {
-      top: -1.75rem;
+      top: calc(var(--annot-h, 1.75rem) * -1);
     }
   }
   /* The annotation is not shown over a scene (its text stays for screen readers, as the live
@@ -801,6 +801,11 @@ const title = t.hero.title;
     hero.querySelector('[data-annot]')?.removeAttribute('aria-hidden');
     render(current, false);
     new ResizeObserver(() => current === 'design' && render('design', false)).observe(box);
+    // The scenes reach up to where the annotation of the Design mode is: its height, measured in that mode.
+    const annot = hero.querySelector<HTMLElement>('[data-annot]')!;
+    const measureAnnot = () => current === 'design' && hero.style.setProperty('--annot-h', `${annot.offsetHeight}px`);
+    new ResizeObserver(measureAnnot).observe(annot);
+    measureAnnot();
     new ResizeObserver(() => placeThumb(false)).observe(bar);
 
     // The cursors lean toward the mouse (src/lib/cursors.ts). Clicking one switches to its mode.

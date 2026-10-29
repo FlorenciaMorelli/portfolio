@@ -1,0 +1,292 @@
+---
+// Work calendar (Movimiento v2, ficha 2): the days worked, darker when two jobs overlap. It is
+// decorative (aria-hidden): the jobs below are the real content. The year buttons are real
+// buttons. The weeks appear left to right with the scroll progress; static, the calendar is
+// complete. The data: src/lib/work-calendar.ts.
+import { useTranslations, type Locale } from '../i18n/utils';
+import { gridHtml, lastSixMonths } from '../lib/work-calendar';
+import workDays from '../data/work-days.json';
+import caseStudies from '../data/case-studies.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const c = t.experience.calendar;
+
+const today = new Date().toISOString().slice(0, 10);
+const year = Number(today.slice(0, 4));
+const years = Array.from({ length: year - 2020 + 1 }, (_, i) => 2020 + i);
+const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow', timeZone: 'UTC' });
+// 2024-01-01 is a Monday: Monday, Wednesday and Friday.
+const letters = [1, 3, 5].map((d) => narrow.format(new Date(Date.UTC(2024, 0, d)))) as [string, string, string];
+const labels = { months: c.months, letters };
+const six = lastSixMonths(today);
+const client = {
+  today,
+  work: workDays.days,
+  labels,
+  weekdays: c.weekdays,
+  date: c.date,
+  jobs: c.jobs,
+  milestone: { day: caseStudies.audenpass.firstCommit, label: c.firstCommit },
+};
+---
+
+<div class="cal" data-calendar data-scroll data-client={JSON.stringify(client)}>
+  <div class="cal__head">
+    <p class="cal__title" aria-hidden="true">{c.title}</p>
+    <div class="cal__years" role="group" aria-label={c.title}>
+      {years.map((y) => (
+        <button type="button" class="cal__year" data-year={y} aria-pressed={String(y === year)}>{y}</button>
+      ))}
+    </div>
+    <p class="cal__six" aria-hidden="true">{c.lastSix}</p>
+  </div>
+
+  <div class="cal__body" aria-hidden="true">
+    <div class="cal__view cal__view--year" data-year-view set:html={gridHtml(`${year}-01-01`, `${year}-12-31`, today, workDays.days, labels)} />
+    <div class="cal__view cal__view--six" set:html={gridHtml(six.from, six.to, today, workDays.days, labels)} />
+    <p class="cal__legend">
+      {c.less}
+      <span class="cal__day" data-l="0"></span><span class="cal__day" data-l="2"></span><span class="cal__day" data-l="4"></span>
+      {c.more}
+    </p>
+    <div class="cal__tip" data-tip></div>
+  </div>
+</div>
+
+<style>
+  .cal {
+    --cell: 0.5625rem;
+    --gap: 2px;
+    --scroll-range: cover 20vh contain 55vh;
+    position: relative;
+    max-width: 40rem;
+    margin-bottom: var(--space-8);
+    padding: var(--space-4) var(--space-5);
+    background: var(--surface);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-xl);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--text-faint);
+  }
+  .cal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  /* The years need JS; without it the calendar shows this year. */
+  .cal__years {
+    display: none;
+    gap: var(--space-1);
+  }
+  :global(.js) .cal__years {
+    display: flex;
+  }
+  .cal__year {
+    padding: 0.125rem var(--space-2);
+    border: 0;
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .cal__year:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+  }
+  .cal__year[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+  }
+  .cal__six,
+  .cal__view--six {
+    display: none;
+  }
+
+  .cal__body {
+    position: relative;
+  }
+  .cal__view :global(.cal__grid) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      '. months'
+      'letters weeks';
+    column-gap: var(--space-2);
+    row-gap: var(--space-1);
+  }
+  .cal__view :global(.cal__months) {
+    grid-area: months;
+    display: grid;
+    grid-template-columns: repeat(var(--weeks), calc(var(--cell) + var(--gap)));
+  }
+  .cal__view :global(.cal__months span) {
+    white-space: nowrap;
+  }
+  .cal__view :global(.cal__letters) {
+    grid-area: letters;
+    display: grid;
+    grid-template-rows: repeat(7, var(--cell));
+    row-gap: var(--gap);
+    font-size: 0.5625rem;
+    line-height: var(--cell);
+  }
+  .cal__view :global(.cal__weeks) {
+    grid-area: weeks;
+    display: flex;
+    gap: var(--gap);
+  }
+  .cal__view :global(.cal__week) {
+    display: grid;
+    grid-template-rows: repeat(7, var(--cell));
+    gap: var(--gap);
+  }
+  .cal :global(.cal__day) {
+    display: block;
+    width: var(--cell);
+    height: var(--cell);
+    border-radius: 2px;
+    background: var(--contrib-0);
+  }
+  .cal :global(.cal__day[data-l='2']) {
+    background: var(--contrib-2);
+  }
+  .cal :global(.cal__day[data-l='4']) {
+    background: var(--contrib-4);
+  }
+  .cal :global(.cal__day--out) {
+    visibility: hidden;
+  }
+  .cal :global(.cal__day.is-hover) {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .cal__legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--gap);
+    margin-top: var(--space-3);
+  }
+  .cal__legend .cal__day:first-of-type {
+    margin-left: var(--space-1);
+  }
+  .cal__legend .cal__day:last-of-type {
+    margin-right: var(--space-1);
+  }
+
+  /* Day detail: shown on hover or tap, after 80ms, in a fade. */
+  .cal__tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    min-width: 11rem;
+    max-width: 15rem;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-3);
+    color: var(--text-faint);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(var(--tip-x, 0), var(--tip-y, 0));
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .cal__tip[data-shown] {
+    opacity: 1;
+    transition-delay: 80ms;
+  }
+  .cal__tip :global(strong) {
+    display: block;
+    margin-top: var(--space-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  @media (max-width: 767.98px) {
+    .cal {
+      --cell: 0.625rem;
+      padding: var(--space-4);
+    }
+    :global(.js) .cal__years,
+    .cal__view--year {
+      display: none;
+    }
+    .cal__six,
+    .cal__view--six {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  import { gridHtml, type Job } from '../lib/work-calendar';
+
+  for (const cal of document.querySelectorAll<HTMLElement>('[data-calendar]')) {
+    const data = JSON.parse(cal.dataset.client ?? '{}');
+    const view = cal.querySelector<HTMLElement>('[data-year-view]')!;
+    const tip = cal.querySelector<HTMLElement>('[data-tip]')!;
+    const body = tip.parentElement!;
+
+    // A year at a time: the buttons draw the grid of their year.
+    cal.querySelectorAll<HTMLButtonElement>('[data-year]').forEach((button, _, all) => {
+      button.addEventListener('click', () => {
+        const y = button.dataset.year;
+        view.innerHTML = gridHtml(`${y}-01-01`, `${y}-12-31`, data.today, data.work, data.labels);
+        all.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      });
+    });
+
+    const format = (day: string) => {
+      const d = new Date(`${day}T00:00:00Z`);
+      return data.date
+        .replace('{wd}', data.weekdays[(d.getUTCDay() + 6) % 7])
+        .replace('{d}', String(d.getUTCDate()))
+        .replace('{m}', data.labels.months[d.getUTCMonth()])
+        .replace('{y}', String(d.getUTCFullYear()));
+    };
+
+    // Hover or tap a day: an accent ring and a card with the job of that day. Decorative: it
+    // takes no focus and is not announced.
+    let current: HTMLElement | null = null;
+    const hide = () => {
+      current?.classList.remove('is-hover');
+      current = null;
+      tip.removeAttribute('data-shown');
+    };
+    body.addEventListener('pointerover', (event) => {
+      const day = (event.target as HTMLElement).closest<HTMLElement>('.cal__day[data-d]');
+      if (!day || day === current) return;
+      current?.classList.remove('is-hover');
+      current = day;
+      day.classList.add('is-hover');
+      const jobs = (day.dataset.j?.split(' ') ?? []) as Job[];
+      const lines = jobs.map((job) => `<strong>${data.jobs[job]}</strong>`).join('');
+      const milestone = day.dataset.d === data.milestone.day ? `<span>${data.milestone.label}</span>` : '';
+      tip.innerHTML = `<span>${format(day.dataset.d!)}</span>${lines}${milestone}`;
+      // Measured on hover only: next to the day, kept inside the calendar.
+      const box = body.getBoundingClientRect();
+      const cell = day.getBoundingClientRect();
+      const x = Math.min(cell.left - box.left + 14, body.clientWidth - tip.offsetWidth);
+      const y = cell.top - box.top + 14;
+      tip.style.setProperty('--tip-x', `${Math.max(0, x)}px`);
+      tip.style.setProperty('--tip-y', `${y}px`);
+      tip.setAttribute('data-shown', '');
+    });
+    body.addEventListener('pointerleave', hide);
+  }
+</script>

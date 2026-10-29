@@ -203,6 +203,60 @@ test.describe('Experience', () => {
   });
 });
 
+test.describe('Work calendar', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  const wide = (page: Page) => (page.viewportSize()?.width ?? 0) >= 768;
+
+  test('is decorative, with real buttons for the years', async ({ page }) => {
+    await expect(page.locator('.cal__body')).toHaveAttribute('aria-hidden', 'true');
+    const years = page.getByRole('group', { name: 'Días trabajados' }).getByRole('button');
+    test.skip(!wide(page), 'one year at a time is the desktop view');
+    await expect(years.last()).toHaveAttribute('aria-pressed', 'true');
+    await expect(years.first()).toHaveText('2020');
+  });
+
+  test('paints two jobs darker and draws another year on request', async ({ page }) => {
+    test.skip(!wide(page), 'one year at a time is the desktop view');
+    await expect(page.locator('.cal__view--year [data-d="2026-09-28"]')).toHaveAttribute('data-l', '4');
+    await page.getByRole('button', { name: '2023' }).click();
+    await expect(page.getByRole('button', { name: '2023' })).toHaveAttribute('aria-pressed', 'true');
+    // A Saturday at Diagnóstico Maipú with a commit for Enivel7.
+    await expect(page.locator('.cal__view--year [data-d="2023-08-26"]')).toHaveAttribute('data-l', '4');
+    await expect(page.locator('.cal__view--year [data-d="2023-08-27"]')).toHaveAttribute('data-l', '2');
+  });
+
+  test('shows the job of a day on hover, with the milestone', async ({ page }) => {
+    test.skip(!wide(page), 'desktop view');
+    const day = page.locator('.cal__view--year [data-d="2026-09-28"]');
+    await day.scrollIntoViewIfNeeded();
+    await day.hover();
+    const tip = page.locator('[data-tip]');
+    await expect(tip).toContainText('lun 28 sep 2026');
+    await expect(tip).toContainText('SMG · Analista técnico-funcional');
+    await expect(tip).toContainText('Guia · Cofundadora y desarrolladora');
+    await expect(tip).toContainText('Primer commit de Audenpass');
+    await expect(tip).toHaveCSS('opacity', '1');
+  });
+
+  test('shows the last six months on small screens', async ({ page }) => {
+    test.skip(wide(page), 'mobile view');
+    await expect(page.locator('.cal__six')).toHaveText('Últimos 6 meses');
+    await expect(page.locator('.cal__view--six')).toBeVisible();
+    await expect(page.locator('.cal__view--year')).toBeHidden();
+  });
+
+  test('the weeks appear with the scroll', async ({ page }) => {
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const last = page.locator('.cal__view:visible .cal__week').last();
+    expect(Number(await last.evaluate((el) => getComputedStyle(el).opacity))).toBe(0);
+    await page.locator('[data-calendar]').evaluate((el) => window.scrollTo(0, window.scrollY + el.getBoundingClientRect().bottom - window.innerHeight * 0.4));
+    await expect.poll(() => last.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+});
+
 test.describe('Projects', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');
@@ -616,6 +670,13 @@ test.describe('Reduced motion', () => {
     await expect(page.locator('.task__chip').first()).toHaveCSS('opacity', '0');
   });
 
+  test('shows the work calendar complete', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const weeks = page.locator('.cal__view:visible .cal__week');
+    await expect(weeks.first()).toHaveCSS('opacity', '1');
+    await expect(weeks.last()).toHaveCSS('opacity', '1');
+  });
+
   test('keeps the scroll-linked progress at its end', async ({ page }) => {
     await page.goto('/portfolio/');
     expect(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--p').trim())).toBe('1');
@@ -638,6 +699,12 @@ test.describe('Without JavaScript', () => {
   test('shows every revealed block in its final state', async ({ page }) => {
     await page.goto('/portfolio/');
     await expectRevealsSettled(page);
+  });
+
+  test('shows this year in the work calendar, complete and without year buttons', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.cal__years')).toBeHidden();
+    await expect(page.locator('.cal__view:visible .cal__week').last()).toHaveCSS('opacity', '1');
   });
 
   test('shows the How I work thumbnails complete', async ({ page }) => {

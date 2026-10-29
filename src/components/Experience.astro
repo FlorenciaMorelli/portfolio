@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import SectionHeading from './SectionHeading.astro';
+import WorkCalendar from './WorkCalendar.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { caseStudyPath } from '../lib/case-studies';
 
@@ -14,6 +15,7 @@ const t = useTranslations(locale);
 <section id="experience" class="section experience">
   <div class="container">
     <SectionHeading title={t.experience.title} />
+    <WorkCalendar locale={locale} />
     <ol class="jobs">
       {t.experience.jobs.map((job) => (
         <li class:list={['job', 'reveal', !job.points && 'job--compact']}>
@@ -76,10 +78,6 @@ const t = useTranslations(locale);
     grid-template-columns: 12.5rem minmax(0, 1fr);
     column-gap: var(--space-10);
     padding-block: calc(var(--space-6) + var(--space-1));
-    border-top: var(--border-width) solid var(--border);
-  }
-  .job:first-child {
-    border-top: 0;
   }
   .job--compact {
     padding-block: var(--space-5);

@@ -283,7 +283,7 @@ las reglas de `global.css`. Cada componente lo importa; no se arma otro:
 
 - «Una vez al entrar»: `.reveal`, con variantes por atributo (escalonado, retraso y pasos
   internos).
-- «Ligado al progreso del scroll»: `[data-scroll]` anima `--p` de 0 a 1 con
+- «Ligado al progreso del scroll»: `[data-scroll]` anima `--p` de 0 a 1, con ease in-out (arranca y frena suave), con
   `animation-timeline: view()` dentro de `@supports`, en el tramo de `--scroll-range`. Los
   hijos lo traducen a `opacity` y `transform` con `var(--p, 1)`. Sin soporte, queda el estado
   final. No hay JavaScript que lea el layout en cada frame. Soporte: Chrome 115, Safari 26 y

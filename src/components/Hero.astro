@@ -319,9 +319,47 @@ const title = t.hero.title;
   .hero__cursors .hero__cursor--design.is-away { --c: var(--cursor-design); --c-text: var(--cursor-design-text); }
   .hero__cursors .hero__cursor--development.is-away { --c: var(--cursor-dev); --c-text: var(--cursor-dev-text); }
   .hero__cursors .hero__cursor--quality.is-away { --c: var(--cursor-qa); --c-text: var(--cursor-qa-text); }
-  .hero__cursor.is-click .hero__cursor-float {
-    scale: 0.86;
+  /* Over the content the arrow is solid, with a light edge so it reads over any text. */
+  .hero__cursor.is-away .hero__cursor-arrow {
+    fill: var(--c);
+    filter: drop-shadow(1.5px 0 0 var(--surface)) drop-shadow(-1.5px 0 0 var(--surface)) drop-shadow(0 1.5px 0 var(--surface)) drop-shadow(0 -1.5px 0 var(--surface));
   }
+  /* The click: the arrow presses down and a ring spreads from its tip. */
+  .hero__cursor.is-press .hero__cursor-float {
+    scale: 0.74;
+    transition-duration: 80ms;
+  }
+  .hero__cursor::after {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: 0.125rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: -1.125rem 0 0 -1.125rem;
+    border: 2px solid var(--ink, var(--c));
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 0 1px var(--surface), inset 0 0 0 1px var(--surface);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hero__cursor.is-ripple::after {
+    animation: hero-ripple 560ms var(--ease) both;
+  }
+  @keyframes hero-ripple {
+    from {
+      opacity: 0.9;
+      transform: scale(0.25);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .hero__cursor--analysis { --ink: var(--lens-ink-analysis); }
+  .hero__cursor--design { --ink: var(--lens-ink-design); }
+  .hero__cursor--development { --ink: var(--lens-ink-development); }
+  .hero__cursor--quality { --ink: var(--lens-ink-quality); }
   .hero__cursor-label {
     padding: 0 var(--space-2);
     border-radius: var(--radius-pill);

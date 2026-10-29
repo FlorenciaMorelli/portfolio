@@ -633,6 +633,38 @@ test.describe('Footer canvas', () => {
   });
 });
 
+test.describe('Navigation to the case', () => {
+  test('the screenshot pair has the same view-transition-name on the home and on the case', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const home = await page.locator('.featured__shots').evaluate((el) => getComputedStyle(el).getPropertyValue('view-transition-name'));
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const caseName = await page.locator('.pair--cover').evaluate((el) => getComputedStyle(el).getPropertyValue('view-transition-name'));
+    expect([home, caseName]).toEqual(['pair', 'pair']);
+    // Names must be unique on a page: no other element carries it.
+    expect(await page.locator('.pair').evaluateAll((els) => els.filter((el) => getComputedStyle(el).viewTransitionName === 'pair').length)).toBe(1);
+  });
+
+  test('navigates as usual with the normal focus order', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await page.getByRole('link', { name: 'Ver caso de estudio' }).click();
+    await expect(page).toHaveURL(/\/proyectos\/audenpass\/$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Audenpass');
+    // The page scripts start as in any navigation: the header marker and the theme toggle work.
+    await expect(page.locator('[data-header]')).toBeAttached();
+    await expect(page.locator('.pair--cover')).toBeVisible();
+  });
+});
+
+test.describe('Navigation with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('does not opt in to view transitions', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const rule = await page.evaluate(() => [...document.styleSheets].some((s) => { try { return [...s.cssRules].some((r) => r.cssText.startsWith('@view-transition')); } catch { return false; } }));
+    expect(rule).toBe(false);
+  });
+});
+
 test.describe('States', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');

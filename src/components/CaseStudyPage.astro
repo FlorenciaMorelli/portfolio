@@ -73,7 +73,7 @@ const studioName = study.studio?.name;
     </section>
 
     <div class="container">
-      <figure class="pair">
+      <figure class="pair pair--cover">
         <img
           class="pair__desktop"
           src={assetUrl(cover.desktop.src)}
@@ -290,6 +290,10 @@ const studioName = study.studio?.name;
   }
 
   /* Screenshot pair: both images end up the same height */
+  /* The cover pair has the same name as the screenshots of the featured case on the home (ficha 8). */
+  .pair--cover {
+    view-transition-name: pair;
+  }
   .pair {
     display: grid;
     grid-template-columns: 3.46fr 1fr;

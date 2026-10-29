@@ -37,6 +37,9 @@ interface Traveller {
   label: HTMLElement | null;
   home: string;
   away: string;
+  /** The click is a short sequence in time (arrive, press, release, select), not a scroll position. */
+  arrived: boolean;
+  timers: number[];
 }
 
 export function startJourney(hero: HTMLElement, els: HTMLElement[], follow: { setEnabled(on: boolean): void }): void {
@@ -54,6 +57,8 @@ export function startJourney(hero: HTMLElement, els: HTMLElement[], follow: { se
       label,
       home: label?.textContent ?? '',
       away: el.dataset.awayLabel ?? '',
+      arrived: false,
+      timers: [],
     };
   });
 
@@ -85,6 +90,28 @@ export function startJourney(hero: HTMLElement, els: HTMLElement[], follow: { se
     }
   };
 
+  // Arrive and settle, press (the arrow shrinks and a ring spreads from its tip), release and
+  // then the title is selected. Leaving the title undoes it.
+  const clear = (t: Traveller) => {
+    t.timers.forEach((id) => window.clearTimeout(id));
+    t.timers = [];
+    t.el.classList.remove('is-press', 'is-ripple', 'is-click');
+    t.title?.removeAttribute('data-selected');
+  };
+  const arrive = (t: Traveller) => {
+    t.timers.push(
+      window.setTimeout(() => {
+        t.el.classList.add('is-press', 'is-ripple');
+      }, 260),
+      window.setTimeout(() => {
+        t.el.classList.remove('is-press');
+        t.el.classList.add('is-click');
+        t.title?.setAttribute('data-selected', '');
+      }, 420),
+      window.setTimeout(() => t.el.classList.remove('is-ripple'), 900),
+    );
+  };
+
   const render = () => {
     frame = 0;
     const s = window.scrollY;
@@ -108,13 +135,18 @@ export function startJourney(hero: HTMLElement, els: HTMLElement[], follow: { se
         clicking = w > 0.985;
         // Once the title has gone up, the cursor goes with it.
         gone = Math.min(1, Math.max(0, (titleY + 160) / 160));
-        t.title.toggleAttribute('data-selected', clicking && gone > 0.2);
       }
       // Cursors start at their hero place: at the top of the page nothing moves.
       t.el.style.translate = `${(x - t.spot.x).toFixed(1)}px ${(y - t.spot.y).toFixed(1)}px`;
       t.el.style.opacity = gone.toFixed(2);
       t.el.classList.toggle('is-away', away);
-      t.el.classList.toggle('is-click', clicking);
+      if (clicking && !t.arrived) {
+        t.arrived = true;
+        arrive(t);
+      } else if (!clicking && t.arrived) {
+        t.arrived = false;
+        clear(t);
+      }
       const text = away ? t.away : t.home;
       if (t.label && t.label.textContent !== text) t.label.textContent = text;
     }
@@ -137,7 +169,9 @@ export function startJourney(hero: HTMLElement, els: HTMLElement[], follow: { se
     window.removeEventListener('scroll', schedule);
     follow.setEnabled(true);
     for (const t of travellers) {
-      t.el.classList.remove('is-journey', 'is-away', 'is-click');
+      t.arrived = false;
+      clear(t);
+      t.el.classList.remove('is-journey', 'is-away');
       for (const prop of ['left', 'top', 'translate', 'opacity']) t.el.style.removeProperty(prop);
       if (t.label) t.label.textContent = t.home;
       t.title?.removeAttribute('data-selected');

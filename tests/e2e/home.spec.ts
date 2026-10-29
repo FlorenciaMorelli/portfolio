@@ -733,9 +733,13 @@ test.describe('Cursors travelling the page', () => {
       const title = page.locator(`[data-lens-title="${lens}"]`);
       await title.evaluate((el) => window.scrollTo({ top: (el as HTMLElement).getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.4, behavior: 'instant' }));
       await expect(title).toHaveText(text);
-      await expect(title).toHaveAttribute('data-selected', '');
       const cursor = page.locator(`[data-cursor="${lens}"]`);
+      // It arrives, presses (the arrow shrinks, a ring spreads), releases and only then the title is selected.
+      await expect(cursor).toHaveClass(/is-press/);
+      await expect(title).not.toHaveAttribute('data-selected', '');
+      await expect(title).toHaveAttribute('data-selected', '');
       await expect(cursor).toHaveClass(/is-click/);
+      await expect(cursor).not.toHaveClass(/is-press/);
       const [c, t] = await Promise.all([cursor.boundingBox(), title.boundingBox()]);
       // The tip of the arrow is inside the title.
       expect(c!.x).toBeGreaterThan(t!.x - 4);

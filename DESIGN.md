@@ -306,6 +306,11 @@ aparece, y se aleja, más chico y más tenue, al salir. El hero retrocede igual 
 pantalla de scroll. Es CSS puro atado al scroll (`view()` y `scroll()`), solo `transform` y
 `opacity`; sin soporte, sin JS o con reduced motion rige el fundido de `.reveal` o la página estática.
 
+**Hero por modos.** Con el modo, el titular cede su lugar a la pieza de trabajo de esa lente: el
+ticket en Análisis, el editor en Desarrollo y la tarea en Calidad; Diseño es el titular. La pieza es
+decorativa (`aria-hidden`) y avanza de Reposo a Completo al aparecer; el titular se atenúa pero sigue
+en la página (lo lee un lector de pantalla) y la caja no cambia de tamaño. Sin JS queda en Diseño.
+
 **Fichas**
 
 | Ficha | Lugar | Disparador |

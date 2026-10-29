@@ -1,5 +1,8 @@
 ---
 import Icon from './Icon.astro';
+import Ticket from './lenses/Ticket.astro';
+import EditorPanel from './lenses/EditorPanel.astro';
+import TaskDetail from './lenses/TaskDetail.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import type { IconName } from '../lib/types';
 
@@ -61,6 +64,11 @@ const title = t.hero.title;
           <span class="hero__lead">{title.lead}<span class="hero__conn hero__conn--lead"> {title.connector}</span></span>
           <span class="hero__accent"><span class="hero__conn hero__conn--accent">{title.connector} </span>{title.accent}</span>
         </h1>
+        <!-- The same canvas seen from each lens: the headline gives way to the piece of work of that
+             part of the job. Decorative; the h1 stays in the page and is read as always. -->
+        <div class="hero__scene hero__scene--analysis" aria-hidden="true"><Ticket locale={locale} /></div>
+        <div class="hero__scene hero__scene--development" aria-hidden="true"><EditorPanel /></div>
+        <div class="hero__scene hero__scene--quality" aria-hidden="true"><TaskDetail locale={locale} /></div>
       </div>
     </div>
 
@@ -199,6 +207,61 @@ const title = t.hero.title;
     min-height: var(--hero-box-h);
     padding: var(--space-3) var(--space-4);
     border: var(--border-width) solid var(--accent);
+  }
+  /* Scenes (one per lens, except Design, which shows the headline itself). The headline fades out
+     but keeps its place, so the box never changes size; the scene fades in over it and its steps
+     play from 0 to 1 (--p), as in «Cómo trabajo». Without JS the page stays in Design mode. */
+  .hero__scene {
+    position: absolute;
+    inset: var(--space-3) var(--space-4) 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease), visibility 0s var(--dur-fast);
+  }
+  .hero__scene > :global(.lens) {
+    width: min(34rem, 100%);
+    border-bottom: 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    box-shadow: var(--shadow-2);
+  }
+  .hero__title {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__scene--analysis,
+  .hero[data-mode='development'] .hero__scene--development,
+  .hero[data-mode='quality'] .hero__scene--quality {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: var(--dur-fast), 0s;
+  }
+  .hero[data-mode='analysis'] .hero__title,
+  .hero[data-mode='development'] .hero__title,
+  .hero[data-mode='quality'] .hero__title {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero[data-mode='analysis'] .hero__scene--analysis,
+    .hero[data-mode='development'] .hero__scene--development,
+    .hero[data-mode='quality'] .hero__scene--quality {
+      animation: hero-scene var(--dur-slow) var(--ease) 80ms both, hero-scene-steps 1400ms ease-in-out 120ms both;
+    }
+  }
+  @keyframes hero-scene {
+    from {
+      transform: translateY(12px) scale(0.97);
+    }
+  }
+  @keyframes hero-scene-steps {
+    from {
+      --p: 0;
+    }
+    to {
+      --p: 1;
+    }
   }
   .hero__handle {
     position: absolute;

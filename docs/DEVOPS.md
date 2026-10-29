@@ -50,7 +50,7 @@ push a `staging`:
 - **Pruebas unitarias:** cada build (`astro build` o `astro dev`) corre vitest y guarda el
   resumen en `.astro/test-stats.json`, que muestran las piezas de Calidad. Si una prueba
   falla, el build falla.
-- **Calendario de trabajo** (Experiencia): `npm run work-days` lee, con tu sesión de `gh`, los
+- **Calendario de trabajo** (Experiencia): `npm run work-days` lee, con mi sesión de `gh`, los
   días con commits de los repositorios de Enivel7 y Guia y escribe solo el día y el puesto en
   `src/data/work-days.json`. Los repositorios son privados: se listan en
   `scripts/work-days.local.json`, que no se versiona (ver `scripts/work-days.example.json`).

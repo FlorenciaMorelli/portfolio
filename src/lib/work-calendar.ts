@@ -1,7 +1,7 @@
 // Work calendar of Experiencia: one square per day, darker when two jobs overlap. Pure functions,
 // used at build time and in the browser (to draw other years).
 //
-// Rules given by Florencia: Diagnóstico Maipú from Monday to Saturday (10/05/2020 to 01/12/2024),
+// Rules: Diagnóstico Maipú from Monday to Saturday (10/05/2020 to 01/12/2024),
 // SMG from Monday to Friday (from 02/12/2024), and the days with commits for Enivel7 and Guia
 // (src/data/work-days.json, written by scripts/work-days.mjs).
 

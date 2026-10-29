@@ -1,4 +1,4 @@
-// Days with commits for the work calendar in Experiencia. Run by hand, with your own `gh` login:
+// Days with commits for the work calendar in Experiencia. Run by hand, with my own `gh` login:
 //   npm run work-days
 // The repositories are private, so they are listed in scripts/work-days.local.json (not
 // versioned; see scripts/work-days.example.json). Only the day and the job are written to

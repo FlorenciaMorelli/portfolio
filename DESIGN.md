@@ -372,7 +372,7 @@ están dibujados en Figma pero no se usan en ninguna pantalla.
 **Footer nuevo (Lienzo).** Caja de selección con etiqueta de medida y manijas, cursores en
 las esquinas (ocultos en mobile) y grilla de puntos. Contenido: logo, «© año · Todos los
 derechos reservados.», «Buenos Aires, Argentina» (`cv.json`), GitHub, LinkedIn y volver
-arriba. Plan B aprobado: la dirección «README».
+arriba. Plan B: la dirección «README».
 
 **Dónde se suman los elementos nuevos**
 

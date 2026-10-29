@@ -88,6 +88,7 @@ const title = t.hero.title;
   </div>
 
   <div class="hero__bar" role="radiogroup" aria-label={t.hero.modes.label} data-bar>
+    <span class="hero__bar-thumb" aria-hidden="true" data-thumb></span>
     {modes.map((m) => (
       <button
         type="button"
@@ -284,13 +285,16 @@ const title = t.hero.title;
   .hero__cursor:active .hero__cursor-float {
     scale: 0.94;
   }
-  /* Each cursor drifts on its own rhythm while it waits. */
+  /* Each cursor drifts ±3px on its own rhythm while it waits (cycles of 6, 8, 9 and 11s). */
   @media (prefers-reduced-motion: no-preference) {
     .hero__cursor-float {
       animation: hero-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate;
     }
   }
   @keyframes hero-drift {
+    from {
+      translate: calc(var(--drift-x) * -1) calc(var(--drift-y) * -1);
+    }
     to {
       translate: var(--drift-x) var(--drift-y);
     }
@@ -304,10 +308,10 @@ const title = t.hero.title;
     font-weight: 500;
     white-space: nowrap;
   }
-  .hero__cursor--analysis { left: 13.89%; top: 27.78%; --drift-x: 0.5rem; --drift-y: -0.625rem; --drift-time: 5.2s; --drift-delay: 0s; }
-  .hero__cursor--design { left: 79.86%; top: 21.11%; --drift-x: -0.625rem; --drift-y: 0.5rem; --drift-time: 6.4s; --drift-delay: -2s; }
-  .hero__cursor--development { left: 77.08%; top: 56.67%; --drift-x: -0.5rem; --drift-y: -0.5rem; --drift-time: 5.8s; --drift-delay: -4s; }
-  .hero__cursor--quality { left: 15.97%; top: 60%; --drift-x: 0.625rem; --drift-y: 0.625rem; --drift-time: 7s; --drift-delay: -1s; }
+  .hero__cursor--analysis { left: 13.89%; top: 27.78%; --drift-x: 3px; --drift-y: -3px; --drift-time: 3s; --drift-delay: 0s; }
+  .hero__cursor--design { left: 79.86%; top: 21.11%; --drift-x: -3px; --drift-y: 3px; --drift-time: 4s; --drift-delay: -2s; }
+  .hero__cursor--development { left: 77.08%; top: 56.67%; --drift-x: -3px; --drift-y: -3px; --drift-time: 4.5s; --drift-delay: -3s; }
+  .hero__cursor--quality { left: 15.97%; top: 60%; --drift-x: 3px; --drift-y: 3px; --drift-time: 5.5s; --drift-delay: -1s; }
   .hero__cursor--analysis { --c: var(--cursor-analysis-idle); --c-text: var(--cursor-analysis-idle-text); }
   .hero__cursor--design { --c: var(--cursor-design-idle); --c-text: var(--cursor-design-idle-text); }
   .hero__cursor--development { --c: var(--cursor-dev-idle); --c-text: var(--cursor-dev-idle-text); }
@@ -359,9 +363,35 @@ const title = t.hero.title;
     background: var(--surface-alt);
     color: var(--text);
   }
+  .hero__mode {
+    position: relative;
+    z-index: 1;
+  }
   .hero__mode[aria-checked='true'] {
     background: var(--accent-soft);
     color: var(--accent);
+  }
+  /* With JS, the active background is one layer that slides to the new mode (translateX). */
+  .hero__bar-thumb {
+    display: none;
+  }
+  :global(.js) .hero__bar-thumb[data-ready] {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--thumb-w);
+    height: var(--thumb-h);
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+    transform: translate(var(--thumb-x), var(--thumb-y));
+    transition: transform var(--dur) var(--ease);
+  }
+  :global(.js) .hero__bar-thumb[data-ready] ~ .hero__mode[aria-checked='true'] {
+    background: transparent;
+  }
+  .hero__bar-thumb[data-instant] {
+    transition: none;
   }
   .hero__mode-name {
     display: none;
@@ -511,6 +541,7 @@ const title = t.hero.title;
     const tag = hero.querySelector<HTMLElement>('[data-tag]')!;
     const note = hero.querySelector<HTMLElement>('[data-note]')!;
     const label = hero.querySelector<HTMLElement>('[data-mode-label]')!;
+    const thumb = hero.querySelector<HTMLElement>('[data-thumb]')!;
     const box = hero.querySelector<HTMLElement>('[data-box]')!;
     const lead = hero.querySelector<HTMLElement>('.hero__lead')!;
     const accent = hero.querySelector<HTMLElement>('.hero__accent')!;
@@ -531,9 +562,25 @@ const title = t.hero.title;
       if (tag.textContent !== tagText) tag.textContent = tagText;
       if (note.textContent !== noteText) note.textContent = noteText;
       label.textContent = names[mode];
+      // The tag, the note and the bar label cross-fade (--dur-fast); the live region announces the note.
       if (animate && !reduced.matches) {
-        tag.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 140, easing: 'ease-out' });
+        for (const el of [tag, note, label]) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 140, easing: 'ease-out' });
       }
+      placeThumb(animate);
+    }
+
+    // The active background slides to the button of the new mode. Measured on mode changes and
+    // when the bar changes size, never while animating.
+    function placeThumb(animate: boolean) {
+      const btn = buttons.find((b) => b.dataset.mode === current);
+      if (!btn) return;
+      if (!animate) thumb.setAttribute('data-instant', '');
+      thumb.style.setProperty('--thumb-x', `${btn.offsetLeft}px`);
+      thumb.style.setProperty('--thumb-y', `${btn.offsetTop}px`);
+      thumb.style.setProperty('--thumb-w', `${btn.offsetWidth}px`);
+      thumb.style.setProperty('--thumb-h', `${btn.offsetHeight}px`);
+      thumb.setAttribute('data-ready', '');
+      if (!animate) requestAnimationFrame(() => thumb.removeAttribute('data-instant'));
     }
 
     function select(mode: Mode, focus = false) {
@@ -572,30 +619,50 @@ const title = t.hero.title;
     hero.querySelector('[data-annot]')?.removeAttribute('aria-hidden');
     render(current, false);
     new ResizeObserver(() => current === 'design' && render('design', false)).observe(box);
+    new ResizeObserver(() => placeThumb(false)).observe(bar);
 
-    // Each cursor leans toward the mouse by its own amount and catches up at its own pace.
-    // Not with reduced motion, touch or small screens. Clicking one switches to its mode.
+    // Each cursor leans toward the mouse, 10 to 12px at most, and catches up with its own delay
+    // (120 to 260ms). Not with reduced motion, touch or small screens. Clicking one switches to its mode.
     const cursors = [...hero.querySelectorAll<HTMLElement>('[data-cursor]')].map((el, i) => ({
       el,
       x: 0,
       y: 0,
       tx: 0,
       ty: 0,
-      reach: [26, 34, 22, 30][i % 4],
-      ease: [0.07, 0.11, 0.085, 0.13][i % 4],
+      cx: 0,
+      cy: 0,
+      reach: [11, 12, 10, 12][i % 4],
+      delay: [120, 200, 260, 160][i % 4],
     }));
     const wide = window.matchMedia('(min-width: 1280px) and (pointer: fine)');
     let frame = 0;
+    let last = 0;
+    // Resting centres of the cursors in page coordinates; measured again only after a resize.
+    let measuredAt = '';
+    const measure = () => {
+      const key = `${window.innerWidth}x${window.innerHeight}`;
+      if (key === measuredAt) return;
+      measuredAt = key;
+      for (const c of cursors) {
+        const r = c.el.getBoundingClientRect();
+        c.cx = r.left - c.x + r.width / 2 + window.scrollX;
+        c.cy = r.top - c.y + r.height / 2 + window.scrollY;
+      }
+    };
 
-    const step = () => {
+    const step = (now: number) => {
+      const dt = last ? Math.min(now - last, 64) : 16;
+      last = now;
       let moving = false;
       for (const c of cursors) {
-        c.x += (c.tx - c.x) * c.ease;
-        c.y += (c.ty - c.y) * c.ease;
+        const k = 1 - Math.exp(-dt / c.delay);
+        c.x += (c.tx - c.x) * k;
+        c.y += (c.ty - c.y) * k;
         if (Math.abs(c.tx - c.x) > 0.05 || Math.abs(c.ty - c.y) > 0.05) moving = true;
         c.el.style.transform = `translate3d(${c.x.toFixed(2)}px, ${c.y.toFixed(2)}px, 0)`;
       }
       frame = moving ? requestAnimationFrame(step) : 0;
+      if (!frame) last = 0;
     };
     const run = () => {
       if (!frame) frame = requestAnimationFrame(step);
@@ -607,19 +674,23 @@ const title = t.hero.title;
       } else run();
     };
 
-    window.addEventListener('pointermove', (e) => {
-      if (reduced.matches || !wide.matches) return;
-      for (const c of cursors) {
-        const r = c.el.getBoundingClientRect();
-        const dx = e.clientX - (r.left - c.x + r.width / 2);
-        const dy = e.clientY - (r.top - c.y + r.height / 2);
-        const dist = Math.hypot(dx, dy) || 1;
-        const pull = c.reach * Math.min(1, dist / 360);
-        c.tx = (dx / dist) * pull;
-        c.ty = (dy / dist) * pull;
-      }
-      run();
-    });
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        if (reduced.matches || !wide.matches) return;
+        measure();
+        for (const c of cursors) {
+          const dx = e.pageX - c.cx;
+          const dy = e.pageY - c.cy;
+          const dist = Math.hypot(dx, dy) || 1;
+          const pull = c.reach * Math.min(1, dist / 360);
+          c.tx = (dx / dist) * pull;
+          c.ty = (dy / dist) * pull;
+        }
+        run();
+      },
+      { passive: true },
+    );
     hero.addEventListener('pointerleave', settle);
     reduced.addEventListener('change', settle);
     wide.addEventListener('change', settle);

@@ -179,9 +179,12 @@ const studioName = study.studio?.name;
             )}
             <div class="part__content">
               {section.tags && (
-                <ul class="chips">
-                  {section.tags.map((tag) => <li class="tag tag--tech">{tag}</li>)}
-                </ul>
+                <div class="deps reveal reveal--still" data-reveal-at="0.3">
+                  <p class="deps__bar" aria-hidden="true"><span class="deps__dot"></span>{section.title[locale]}</p>
+                  <ul class="deps__list">
+                    {section.tags.map((tag, i) => <li data-reveal-item style={`--i: ${i}`}>{tag}</li>)}
+                  </ul>
+                </div>
               )}
 
               {section.body && (
@@ -362,13 +365,46 @@ const studioName = study.studio?.name;
     line-height: var(--text-lead-lh);
     color: var(--text-muted);
   }
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
+  /* Stack as a dependency file (Movimiento v2, ficha 6). Once 30% of it is in view, the
+     technologies appear one by one, 40ms apart (.reveal with [data-reveal-item]). The list is
+     real text; only the file's title bar is decorative. */
+  .deps {
+    overflow: hidden;
+    background: var(--code-bg);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-md);
   }
-  .chips .tag--tech {
-    background: var(--surface-alt);
+  .deps__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) solid var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--code-text);
+  }
+  .deps__dot {
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 2px;
+    background: var(--cursor-dev);
+  }
+  .deps__list {
+    padding: var(--space-4) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    line-height: var(--text-mono-lh);
+    color: var(--code-property);
+  }
+  .deps__list li {
+    display: inline;
+  }
+  .deps__list li:not(:last-child)::after {
+    content: ',';
+    content: ',' / '';
+    margin-right: 1ch;
   }
   /* Two columns that fill top to bottom, as in Figma */
   .checks {

@@ -116,3 +116,31 @@ test.describe('Qué incluye without JavaScript', () => {
     await expect(page.locator('.checks__mark').last()).toHaveCSS('opacity', '1');
   });
 });
+
+test.describe('Stack', () => {
+  test('is a dependency file whose list is real text', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await expect(page.locator('.deps__bar')).toHaveAttribute('aria-hidden', 'true');
+    const items = page.getByRole('list').filter({ has: page.getByText('Playwright', { exact: true }) });
+    await expect(items.getByRole('listitem')).toHaveCount(16);
+  });
+
+  test('writes the technologies one by one, 40ms apart, once in view', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const items = page.locator('.deps__list li');
+    await expect(items.first()).toHaveCSS('opacity', '0');
+    await expect(items.nth(2)).toHaveCSS('transition-delay', '0.08s');
+    await page.locator('.deps').scrollIntoViewIfNeeded();
+    await expect(page.locator('.deps')).toHaveClass(/is-visible/);
+    await expect(items.last()).toHaveCSS('opacity', '1');
+  });
+});
+
+test.describe('Stack with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('shows the whole list', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await expect(page.locator('.deps__list li').last()).toHaveCSS('opacity', '1');
+  });
+});

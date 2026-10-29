@@ -53,6 +53,10 @@ test.describe('Spanish home', () => {
       await page.evaluate((t) => localStorage.setItem('theme', t), theme);
       await page.reload();
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+      // Measure colours at rest, not halfway through an entrance fade.
+      await page.evaluate(() =>
+        Promise.all(document.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.finished)),
+      );
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
       const serious = results.violations.filter((v) =>
         ['critical', 'serious'].includes(v.impact ?? ''),
@@ -402,8 +406,45 @@ test.describe('States', () => {
   });
 });
 
+// Every .reveal element must already be in its final place, without scrolling to it.
+async function expectRevealsSettled(page: Page) {
+  const states = await page.locator('.reveal').evaluateAll((els) =>
+    els.map((el) => {
+      const cs = getComputedStyle(el);
+      return `${cs.opacity} ${cs.transform}`;
+    }),
+  );
+  expect(states.length).toBeGreaterThan(0);
+  expect(new Set(states)).toEqual(new Set(['1 none']));
+}
+
+test.describe('Motion', () => {
+  test('reveals a block once, when it scrolls into view', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const job = page.locator('#experience .job').first();
+    await expect(job).not.toHaveClass(/is-visible/);
+    await job.scrollIntoViewIfNeeded();
+    await expect(job).toHaveClass(/is-visible/);
+    await expect(job).toHaveCSS('opacity', '1');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(job).toHaveClass(/is-visible/);
+  });
+});
+
 test.describe('Reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('shows every revealed block in its final state', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expectRevealsSettled(page);
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await expectRevealsSettled(page);
+  });
+
+  test('keeps the scroll-linked progress at its end', async ({ page }) => {
+    await page.goto('/portfolio/');
+    expect(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--p').trim())).toBe('1');
+  });
 
   test('the pressed primary button only changes colour', async ({ page }) => {
     await page.goto('/portfolio/');
@@ -413,6 +454,15 @@ test.describe('Reduced motion', () => {
     await expect(button).toHaveCSS('box-shadow', 'none');
     await expect(button).toHaveCSS('transform', 'none');
     await page.mouse.up();
+  });
+});
+
+test.describe('Without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('shows every revealed block in its final state', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expectRevealsSettled(page);
   });
 });
 

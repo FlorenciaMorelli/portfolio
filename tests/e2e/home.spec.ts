@@ -351,6 +351,9 @@ test.describe('Projects', () => {
   test('the diagonal arrow of a card leans on hover', async ({ page }) => {
     test.skip(!(await page.evaluate(() => matchMedia('(hover: hover)').matches)), 'needs a pointer');
     const button = page.locator('[data-card]:visible .card__actions a:has(svg.icon-arrow-up-right)').first();
+    // The cards move with the scroll: put it in the middle of the window, where it is at rest.
+    await button.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+    await page.waitForTimeout(300);
     await button.hover();
     await expect(button.locator('svg')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 2, -2)');
   });
@@ -701,6 +704,35 @@ test.describe('Navigation with reduced motion', () => {
     await page.goto('/portfolio/');
     const rule = await page.evaluate(() => [...document.styleSheets].some((s) => { try { return [...s.cssRules].some((r) => r.cssText.startsWith('@view-transition')); } catch { return false; } }));
     expect(rule).toBe(false);
+  });
+});
+
+test.describe('Depth', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+  });
+
+  test('the hero recedes as the page scrolls and the blocks come toward you', async ({ page }) => {
+    const hero = page.locator('.hero__inner');
+    expect(Number(await hero.evaluate((el) => getComputedStyle(el).opacity))).toBe(1);
+    await page.evaluate(() => window.scrollTo({ top: 700, behavior: 'instant' }));
+    await expect.poll(() => hero.evaluate((el) => Number(getComputedStyle(el).opacity))).toBeLessThan(0.5);
+    // A block that is still below the window has not come yet.
+    const job = page.locator('#experience .job').last();
+    expect(Number(await job.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.1);
+    await job.evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.4, behavior: 'instant' }));
+    await expect.poll(() => job.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+    await expect(job).toHaveCSS('transform', 'none');
+  });
+});
+
+test.describe('Depth with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('has no scroll animation', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.hero__inner')).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('#experience .job').first()).toHaveCSS('animation-name', 'none');
   });
 });
 

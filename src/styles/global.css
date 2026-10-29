@@ -293,7 +293,9 @@ ul {
    and a piece can raise it (on hover, for example). Without progress it is at the end. */
 [data-step] {
   --at: calc(var(--progress, var(--p, 1)) * var(--steps, 1));
-  opacity: calc(clamp(0, var(--at) - var(--from, -1), 1) - clamp(0, var(--at) - var(--to, 99), 1));
+  /* 0 → 1 as the step arrives, for pieces that also grow (transform) */
+  --step-in: clamp(0, var(--at) - var(--from, -1), 1);
+  opacity: calc(var(--step-in) - clamp(0, var(--at) - var(--to, 99), 1));
 }
 
 @media (prefers-reduced-motion: reduce) {

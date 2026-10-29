@@ -67,3 +67,52 @@ test.describe('Audenpass case study', () => {
     expect(serious).toEqual([]);
   });
 });
+
+// The number of the «n de n» counter that is showing.
+const counter = (page: import('@playwright/test').Page) =>
+  page.locator('.criteria__n > *').evaluateAll((els) => els.filter((el) => Number(getComputedStyle(el).opacity) > 0.5).map((el) => el.textContent));
+
+test.describe('Qué incluye', () => {
+  test('counts its items as criteria met, without announcing it', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const items = await page.locator('#features .checks li').count();
+    await expect(page.locator('.criteria')).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.criteria')).toContainText(`de ${items}`);
+    await expect(page.locator('.criteria')).toContainText('criterios cumplidos');
+  });
+
+  test('ticks the criteria one after another with the scroll', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const items = await page.locator('#features .checks li').count();
+    const block = page.locator('.part__block--criteria');
+    // Its top just at 80% of the window: nothing ticked yet.
+    await block.evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.8, behavior: 'instant' }));
+    await expect.poll(() => counter(page)).toEqual(['0']);
+    // Its bottom past 50%: every criterion met.
+    await block.evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().bottom - window.innerHeight * 0.45, behavior: 'instant' }));
+    await expect.poll(() => counter(page)).toEqual([String(items)]);
+    await expect(page.locator('.checks__mark').last()).toHaveCSS('opacity', '1');
+  });
+});
+
+test.describe('Qué incluye with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('shows every check and the full count', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const items = await page.locator('#features .checks li').count();
+    await expect(page.locator('.checks__mark').first()).toHaveCSS('opacity', '1');
+    await expect(page.locator('.checks__mark').last()).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+    await expect.poll(() => counter(page)).toEqual([String(items)]);
+  });
+});
+
+test.describe('Qué incluye without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('shows every check', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await expect(page.locator('.checks__mark').last()).toHaveCSS('opacity', '1');
+  });
+});

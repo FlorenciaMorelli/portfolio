@@ -168,7 +168,8 @@ const [lead, ...rest] = t.about.body;
     margin-top: var(--space-3);
     margin-inline: calc(var(--space-1) * -1);
     opacity: calc(0.35 + 0.65 * var(--progress));
-    transform: translateY(calc((1 - var(--progress)) * 8px));
+    transform-origin: 50% 0;
+    transform: translateY(calc((1 - var(--progress)) * 40px)) scale(calc(0.88 + 0.12 * var(--progress)));
   }
   .facet__thumb > :global(.lens) {
     border-bottom: 0;

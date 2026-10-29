@@ -271,6 +271,7 @@ fichas con fotogramas de 0, 50 y 100 % y la tabla de 27 microinteracciones.
 **Reglas**
 
 - Solo se mueven `transform` y `opacity`.
+- Con más presencia que en las fichas: `.reveal` entra desde 32 px, los checks de «Qué incluye» crecen desde .2 y la anotación del caso destacado sube 20 px. El calendario de trabajo queda como en la ficha.
 - Con `prefers-reduced-motion: reduce` y sin JavaScript se ve el estado final, estático.
 - Los elementos que se mueven son decorativos (`aria-hidden`) y lo que cambia con el scroll no
   se anuncia. El contenido real ya está en el HTML.
@@ -293,7 +294,7 @@ las reglas de `global.css`. Cada componente lo importa; no se arma otro:
 
 | Ficha | Lugar | Disparador |
 |-------|-------|------------|
-| 1 | Sobre mí · Cómo trabajo: miniatura de cada lente | Progreso del scroll; el hover la completa |
+| 1 | Sobre mí · Cómo trabajo: miniatura de cada lente (opacity .35 a 1, 40 px a 0 y escala .88 a 1) | Progreso del scroll; el hover la completa |
 | 2 | Experiencia · Calendario de trabajo | Progreso del scroll |
 | 3 | Proyectos · anotación «E2E» del caso destacado | Una vez al entrar |
 | 4 | Caso de estudio · Qué incluye | Progreso del scroll |

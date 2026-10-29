@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { highlightLine, excerpt } from '../../src/lib/highlight';
+import { highlightLine, excerpt, splitAt } from '../../src/lib/highlight';
 
 describe('highlightLine', () => {
   it('colours keywords, calls, properties and strings', () => {
@@ -29,5 +29,22 @@ describe('excerpt', () => {
     expect(lines[0].text).toContain('export function reveal');
     expect(source.split('\n')[lines[0].n - 1]).toBe(lines[0].text);
     expect(lines.at(-1)?.text).toContain('is-visible');
+  });
+});
+
+describe('splitAt', () => {
+  it('splits tokens in the middle of one, keeping every character', () => {
+    const line = "accent: 'producción.' },";
+    const tokens = highlightLine(line);
+    const [before, after] = splitAt(tokens, line.indexOf('producción.') + 'producción.'.length);
+    expect(before.map((t) => t.text).join('')).toBe("accent: 'producción.");
+    expect(after.map((t) => t.text).join('')).toBe("' },");
+    expect(before.at(-1)?.kind).toBe('string');
+    expect(after[0].kind).toBe('string');
+  });
+
+  it('can take lines before the first match', () => {
+    const src = 'a\nb\nneedle\nc\nend';
+    expect(excerpt(src, 'needle', 'end', 1).map((l) => l.n)).toEqual([2, 3, 4, 5]);
   });
 });

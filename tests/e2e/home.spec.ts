@@ -555,6 +555,57 @@ test.describe('Hero', () => {
     await expect(page.locator('.hero__scene--quality')).toHaveCSS('visibility', 'hidden');
   });
 
+  test('the ticket and the task show the headline being typed, and the editor its real line', async ({ page }) => {
+    for (const [mode, scene] of [['analysis', '.ticket'], ['quality', '.task']]) {
+      await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
+      const typed = page.locator(`.hero__scene--${mode} ${scene} [data-typed]`);
+      // It starts empty and is typed letter by letter, with the caret after it.
+      await expect(typed).not.toHaveText('Del requerimiento a producción.');
+      await expect(typed).toHaveText('Del requerimiento a producción.', { timeout: 4000 });
+      await expect(page.locator(`.hero__scene--${mode} ${scene} .lens__caret`).first()).toBeAttached();
+    }
+    await page.locator('.hero__mode[data-mode="development"]').click();
+    const line = page.locator('.hero__scene--development .editor__headline');
+    // The real line of src/i18n/ui.ts, with the caret right after «producción.».
+    await expect(line).toContainText("title: { lead: 'Del requerimiento', connector: 'a', accent: 'producción.");
+    await expect(line.locator('.lens__caret')).toHaveCount(1);
+    expect(await line.evaluate((el) => el.innerHTML.indexOf('lens__caret') > el.innerHTML.indexOf('producci'))).toBe(true);
+    // The criteria of the task are about the headline.
+    await expect(page.locator('.hero__scene--quality .lens__checks')).toContainText('El titular dice «Del requerimiento a producción.»');
+    await expect(page.locator('.hero__scene--quality .lens__checks')).toContainText('Un lector de pantalla lo lee completo');
+  });
+
+  test('the selection box only stays around the headline in Design mode', async ({ page }) => {
+    const box = page.locator('[data-box]');
+    const transparent = 'rgba(0, 0, 0, 0)';
+    for (const mode of ['analysis', 'development', 'quality']) {
+      await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
+      await expect(box).toHaveCSS('border-top-color', transparent);
+    }
+    await page.locator('.hero__mode[data-mode="design"]').click();
+    await expect(box).not.toHaveCSS('border-top-color', transparent);
+  });
+
+  test('each scene takes the space of the Design mode, annotation and box, and the annotation is not shown', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) < 1024, 'the annotation floats above the box from 1024px');
+    const area = async () => {
+      const a = await page.locator('.hero__annot').boundingBox();
+      const b = await page.locator('[data-box]').boundingBox();
+      return { top: Math.round(a!.y), bottom: Math.round(b!.y + b!.height) };
+    };
+    const design = await area();
+    for (const mode of ['analysis', 'development', 'quality']) {
+      await page.locator(`.hero__mode[data-mode="${mode}"]`).click();
+      const scene = await page.locator(`.hero__scene--${mode}`).boundingBox();
+      expect(Math.abs(Math.round(scene!.y) - design.top)).toBeLessThanOrEqual(3);
+      expect(Math.abs(Math.round(scene!.y + scene!.height) - design.bottom)).toBeLessThanOrEqual(3);
+      await expect(page.locator('.hero__annot')).toHaveCSS('opacity', '0');
+      // Still there for screen readers: the live region says what changed.
+      await expect(page.locator('[data-note]')).toHaveAttribute('aria-live', 'polite');
+      await expect(page.locator('[data-note]')).not.toHaveText('');
+    }
+  });
+
   test('the box keeps its size when the mode changes', async ({ page }) => {
     const box = page.locator('[data-box]');
     const size = async () => box.evaluate((el) => `${el.offsetWidth}x${el.offsetHeight}`);
@@ -1101,6 +1152,8 @@ test.describe('Hero scenes with reduced motion', () => {
     await page.locator('.hero__mode[data-mode="quality"]').click();
     await expect(page.locator('.hero__scene--quality')).toHaveCSS('animation-name', 'none');
     await expect(page.locator('.hero__scene--quality .task__chip--done')).toHaveCSS('opacity', '1');
+    // Not typed: the whole headline is there at once.
+    await expect(page.locator('.hero__scene--quality [data-typed]')).toHaveText('Del requerimiento a producción.');
   });
 });
 

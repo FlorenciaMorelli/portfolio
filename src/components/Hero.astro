@@ -64,12 +64,12 @@ const title = t.hero.title;
           <span class="hero__lead">{title.lead}<span class="hero__conn hero__conn--lead"> {title.connector}</span></span>
           <span class="hero__accent"><span class="hero__conn hero__conn--accent">{title.connector} </span>{title.accent}</span>
         </h1>
-        <!-- The same canvas seen from each lens: the headline gives way to the piece of work of that
-             part of the job. Decorative; the h1 stays in the page and is read as always. -->
-        <div class="hero__scene hero__scene--analysis" aria-hidden="true"><Ticket locale={locale} /></div>
-        <div class="hero__scene hero__scene--development" aria-hidden="true"><EditorPanel /></div>
-        <div class="hero__scene hero__scene--quality" aria-hidden="true"><TaskDetail locale={locale} /></div>
       </div>
+      <!-- The same canvas seen from each lens: the headline gives way to the piece of work of that
+             part of the job. Decorative; the h1 stays in the page and is read as always. -->
+      <div class="hero__scene hero__scene--analysis" aria-hidden="true"><Ticket locale={locale} scene /></div>
+      <div class="hero__scene hero__scene--development" aria-hidden="true"><EditorPanel hero={locale} /></div>
+      <div class="hero__scene hero__scene--quality" aria-hidden="true"><TaskDetail locale={locale} scene /></div>
     </div>
 
     <p class="hero__intro">{t.hero.intro}</p>
@@ -213,20 +213,51 @@ const title = t.hero.title;
      play from 0 to 1 (--p), as in «Cómo trabajo». Without JS the page stays in Design mode. */
   .hero__scene {
     position: absolute;
-    inset: var(--space-3) var(--space-4) 0;
+    inset: 0;
+    z-index: 1;
     display: flex;
     justify-content: center;
-    overflow: hidden;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transition: opacity var(--dur-fast) var(--ease), visibility 0s var(--dur-fast);
+    /* No box around it: the piece fades out at the bottom instead of being cut. */
+    mask-image: linear-gradient(to bottom, #000 62%, transparent);
   }
   .hero__scene > :global(.lens) {
     width: min(34rem, 100%);
-    border-bottom: 0;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    height: max-content;
     box-shadow: var(--shadow-2);
+  }
+  /* The scene takes the whole space of the Design mode: the annotation band and the box. From
+     1024px the annotation floats above the box, so the scene reaches up to where it is. */
+  @media (min-width: 1024px) {
+    .hero__scene {
+      top: -1.75rem;
+    }
+  }
+  /* The annotation is not shown over a scene (its text stays for screen readers, as the live
+     region that announces the change of mode). */
+  .hero__annot {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__annot,
+  .hero[data-mode='development'] .hero__annot,
+  .hero[data-mode='quality'] .hero__annot {
+    opacity: 0;
+  }
+  /* The line of the translations is long: the editor gets more room than the other pieces. */
+  .hero__scene--development > :global(.lens) {
+    width: min(42rem, 100%);
+  }
+  /* The selection box only belongs to the Design mode, where the headline is the subject. */
+  .hero__box {
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .hero[data-mode='analysis'] .hero__box,
+  .hero[data-mode='development'] .hero__box,
+  .hero[data-mode='quality'] .hero__box {
+    border-color: transparent;
   }
   .hero__title {
     transition: opacity var(--dur-fast) var(--ease);
@@ -248,6 +279,12 @@ const title = t.hero.title;
     .hero[data-mode='development'] .hero__scene--development,
     .hero[data-mode='quality'] .hero__scene--quality {
       animation: hero-scene var(--dur-slow) var(--ease) 80ms both, hero-scene-steps 1400ms ease-in-out 120ms both;
+    }
+    /* The headline is typed first (about 1.8s); the rest of the piece follows. */
+    .hero[data-mode='analysis'] .hero__scene--analysis,
+    .hero[data-mode='quality'] .hero__scene--quality {
+      animation-name: hero-scene, hero-scene-steps;
+      animation-delay: 80ms, 1700ms;
     }
   }
   @keyframes hero-scene {
@@ -710,6 +747,23 @@ const title = t.hero.title;
       if (!animate) requestAnimationFrame(() => thumb.removeAttribute('data-instant'));
     }
 
+    // The headline is typed into the field of the ticket and of the task, once each time the mode
+    // is chosen (the full text is in the page: without JS or with reduced motion it just shows).
+    let typing = 0;
+    function typeScene(mode: Mode) {
+      window.clearInterval(typing);
+      const target = hero!.querySelector<HTMLElement>(`.hero__scene--${mode} [data-typed]`);
+      if (!target || reduced.matches) return;
+      const full = target.dataset.full ?? (target.dataset.full = target.textContent ?? '');
+      let n = 0;
+      target.textContent = '';
+      typing = window.setInterval(() => {
+        n += 1;
+        target.textContent = full.slice(0, n);
+        if (n >= full.length) window.clearInterval(typing);
+      }, 55);
+    }
+
     function select(mode: Mode, focus = false) {
       current = mode;
       hero!.dataset.mode = mode;
@@ -720,6 +774,7 @@ const title = t.hero.title;
         if (on && focus) b.focus();
       });
       render(mode, true);
+      typeScene(mode);
     }
 
     bar.addEventListener('click', (e) => {

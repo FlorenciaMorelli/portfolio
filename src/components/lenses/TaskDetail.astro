@@ -8,23 +8,33 @@ import './lens.css';
 
 interface Props {
   locale: Locale;
+  /** The hero's version: the task is about the headline, which is being typed as its title (data-typed). */
+  scene?: boolean;
 }
+const { scene = false } = Astro.props;
 const t = useTranslations(Astro.props.locale);
 const task = t.lenses.task;
 const stats = testStats();
 const fill = (text: string, n: number | string, total: number) => text.replace('{n}', String(n)).replace('{total}', String(total));
-const criteria = [fill(task.unitTests, stats.passed, stats.total), ...t.lenses.ticket.criteria.slice(1)];
+const headline = `${t.hero.title.lead} ${t.hero.title.connector} ${t.hero.title.accent}`;
+const criteria = scene
+  ? t.lenses.scene.criteria.map((c) => c.replace('{title}', headline))
+  : [fill(task.unitTests, stats.passed, stats.total), ...t.lenses.ticket.criteria.slice(1)];
 const total = criteria.length;
 const [before, after] = task.count.split('{n}');
 const [todo, doing, done] = task.status;
 ---
 
-<div class="lens task" aria-hidden="true" style={`--steps: ${total}`}>
+<div class:list={['lens task', scene && 'task--scene']} aria-hidden="true" style={`--steps: ${total}`}>
   <p class="task__key">
     <span class="lens__box"><span class="lens__tick"></span></span>
     <span class="lens__label">Portfolio / QA-01</span>
   </p>
-  <p class="task__title">{task.title}</p>
+  {scene ? (
+    <p class="task__title task__title--field"><span data-typed>{headline}</span><span class="lens__caret"></span></p>
+  ) : (
+    <p class="task__title">{task.title}</p>
+  )}
   <p class="task__status">
     <span class="lens__pointer" data-pointer><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z"/></svg></span>
     <span class="task__chip" data-step style="--to: 0">{todo}</span>
@@ -76,6 +86,11 @@ const [todo, doing, done] = task.status;
     line-height: var(--text-base-lh);
     font-weight: 600;
     color: var(--text);
+  }
+  .task__title--field {
+    padding: var(--space-1) var(--space-2);
+    border: calc(var(--border-width) * 2) solid var(--accent);
+    border-radius: var(--radius-sm);
   }
   /* The three states sit on top of each other; the progress shows one */
   .task__status {

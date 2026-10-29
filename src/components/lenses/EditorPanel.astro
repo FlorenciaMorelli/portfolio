@@ -1,0 +1,116 @@
+---
+// Development lens: real lines of this site's motion module, read at build time, so the line
+// numbers and the code are always the current ones. Decorative (aria-hidden). Steps: Reposo
+// (only the numbers), Activo (the code being written) and Completo (with the active line).
+import { highlightLine, excerpt, splitAt } from '../../lib/highlight';
+import motion from '../../lib/motion.ts?raw';
+import ui from '../../i18n/ui.ts?raw';
+import { useTranslations, type Locale } from '../../i18n/utils';
+import './lens.css';
+
+interface Props {
+  /** First and last line of the excerpt, and the line that gets the active highlight. */
+  from?: string;
+  to?: string;
+  active?: string;
+  /** The lines of the headline in the translations (what the hero says), with the caret after it. */
+  hero?: Locale;
+}
+const { from = 'const stop = watch(el', to = '    });', active: activeText = "classList.add('is-visible')", hero } = Astro.props;
+const heroTitle = hero ? useTranslations(hero).hero.title : null;
+const FILE = hero ? 'src/i18n/ui.ts' : 'src/lib/motion.ts';
+const lines = hero
+  ? excerpt(ui, `title: { lead: '${heroTitle!.lead}'`, 'intro:', 1)
+  : excerpt(motion, from, to);
+const indent = Math.min(...lines.filter((l) => l.text.trim()).map((l) => l.text.match(/^ */)![0].length));
+const active = lines.findIndex((l) => l.text.includes(hero ? `lead: '${heroTitle!.lead}'` : activeText));
+// Where the caret goes: right after the last word of the headline, inside its quotes.
+const caretAt = hero ? lines[active].text.slice(indent).indexOf(heroTitle!.accent) + heroTitle!.accent.length : -1;
+---
+
+<div class="lens editor" aria-hidden="true" style={`--steps: ${lines.length + 1}`}>
+  <p class="lens__bar"><span class="lens__dot editor__dot"></span>{FILE}</p>
+  <ol class="editor__lines">
+    {lines.map((line, i) => (
+      <li>
+        {i === active && <span class="editor__active" data-step style={`--from: ${lines.length}`}></span>}
+        <span class="editor__n">{line.n}</span>
+        {hero && i === active ? (
+          <code class="lens__ellipsis editor__headline" data-step style={`--from: ${i}`}>
+            {splitAt(highlightLine(line.text.slice(indent)), caretAt)[0].map((token) => <span class={`tok tok--${token.kind}`}>{token.text}</span>)}<span class="lens__caret"></span>{splitAt(highlightLine(line.text.slice(indent)), caretAt)[1].map((token) => <span class={`tok tok--${token.kind}`}>{token.text}</span>)}
+          </code>
+        ) : (
+          <code class="lens__ellipsis" data-step style={`--from: ${i}`}>
+            {highlightLine(line.text.slice(indent)).map((token) => <span class={`tok tok--${token.kind}`}>{token.text}</span>)}
+          </code>
+        )}
+        {!hero && i === active && <span class="editor__caret" data-step style={`--from: ${lines.length}`}><span class="lens__caret"></span></span>}
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .editor {
+    background: var(--code-bg);
+  }
+  .editor__dot {
+    color: var(--cursor-dev);
+  }
+  .editor__lines {
+    padding: var(--space-2) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: 1.375rem;
+    color: var(--code-text);
+  }
+  .editor__lines li {
+    position: relative;
+    display: flex;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+  .editor__active {
+    position: absolute;
+    inset: 0;
+    background: var(--code-line-active);
+  }
+  .editor__n {
+    position: relative;
+    flex: none;
+    min-width: 1.5rem;
+    text-align: right;
+    color: var(--code-line-number);
+  }
+  .editor__lines code {
+    position: relative;
+    display: block;
+    font: inherit;
+    white-space: pre;
+  }
+  /* The caret sits at the end of the active line, inside the panel even when the code is cut. */
+  .editor__caret {
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    display: inline-flex;
+    margin-top: -0.4375rem;
+    padding-left: var(--space-1);
+    background: var(--code-line-active);
+  }
+  /* On small screens the tail of the headline line is the part that shows, with the caret. */
+  @media (max-width: 767.98px) {
+    .editor__lines .editor__headline {
+      display: flex;
+      justify-content: flex-end;
+      overflow: hidden;
+      text-overflow: clip;
+    }
+  }
+  .tok--keyword { color: var(--code-keyword); }
+  .tok--string { color: var(--code-string); }
+  .tok--function { color: var(--code-function); }
+  .tok--property { color: var(--code-property); }
+  .tok--number { color: var(--code-number); }
+  .tok--comment { color: var(--code-comment); }
+</style>

@@ -19,10 +19,11 @@ const home = localizedPath(locale, '');
 const anchor = (id: string) => (onHome ? `#${id}` : `${home}/#${id}`);
 const resume = assetUrl(profile.resume[locale]);
 const links = [
-  { id: 'about', label: t.nav.about },
-  { id: 'experience', label: t.nav.experience },
-  { id: 'projects', label: t.nav.projects },
-  { id: 'contact', label: t.nav.contact },
+  // Each section belongs to a lens; the marker takes its colour.
+  { id: 'about', label: t.nav.about, lens: 'analysis' },
+  { id: 'experience', label: t.nav.experience, lens: 'development' },
+  { id: 'projects', label: t.nav.projects, lens: 'design' },
+  { id: 'contact', label: t.nav.contact, lens: 'quality' },
 ];
 ---
 
@@ -37,10 +38,11 @@ const links = [
       <nav id="primary-nav" class="site-nav" data-nav aria-label={t.nav.label}>
         <ul class="site-nav__list">
           {links.map((link) => (
-            <li><a href={anchor(link.id)} data-section={link.id}>{link.label}</a></li>
+            <li style={`--i: ${links.indexOf(link)}`}><a href={anchor(link.id)} data-section={link.id} data-lens={link.lens}>{link.label}</a></li>
           ))}
         </ul>
-        <div class="site-nav__foot">
+        <span class="site-nav__marker" aria-hidden="true" data-nav-marker></span>
+        <div class="site-nav__foot" style={`--i: ${links.length}`}>
           <LangSwitcher locale={locale} href={altHref} />
           <a class="btn btn--secondary" href={resume} download>{t.nav.resumeLong}</a>
         </div>
@@ -52,7 +54,7 @@ const links = [
         <div class="only-desktop"><LangSwitcher locale={locale} href={altHref} /></div>
         <ThemeToggle locale={locale} />
         <a class="header-cv only-desktop" href={resume} download>
-          <Icon name="download" size={18} />{t.nav.resume}
+          <span class="header-cv__icon"><Icon name="download" size={18} /></span>{t.nav.resume}
         </a>
         <button
           type="button"
@@ -80,12 +82,20 @@ const links = [
     z-index: 50;
     height: var(--header-h);
     margin-bottom: calc(var(--header-h) * -1);
-    border-bottom: var(--border-width) solid transparent;
-    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
-  .site-header.is-scrolled {
+  /* Transparent over the hero; once the page scrolls, the background and its bottom line fade in. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background: var(--bg);
-    border-bottom-color: var(--border);
+    border-bottom: var(--border-width) solid var(--border);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+  .site-header.is-scrolled::before {
+    opacity: 1;
   }
   .site-header__inner {
     position: relative;
@@ -143,21 +153,39 @@ const links = [
     transition: color var(--dur-fast) var(--ease);
   }
   .site-nav__list a:hover,
+  .site-nav__list a:focus-visible,
   .site-nav__list a[aria-current] {
     color: var(--text);
   }
-  /* Short accent underline marks the section in view. */
+  /* Room for the section marker under each link. */
   .site-nav__list a::after {
     content: '';
     display: block;
-    width: var(--space-4);
     height: 2px;
     margin-top: var(--space-1);
-    background: transparent;
-    border-radius: var(--radius-pill);
   }
-  .site-nav__list a[aria-current]::after {
-    background: var(--accent);
+  /* Section marker (Movimiento v2, ficha 9): one accent line under the link of the section in
+     view. It slides to the next link (translateX) and stretches to its width (scaleX). */
+  .site-nav {
+    position: relative;
+  }
+  .site-nav__marker {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    height: 2px;
+    background: var(--marker-ink, var(--accent));
+    transform-origin: left;
+    transform: translateX(var(--marker-x, 0)) scaleX(var(--marker-w, 0));
+    opacity: 0;
+    transition: transform var(--dur) var(--ease), opacity var(--dur-fast) var(--ease);
+  }
+  .site-nav__marker[data-shown] {
+    opacity: 1;
+  }
+  .site-nav__marker[data-instant] {
+    transition: opacity var(--dur-fast) var(--ease);
   }
   .site-nav__foot {
     display: none;
@@ -193,6 +221,15 @@ const links = [
   .header-cv:active {
     background: var(--accent-soft);
     color: var(--accent);
+  }
+  .header-cv__icon {
+    display: inline-grid;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .header-cv:hover .header-cv__icon {
+      transform: translateY(2px);
+    }
   }
   .nav-toggle {
     display: none;
@@ -254,6 +291,26 @@ const links = [
       align-items: flex-start;
       gap: var(--space-4);
     }
+    .site-nav__marker {
+      display: none;
+    }
+    :global(.js) .site-nav__list a[aria-current]::after {
+      width: var(--space-4);
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+    }
+    /* The links come down 8px into place, one after another. */
+    :global(.js) .site-nav__list li,
+    :global(.js) .site-nav__foot {
+      transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+      transition-delay: calc(var(--i, 0) * 40ms);
+    }
+    :global(.js) .site-nav:not([data-open='true']) .site-nav__list li,
+    :global(.js) .site-nav:not([data-open='true']) .site-nav__foot {
+      opacity: 0;
+      transform: translateY(calc(var(--space-2) * -1));
+      transition-delay: 0s;
+    }
     :global(.js) .site-nav__list a {
       font-size: var(--text-h3);
       line-height: var(--text-h3-lh);
@@ -277,6 +334,8 @@ const links = [
 </style>
 
 <script>
+  import { watch } from '../lib/motion';
+
   const header = document.querySelector<HTMLElement>('[data-header]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const nav = document.querySelector<HTMLElement>('[data-nav]');
@@ -307,34 +366,75 @@ const links = [
 
   // Transparent over the hero; solid with a bottom border once the page scrolls.
   const syncScrolled = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  let queued = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        syncScrolled();
+        queued = false;
+      });
+    },
+    { passive: true },
+  );
+  syncScrolled();
 
-  // Mark the link of the section in view with aria-current (home only).
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-section]')];
-  const sections = links
-    .map((link) => document.getElementById(link.dataset.section ?? ''))
-    .filter((el): el is HTMLElement => el !== null);
-  const syncActive = () => {
-    if (header?.dataset.home !== 'true') return;
-    const line = window.innerHeight * 0.35;
-    const current = sections.filter((s) => s.getBoundingClientRect().top <= line).at(-1);
+  // Section in view (home only): the one crossing a line at 40% of the window (a band of 0.5%,
+  // since an observer area of zero height reports nothing). Its link gets
+  // aria-current and the marker slides under it. Nothing is announced on each change.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-section]')].filter((link) =>
+    nav?.contains(link),
+  );
+  const marker = document.querySelector<HTMLElement>('[data-nav-marker]');
+  const crossing = new Set<string>();
+  let syncQueued = false;
+
+  function placeMarker(link?: HTMLAnchorElement) {
+    if (!marker) return;
+    if (!link) {
+      marker.removeAttribute('data-shown');
+      return;
+    }
+    // Coming from nothing, it appears in place instead of sliding in from the side.
+    if (!marker.hasAttribute('data-shown')) marker.setAttribute('data-instant', '');
+    marker.style.setProperty('--marker-x', `${link.offsetLeft}px`);
+    marker.style.setProperty('--marker-w', String(link.offsetWidth));
+    marker.style.setProperty('--marker-ink', `var(--lens-ink-${link.dataset.lens})`);
+    marker.setAttribute('data-shown', '');
+    requestAnimationFrame(() => marker.removeAttribute('data-instant'));
+  }
+
+  function syncActive() {
+    const current = links.filter((link) => crossing.has(link.dataset.section ?? '')).at(-1);
     links.forEach((link) => {
-      if (current && link.dataset.section === current.id) link.setAttribute('aria-current', 'true');
+      if (link === current) link.setAttribute('aria-current', 'true');
       else link.removeAttribute('aria-current');
     });
-  };
+    placeMarker(current);
+  }
 
-  let queued = false;
-  const onScroll = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      syncScrolled();
-      syncActive();
-      queued = false;
-    });
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  syncScrolled();
-  syncActive();
+  if (header?.dataset.home === 'true') {
+    for (const link of links) {
+      const section = document.getElementById(link.dataset.section ?? '');
+      if (!section) continue;
+      watch(section, { rootMargin: '-40% 0px -59.5% 0px' }, (change) => {
+        if (change.isIntersecting) crossing.add(section.id);
+        else crossing.delete(section.id);
+        // One section leaving and the next one entering arrive as separate entries of the same
+        // batch: settle them together once the batch is done.
+        if (!syncQueued) {
+          syncQueued = true;
+          queueMicrotask(() => {
+            syncQueued = false;
+            syncActive();
+          });
+        }
+      });
+    }
+    // The links change width when the web font loads or the window changes: measure again only then.
+    const list = nav?.querySelector('ul');
+    if (list) new ResizeObserver(() => placeMarker(links.find((link) => link.hasAttribute('aria-current')))).observe(list);
+  }
 </script>

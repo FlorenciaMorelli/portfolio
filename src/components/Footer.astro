@@ -1,7 +1,11 @@
 ---
+// Footer · Lienzo: the page closes on the design canvas it opened with. A selection box with its
+// measure label and handles, one cursor per lens at the corners (hidden on small screens) and
+// the dot grid. Label, handles and cursors are decorative (aria-hidden).
 import Icon from './Icon.astro';
-import { useTranslations, type Locale } from '../i18n/utils';
+import { useTranslations, localizedPath, type Locale } from '../i18n/utils';
 import profile from '../data/profile.json';
+import cv from '../data/cv.json';
 
 interface Props {
   locale: Locale;
@@ -9,49 +13,188 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+const home = localizedPath(locale, '');
+const cursors = [
+  { id: 'analysis', label: t.hero.modes.analysis },
+  { id: 'design', label: t.hero.modes.design },
+  { id: 'quality', label: t.hero.modes.quality },
+  { id: 'development', label: t.hero.modes.development },
+];
 ---
 
 <footer class="site-footer">
-  <div class="container site-footer__inner">
-    <div class="site-footer__brand">
-      <span class="site-footer__mark" aria-hidden="true">FM</span>
-      <span class="site-footer__name">Florencia Morelli</span>
-      <p class="site-footer__rights">© {year} · {t.footer.rights}</p>
-    </div>
+  <div class="container">
+    <div class="site-footer__box reveal reveal--still" data-footer-box>
+      <span class="site-footer__label" aria-hidden="true">footer<span data-footer-measure></span></span>
+      <span class="site-footer__handle site-footer__handle--tl" aria-hidden="true"></span>
+      <span class="site-footer__handle site-footer__handle--tr" aria-hidden="true"></span>
+      <span class="site-footer__handle site-footer__handle--bl" aria-hidden="true"></span>
+      <span class="site-footer__handle site-footer__handle--br" aria-hidden="true"></span>
 
-    <div class="site-footer__socials">
-      <a href={profile.socials.github} target="_blank" rel="noopener" aria-label="GitHub">
-        <Icon name="github-outline" size={20} />
+      <div class="site-footer__cursors" aria-hidden="true">
+        {cursors.map((c) => (
+          <span class={`site-footer__cursor site-footer__cursor--${c.id}`} data-footer-cursor>
+            <span class="site-footer__cursor-float">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z" />
+              </svg>
+              <span class="site-footer__cursor-label">{c.label}</span>
+            </span>
+          </span>
+        ))}
+      </div>
+
+      <a class="site-footer__brand" href={home}>
+        <span class="site-footer__mark" aria-hidden="true">FM</span>
+        <span class="site-footer__name">Florencia Morelli</span>
       </a>
-      <a href={profile.socials.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
-        <Icon name="linkedin-outline" size={20} />
-      </a>
-      <a href="#top" aria-label={t.a11y.toTop}>
-        <Icon name="arrow-up" size={20} />
-      </a>
+      <div class="site-footer__text">
+        <p class="site-footer__rights">© {year} · {t.footer.rights}</p>
+        <p class="site-footer__place">{cv.contact.location[locale]}</p>
+      </div>
+
+      <div class="site-footer__socials">
+        <a href={profile.socials.github} target="_blank" rel="noopener" aria-label="GitHub">
+          <Icon name="github-outline" size={20} />
+        </a>
+        <a href={profile.socials.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
+          <Icon name="linkedin-outline" size={20} />
+        </a>
+        <a href="#top" aria-label={t.a11y.toTop} class="site-footer__top">
+          <Icon name="arrow-up" size={20} />
+        </a>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background: var(--bg);
+    padding-block: var(--space-16) var(--space-20);
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--canvas-dot) 1px, transparent 1.5px);
+    background-size: var(--space-6) var(--space-6);
+    overflow: hidden;
   }
-  /* The line above the footer is the container's own width, not the whole page */
-  .site-footer__inner {
+
+  /* The selection box: content in a row on desktop */
+  .site-footer__box {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    padding-block: var(--space-8);
-    border-top: var(--border-width) solid var(--border);
+    gap: var(--space-6);
+    min-height: 8.5rem;
+    padding: var(--space-6) var(--space-8) var(--space-6) var(--space-10);
+    border: var(--border-width) solid var(--accent);
   }
+  .site-footer__label {
+    position: absolute;
+    bottom: 100%;
+    left: calc(var(--border-width) * -1);
+    margin-bottom: var(--space-1);
+    padding: 0.125rem var(--space-2);
+    border-radius: var(--radius-xs);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .site-footer__handle {
+    position: absolute;
+    width: var(--space-2);
+    height: var(--space-2);
+    background: var(--surface);
+    border: var(--border-width) solid var(--accent);
+  }
+  .site-footer__handle--tl { top: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .site-footer__handle--tr { top: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+  .site-footer__handle--bl { bottom: calc(var(--space-1) * -1 - var(--border-width)); left: calc(var(--space-1) * -1 - var(--border-width)); }
+  .site-footer__handle--br { bottom: calc(var(--space-1) * -1 - var(--border-width)); right: calc(var(--space-1) * -1 - var(--border-width)); }
+
+  /* Entrance (microinteraction 22): once in view, the label fades in and the handles grow
+     from .6. Without JS or with reduced motion they are already in place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .site-footer__box.reveal .site-footer__label {
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
+    }
+    :global(.js) .site-footer__box.reveal .site-footer__handle {
+      transform: scale(0.6);
+      transition: transform var(--dur) var(--ease);
+    }
+    :global(.js) .site-footer__box.reveal.is-visible .site-footer__label {
+      opacity: 1;
+    }
+    :global(.js) .site-footer__box.reveal.is-visible .site-footer__handle {
+      transform: none;
+    }
+  }
+
+  /* One idle cursor per lens at the corners, as in the hero. Only with room around the box. */
+  .site-footer__cursors {
+    display: none;
+  }
+  .site-footer__cursor {
+    position: absolute;
+    color: var(--c);
+    will-change: transform;
+  }
+  .site-footer__cursor-float {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--space-1) / 2);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .site-footer__cursor-float {
+      animation: footer-drift var(--drift-time) ease-in-out var(--drift-delay) infinite alternate;
+    }
+  }
+  @keyframes footer-drift {
+    from {
+      translate: calc(var(--drift-x) * -1) calc(var(--drift-y) * -1);
+    }
+    to {
+      translate: var(--drift-x) var(--drift-y);
+    }
+  }
+  .site-footer__cursor-label {
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--c);
+    color: var(--c-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .site-footer__cursor--analysis { --c: var(--cursor-analysis-idle); --c-text: var(--cursor-analysis-idle-text); left: -5.5rem; top: -0.5rem; --drift-x: 3px; --drift-y: -3px; --drift-time: 3s; --drift-delay: 0s; }
+  .site-footer__cursor--design { --c: var(--cursor-design-idle); --c-text: var(--cursor-design-idle-text); left: calc(100% + 0.75rem); top: -2.25rem; --drift-x: -3px; --drift-y: 3px; --drift-time: 4s; --drift-delay: -2s; }
+  .site-footer__cursor--quality { --c: var(--cursor-qa-idle); --c-text: var(--cursor-qa-idle-text); left: 3.75rem; top: calc(100% + 0.5rem); --drift-x: 3px; --drift-y: 3px; --drift-time: 5.5s; --drift-delay: -1s; }
+  .site-footer__cursor--development { --c: var(--cursor-dev-idle); --c-text: var(--cursor-dev-idle-text); left: calc(100% - 8.25rem); top: calc(100% + 0.25rem); --drift-x: -3px; --drift-y: -3px; --drift-time: 4.5s; --drift-delay: -3s; }
+  @media (min-width: 1280px) {
+    .site-footer__cursors {
+      display: block;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+  }
+
   .site-footer__brand {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+    flex: none;
+    border-radius: var(--radius-sm);
+  }
+  /* The logo goes to the start page, as in the header. */
+  .site-footer__brand:hover {
+    color: var(--text);
   }
   .site-footer__mark {
     display: grid;
@@ -71,15 +214,30 @@ const year = new Date().getFullYear();
     font-weight: 600;
     color: var(--text);
   }
+  .site-footer__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
   .site-footer__rights {
     font-size: var(--text-sm);
     line-height: var(--text-sm-lh);
     color: var(--text-muted);
   }
+  .site-footer__place {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    color: var(--text-faint);
+  }
+
+  /* Social links and back to top (microinteraction 23): a soft background on hover; the
+     arrow rises 2px. The page scrolls up smoothly, or jumps with reduced motion. */
   .site-footer__socials {
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    margin-left: auto;
   }
   .site-footer__socials a {
     display: grid;
@@ -98,19 +256,41 @@ const year = new Date().getFullYear();
     background: var(--accent-soft);
     color: var(--accent);
   }
+  .site-footer__top :global(svg) {
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .site-footer__top:hover :global(svg) {
+      transform: translateY(-2px);
+    }
+  }
 
   @media (max-width: 767.98px) {
-    .site-footer__inner {
+    .site-footer {
+      padding-block: var(--space-12) var(--space-16);
+    }
+    .site-footer__box {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-6);
-      padding-block: var(--space-6);
+      gap: var(--space-8);
+      padding: var(--space-6) var(--space-5);
     }
-    .site-footer__brand {
-      flex-direction: row;
-    }
-    .site-footer__rights {
-      flex-basis: 100%;
+    .site-footer__socials {
+      margin-left: calc(var(--space-2) * -1);
     }
   }
 </style>
+
+<script>
+  import { followPointer } from '../lib/cursors';
+
+  const box = document.querySelector<HTMLElement>('[data-footer-box]');
+  const measure = document.querySelector<HTMLElement>('[data-footer-measure]');
+  if (box && measure) {
+    // The label shows the box's real size, as the hero measures its headline.
+    new ResizeObserver(() => {
+      measure.textContent = ` · ${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}`;
+    }).observe(box);
+    followPointer(box.closest('footer') ?? box, [...box.querySelectorAll<HTMLElement>('[data-footer-cursor]')]);
+  }
+</script>

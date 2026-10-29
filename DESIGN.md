@@ -271,27 +271,51 @@ fichas con fotogramas de 0, 50 y 100 % y la tabla de 27 microinteracciones.
 **Reglas**
 
 - Solo se mueven `transform` y `opacity`.
+- Con más presencia que en las fichas: `.reveal` entra desde 32 px, los checks de «Qué incluye» crecen desde .2 y la anotación del caso destacado sube 20 px. El calendario de trabajo queda como en la ficha.
 - Con `prefers-reduced-motion: reduce` y sin JavaScript se ve el estado final, estático.
 - Los elementos que se mueven son decorativos (`aria-hidden`) y lo que cambia con el scroll no
   se anuncia. El contenido real ya está en el HTML.
 - Cada movimiento cuenta algo (un criterio que se cumple, un día trabajado, una línea que se
   escribe); no es adorno.
 
-**Un solo mecanismo.** Se extiende el `.reveal` de `global.css` y `BaseLayout.astro` (un
-`IntersectionObserver`), no se arma otro:
+**Un solo mecanismo.** `src/lib/motion.ts` (observers compartidos, `watch` y `reveal`) y
+las reglas de `global.css`. Cada componente lo importa; no se arma otro:
 
 - «Una vez al entrar»: `.reveal`, con variantes por atributo (escalonado, retraso y pasos
   internos).
-- «Ligado al progreso del scroll»: CSS con `animation-timeline: view()` dentro de
-  `@supports`. Sin soporte, queda el estado final. No hay JavaScript que lea el layout en cada
-  frame.
+- «Ligado al progreso del scroll»: `[data-scroll]` anima `--p` de 0 a 1, con ease in-out (arranca y frena suave), con
+  `animation-timeline: view()` dentro de `@supports`, en el tramo de `--scroll-range`. Los
+  hijos lo traducen a `opacity` y `transform` con `var(--p, 1)`. Sin soporte, queda el estado
+  final. No hay JavaScript que lea el layout en cada frame. Soporte: Chrome 115, Safari 26 y
+  Firefox 159.
 - El indicador de sección del header usa el mismo observer.
+
+**Un hilo conductor: las cuatro lentes.** Los cuatro cursores del hero salen del hero y recorren la
+página (desde 1280 px y con movimiento). Cada uno pertenece a una lente y a una sección: Análisis a
+Sobre mí, Desarrollo a Experiencia, Diseño a Proyectos y Calidad a Contacto. Al salir, el rótulo pasa
+del nombre de la lente al de la sección; flotan en los márgenes y, cuando el título de su sección
+se acerca, el cursor va al título y hace clic: el título queda seleccionado, con una caja y cuatro
+manijas del color de la lente, como en el lienzo. Después se va con el título. La rayita del header
+toma el color de la lente de la sección a la vista (`--lens-ink-*`). El footer reúne los cuatro.
+Los títulos y el texto no cambian de color: el de Diseño no tendría contraste AA. Las posiciones se
+miden una vez (al cargar y al cambiar el tamaño), nunca mientras se scrollea.
+
+**Profundidad.** Es el movimiento que recorre toda la página: el contenido no sube por la pantalla,
+viene hacia vos. Cada bloque (`.reveal`, `.depth`) crece desde un poco más chico mientras sube y
+aparece, y se aleja, más chico y más tenue, al salir. El hero retrocede igual con la primera
+pantalla de scroll. Los títulos de sección y el bloque de Sobre mí solo entran: una vez en su lugar quedan quietos y nítidos hasta que se van, para poder leerlos arriba de la pantalla. Es CSS puro atado al scroll (`view()` y `scroll()`), solo `transform` y
+`opacity`; sin soporte, sin JS o con reduced motion rige el fundido de `.reveal` o la página estática.
+
+**Hero por modos.** Con el modo, el titular cede su lugar a la pieza de trabajo de esa lente: el
+ticket en Análisis, el editor en Desarrollo y la tarea en Calidad; Diseño es el titular. La pieza es
+decorativa (`aria-hidden`) y avanza de Reposo a Completo al aparecer; el titular se atenúa pero sigue
+en la página (lo lee un lector de pantalla) y la caja no cambia de tamaño. Sin JS queda en Diseño.
 
 **Fichas**
 
 | Ficha | Lugar | Disparador |
 |-------|-------|------------|
-| 1 | Sobre mí · Cómo trabajo: miniatura de cada lente | Progreso del scroll; el hover la completa |
+| 1 | Sobre mí · Cómo trabajo: miniatura de cada lente (opacity .35 a 1, 40 px a 0 y escala .88 a 1) | Progreso del scroll; el hover la completa |
 | 2 | Experiencia · Calendario de trabajo | Progreso del scroll |
 | 3 | Proyectos · anotación «E2E» del caso destacado | Una vez al entrar |
 | 4 | Caso de estudio · Qué incluye | Progreso del scroll |
@@ -348,7 +372,7 @@ están dibujados en Figma pero no se usan en ninguna pantalla.
 **Footer nuevo (Lienzo).** Caja de selección con etiqueta de medida y manijas, cursores en
 las esquinas (ocultos en mobile) y grilla de puntos. Contenido: logo, «© año · Todos los
 derechos reservados.», «Buenos Aires, Argentina» (`cv.json`), GitHub, LinkedIn y volver
-arriba. Plan B aprobado: la dirección «README».
+arriba. Plan B: la dirección «README».
 
 **Dónde se suman los elementos nuevos**
 

@@ -25,3 +25,6 @@ Thumbs.db
 *.log
 .vscode/*
 !.vscode/extensions.json
+
+# work calendar: private repository list (scripts/work-days.mjs)
+scripts/work-days.local.json

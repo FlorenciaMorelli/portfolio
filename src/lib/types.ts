@@ -77,7 +77,8 @@ export type IconName =
   | 'check-check'
   | 'clipboard-list'
   | 'mail'
-  | 'linkedin-outline';
+  | 'linkedin-outline'
+  | 'circle-alert';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {
@@ -106,6 +107,8 @@ export interface CaseStudy {
   name: string;
   summary: LocalizedText;
   website?: string;
+  /** Day of the first commit (YYYY-MM-DD): a milestone of the work calendar. */
+  firstCommit?: string;
   studio?: { name: string; url: string };
   facts: { label: LocalizedText; value: LocalizedText }[];
   /** `short` is the label used on the home; `home` marks the figures shown there. */

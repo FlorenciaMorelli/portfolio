@@ -1,0 +1,73 @@
+---
+// Development lens: the real change of the spacing scale in the rewrite of the tokens (commit
+// eb6004c, PR #45): --space-5 went from 1.5rem to 1.25rem and --space-6 from 2rem to 1.5rem.
+// The + and - marks go with the colour, so the diff does not depend on colour alone. Decorative
+// (aria-hidden). Steps: unchanged lines, the removed ones marked, then the added ones.
+import './lens.css';
+
+const rows = [
+  { n: 104, mark: ' ', text: '  --space-4: 1rem;', step: 0 },
+  { n: 51, mark: '-', text: '  --space-5: 1.5rem;', step: 1 },
+  { n: 52, mark: '-', text: '  --space-6: 2rem;', step: 1 },
+  { n: 105, mark: '+', text: '  --space-5: 1.25rem;', step: 2 },
+  { n: 106, mark: '+', text: '  --space-6: 1.5rem;', step: 2 },
+];
+---
+
+<div class="lens diff" aria-hidden="true" style="--steps: 3">
+  <p class="lens__bar"><span class="lens__dot diff__dot"></span>tokens.css<span class="diff__commit">eb6004c</span></p>
+  <ol class="diff__lines">
+    {rows.map((row) => (
+      <li class:list={[row.mark === '-' && 'diff__del', row.mark === '+' && 'diff__add']} data-step style={`--from: ${row.step - 1}`}>
+        <span class="diff__n">{row.n}</span>
+        <span class="diff__mark">{row.mark}</span>
+        <code class="lens__ellipsis">{row.text.trim()}</code>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .diff {
+    background: var(--code-bg);
+  }
+  .diff__dot {
+    color: var(--cursor-dev);
+  }
+  .diff__commit {
+    margin-left: auto;
+  }
+  .diff__lines {
+    padding: var(--space-2) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: 1.375rem;
+    color: var(--code-text);
+  }
+  .diff__lines li {
+    display: flex;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+  .diff__n {
+    flex: none;
+    min-width: 1.5rem;
+    text-align: right;
+    color: var(--code-line-number);
+  }
+  .diff__mark {
+    flex: none;
+    width: 0.75rem;
+  }
+  .diff__lines code {
+    font: inherit;
+  }
+  .diff__del {
+    background: var(--code-diff-del-bg);
+    color: var(--code-diff-del-text);
+  }
+  .diff__add {
+    background: var(--code-diff-add-bg);
+    color: var(--code-diff-add-text);
+  }
+</style>

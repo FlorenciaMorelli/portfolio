@@ -1,0 +1,7 @@
+{
+  "authors": ["your-github-login"],
+  "jobs": {
+    "enivel7": ["owner/repository"],
+    "guia": ["owner/repository", "org:organization"]
+  }
+}

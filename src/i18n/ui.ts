@@ -65,9 +65,30 @@ type Dict = {
     /** One line per facet; the facet names are in `hero.modes`. */
     how: { analysis: string; design: string; development: string; quality: string };
   };
+  /** Decorative pieces of «Cómo trabajo» (aria-hidden): a ticket, a design view and a task. */
+  lenses: {
+    ticket: { kind: string; criteriaTitle: string; criteria: string[] };
+    /** The QA task of the hero (decorative): its criteria are about the headline; `{title}` is the headline. */
+    scene: { criteria: [string, string, string, string] };
+    design: { file: string; panel: string; empty: string; layer: string; corners: string; padding: string; gap: string; text: string; fill: string };
+    /** `count`: `{n}` and `{total}`; `unitTests`: the same, from the last `npm test` run. */
+    task: { title: string; status: [string, string, string]; count: string; unitTests: string; details: string; assignee: string; labels: string; tags: string[] };
+  };
   experience: {
     title: string;
     jobs: Job[];
+    /** Work calendar (decorative). `date` uses {wd}, {d}, {m} and {y}. */
+    calendar: {
+      title: string;
+      lastSix: string;
+      less: string;
+      more: string;
+      months: string[];
+      weekdays: string[];
+      date: string;
+      jobs: { maipu: string; smg: string; enivel7: string; guia: string };
+      firstCommit: string;
+    };
   };
   projects: {
     title: string;
@@ -77,6 +98,8 @@ type Dict = {
     links: Record<string, string>;
     caseStudy: string;
     sourcedNote: string;
+    /** Note of the featured case; `{n}` is its number of E2E suites. */
+    e2eNote: string;
     client: string;
     /** `{studio}` is replaced by the studio name. */
     builtAt: string;
@@ -91,6 +114,8 @@ type Dict = {
     studio: string;
     highlights: string;
     more: string;
+    /** Counter of «Qué incluye» (decorative): `count` uses {n} and {total}. */
+    criteria: { count: string; label: string };
   };
   contact: {
     title: string;
@@ -99,6 +124,10 @@ type Dict = {
     email: string;
     message: string;
     send: string;
+    /** States of the send button, announced by a live region. `error` uses {email}. */
+    sending: string;
+    sent: string;
+    error: string;
   };
   footer: { rights: string };
   theme: { toLight: string; toDark: string };
@@ -170,8 +199,65 @@ export const ui: Record<Locale, Dict> = {
         quality: 'Pruebas, validaciones automatizadas y tests E2E.',
       },
     },
+    lenses: {
+      scene: {
+        criteria: [
+          'El titular dice «{title}»',
+          'Un lector de pantalla lo lee completo',
+          'Contraste AA en claro y oscuro',
+          'Respeta reduced motion',
+        ],
+      },
+      ticket: {
+        kind: 'Historia de usuario',
+        criteriaTitle: 'Criterios de aceptación',
+        criteria: [
+          'Pasan las pruebas unitarias antes de publicar',
+          'Contraste AA en todos los pares, en claro y oscuro',
+          'Navegable con teclado, con foco visible',
+          'Respeta reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · Rediseño 2026',
+        panel: 'Diseño',
+        empty: 'Sin selección',
+        layer: 'Capa',
+        corners: 'Esquinas',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Texto',
+        fill: 'Relleno',
+      },
+      task: {
+        title: 'Pruebas UAT satisfactorias',
+        status: ['Por hacer', 'En curso', 'Finalizado'],
+        count: '{n} de {total}',
+        unitTests: 'Pruebas unitarias en verde ({n} de {total})',
+        details: 'Detalles',
+        assignee: 'Responsable',
+        labels: 'Etiquetas',
+        tags: ['pruebas', 'accesibilidad'],
+      },
+    },
     experience: {
       title: 'Experiencia',
+      calendar: {
+        title: 'Días trabajados',
+        lastSix: 'Últimos 6 meses',
+        less: 'Menos',
+        more: 'Más',
+        months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+        weekdays: ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'],
+        date: '{wd} {d} {m} {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Recepcionista y administrativa',
+          smg: 'SMG · Analista técnico-funcional',
+          enivel7: 'Enivel7 · Desarrolladora web front-end',
+          guia: 'Guia · Cofundadora y desarrolladora',
+        },
+        firstCommit: 'Primer commit de Audenpass',
+      },
       jobs: [
         {
           role: 'Cofundadora · Desarrolladora frontend y diseñadora UX/UI',
@@ -243,6 +329,7 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Ver caso de estudio',
       sourcedNote: 'Catálogo actualizado automáticamente desde GitHub.',
+      e2eNote: '{n} suites con Playwright',
       client: 'Cliente',
       builtAt: 'Desarrollado en {studio}',
       showAll: 'Ver los {n} proyectos',
@@ -254,6 +341,7 @@ export const ui: Record<Locale, Dict> = {
       studio: 'Conocé Guia',
       highlights: 'En números',
       more: 'Ver todos los proyectos',
+      criteria: { count: '{n} de {total}', label: 'criterios cumplidos' },
     },
     contact: {
       title: 'Hablemos.',
@@ -263,6 +351,9 @@ export const ui: Record<Locale, Dict> = {
       email: 'Email',
       message: 'Mensaje',
       send: 'Enviar',
+      sending: 'Enviando',
+      sent: 'Enviado',
+      error: 'No se pudo enviar. Probá de nuevo o escribime a {email}.',
     },
     footer: {
       rights: 'Todos los derechos reservados.',
@@ -334,8 +425,65 @@ export const ui: Record<Locale, Dict> = {
         quality: 'Testing, automated validations and E2E tests.',
       },
     },
+    lenses: {
+      scene: {
+        criteria: [
+          'The headline reads “{title}”',
+          'A screen reader reads it in full',
+          'AA contrast in light and dark',
+          'Respects reduced motion',
+        ],
+      },
+      ticket: {
+        kind: 'User story',
+        criteriaTitle: 'Acceptance criteria',
+        criteria: [
+          'Unit tests pass before publishing',
+          'AA contrast on every pair, in light and dark',
+          'Keyboard accessible, with visible focus',
+          'Respects reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · 2026 redesign',
+        panel: 'Design',
+        empty: 'Nothing selected',
+        layer: 'Layer',
+        corners: 'Corners',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Text',
+        fill: 'Fill',
+      },
+      task: {
+        title: 'UAT tests passed',
+        status: ['To do', 'In progress', 'Done'],
+        count: '{n} of {total}',
+        unitTests: 'Unit tests passing ({n} of {total})',
+        details: 'Details',
+        assignee: 'Assignee',
+        labels: 'Labels',
+        tags: ['tests', 'accessibility'],
+      },
+    },
     experience: {
       title: 'Experience',
+      calendar: {
+        title: 'Days worked',
+        lastSix: 'Last 6 months',
+        less: 'Less',
+        more: 'More',
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        date: '{wd} {m} {d}, {y}',
+        jobs: {
+          maipu: 'Diagnóstico Maipú · Receptionist and administrative assistant',
+          smg: 'SMG · Technical-functional analyst',
+          enivel7: 'Enivel7 · Front-end web developer',
+          guia: 'Guia · Co-founder and developer',
+        },
+        firstCommit: 'First Audenpass commit',
+      },
       jobs: [
         {
           role: 'Co-founder · Frontend developer and UX/UI designer',
@@ -407,6 +555,7 @@ export const ui: Record<Locale, Dict> = {
       },
       caseStudy: 'Read the case study',
       sourcedNote: 'Catalog updated automatically from GitHub.',
+      e2eNote: '{n} suites with Playwright',
       client: 'Client',
       builtAt: 'Built at {studio}',
       showAll: 'See all {n} projects',
@@ -418,6 +567,7 @@ export const ui: Record<Locale, Dict> = {
       studio: 'About Guia',
       highlights: 'By the numbers',
       more: 'See all projects',
+      criteria: { count: '{n} of {total}', label: 'criteria met' },
     },
     contact: {
       title: "Let's talk.",
@@ -427,6 +577,9 @@ export const ui: Record<Locale, Dict> = {
       email: 'Email',
       message: 'Message',
       send: 'Send',
+      sending: 'Sending',
+      sent: 'Sent',
+      error: "It couldn't be sent. Try again or email me at {email}.",
     },
     footer: {
       rights: 'All rights reserved.',

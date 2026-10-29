@@ -95,21 +95,8 @@ const alternates = [
     <slot />
 
     <script>
-      const items = document.querySelectorAll<HTMLElement>('.reveal');
-      if (items.length) {
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                obs.unobserve(entry.target);
-              }
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px' },
-        );
-        items.forEach((el) => observer.observe(el));
-      }
+      import { reveal } from '../lib/motion';
+      reveal();
     </script>
   </body>
 </html>

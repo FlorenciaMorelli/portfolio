@@ -47,18 +47,19 @@ test.describe('Spanish home', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 
-  test('has no critical accessibility violations', async ({ page }) => {
-    // The hero cursors are decorative copies of the mode bar and inactive ones sit at 35%
-    // opacity by design (DESIGN.md, Contraste), so they are left out of the contrast check.
-    const results = await new AxeBuilder({ page })
-      .exclude('.hero__cursors')
-      .withTags(['wcag2a', 'wcag2aa'])
-      .analyze();
-    const serious = results.violations.filter((v) =>
-      ['critical', 'serious'].includes(v.impact ?? ''),
-    );
-    expect(serious).toEqual([]);
-  });
+  for (const theme of ['light', 'dark']) {
+    test(`has no critical accessibility violations in the ${theme} theme`, async ({ page }) => {
+      // Idle hero cursors are solid (cursor/*-idle tokens) and pass AA, so nothing is excluded.
+      await page.evaluate((t) => localStorage.setItem('theme', t), theme);
+      await page.reload();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      const serious = results.violations.filter((v) =>
+        ['critical', 'serious'].includes(v.impact ?? ''),
+      );
+      expect(serious).toEqual([]);
+    });
+  }
 });
 
 test.describe('About', () => {

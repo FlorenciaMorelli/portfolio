@@ -296,6 +296,12 @@ cursor de su lente, decorativo, arriba del título (desde 1280 px), y la rayita 
 color de la lente de la sección a la vista (`--lens-ink-*`). El footer reúne los cuatro cursores.
 Los títulos y el texto no cambian de color: el de Diseño no tendría contraste AA.
 
+**Profundidad.** Es el movimiento que recorre toda la página: el contenido no sube por la pantalla,
+viene hacia vos. Cada bloque (`.reveal`, `.depth`) crece desde un poco más chico mientras sube y
+aparece, y se aleja, más chico y más tenue, al salir. El hero retrocede igual con la primera
+pantalla de scroll. Es CSS puro atado al scroll (`view()` y `scroll()`), solo `transform` y
+`opacity`; sin soporte, sin JS o con reduced motion rige el fundido de `.reveal` o la página estática.
+
 **Fichas**
 
 | Ficha | Lugar | Disparador |

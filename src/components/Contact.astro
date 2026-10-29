@@ -11,6 +11,9 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 
 const action = `https://formsubmit.co/${profile.email}`;
+// With JS the form is sent in the background, so the button can show its states.
+const ajax = `https://formsubmit.co/ajax/${profile.email}`;
+const [errorBefore, errorAfter] = t.contact.error.split('{email}');
 const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
 // Direct links: the address shown is the URL without its protocol.
@@ -41,7 +44,7 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
       </ul>
     </div>
 
-    <form class="contact__form reveal" action={action} method="POST">
+    <form class="contact__form reveal" action={action} method="POST" data-contact-form data-ajax={ajax} data-state="idle">
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value={redirect} />
       <input type="hidden" name="_subject" value="Portfolio - nuevo mensaje" />
@@ -67,9 +70,21 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
         <textarea name="message" rows="5" required></textarea>
       </label>
 
-      <button type="submit" class="btn btn--primary">
-        {t.contact.send}<Icon name="arrow-right" size={18} />
+      <button type="submit" class="btn btn--primary contact__send">
+        <span class="contact__send-text" data-send-text data-idle={t.contact.send} data-sending={t.contact.sending} data-sent={t.contact.sent}>{t.contact.send}</span>
+        <span class="contact__send-icon" aria-hidden="true">
+          <span class="contact__send-arrow"><Icon name="arrow-right" size={18} /></span>
+          <span class="contact__send-dots"><span></span><span></span><span></span></span>
+          <span class="contact__send-check"><Icon name="check" size={18} /></span>
+        </span>
       </button>
+      <p class="contact__status" data-status aria-live="polite">
+        <span class="contact__status-error">
+          <Icon name="circle-alert" size={18} />
+          <span>{errorBefore}<a href={`mailto:${profile.email}`}>{profile.email}</a>{errorAfter}</span>
+        </span>
+        <span class="visually-hidden contact__status-text" data-status-text></span>
+      </p>
     </form>
   </div>
 </section>
@@ -193,6 +208,94 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
     align-self: flex-start;
   }
 
+  /* Sending (microinteraction 21): Enviar → Enviando (three dots that pulse, aria-busy) →
+     Enviado (a check that grows from .6) or an error (icon, text and a strong border; the
+     system has no error colour). The live region announces each state. */
+  .contact__send-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  .contact__send-icon > * {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur) var(--ease);
+  }
+  .contact__send-dots,
+  .contact__send-check,
+  [data-state='sending'] .contact__send-arrow,
+  [data-state='sent'] .contact__send-arrow {
+    opacity: 0;
+  }
+  [data-state='sending'] .contact__send-dots,
+  [data-state='sent'] .contact__send-check {
+    opacity: 1;
+  }
+  .contact__send-check {
+    transform: scale(0.6);
+  }
+  [data-state='sent'] .contact__send-check {
+    transform: none;
+  }
+  .contact__send-dots {
+    gap: 0.1875rem;
+  }
+  .contact__send-dots span {
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: var(--radius-pill);
+    background: currentColor;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-state='sending'] .contact__send-dots span {
+      animation: contact-pulse 900ms var(--ease) infinite alternate;
+    }
+    [data-state='sending'] .contact__send-dots span:nth-child(2) {
+      animation-delay: 150ms;
+    }
+    [data-state='sending'] .contact__send-dots span:nth-child(3) {
+      animation-delay: 300ms;
+    }
+  }
+  @keyframes contact-pulse {
+    from {
+      opacity: 0.3;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  [data-state='sending'] .contact__send {
+    cursor: progress;
+  }
+  /* Empty until there is an error: it takes no room under the button. */
+  [data-contact-form]:not([data-state='error']) .contact__status {
+    margin-top: calc(var(--space-5) * -1);
+  }
+  .contact__status-error {
+    display: none;
+  }
+  [data-state='error'] .contact__status-error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: calc(var(--border-width) * 2) solid var(--border-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text);
+  }
+  .contact__status-error :global(svg) {
+    flex: none;
+    margin-top: 0.125rem;
+  }
+  .contact__status-error a {
+    text-decoration-line: underline;
+    text-underline-offset: 0.25em;
+  }
+
   @media (max-width: 1023.98px) {
     .contact__inner {
       grid-template-columns: 1fr;
@@ -208,3 +311,40 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
     }
   }
 </style>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-contact-form]')) {
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const text = form.querySelector<HTMLElement>('[data-send-text]')!;
+    const status = form.querySelector<HTMLElement>('[data-status-text]')!;
+
+    const setState = (state: 'idle' | 'sending' | 'sent' | 'error') => {
+      form.dataset.state = state;
+      text.textContent = text.dataset[state === 'error' ? 'idle' : state] ?? '';
+      button.setAttribute('aria-busy', String(state === 'sending'));
+      // The error box is in the live region itself; the other states are announced as text.
+      status.textContent = state === 'sending' || state === 'sent' ? text.textContent : '';
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (form.dataset.state === 'sending') return;
+      setState('sending');
+      try {
+        const response = await fetch(form.dataset.ajax!, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || String(result.success) !== 'true') throw new Error('Not sent');
+        form.reset();
+        setState('sent');
+      } catch {
+        setState('error');
+      }
+    });
+    // Writing again after an error or a sent message starts over.
+    form.addEventListener('input', () => form.dataset.state !== 'sending' && form.dataset.state !== 'idle' && setState('idle'));
+  }
+</script>

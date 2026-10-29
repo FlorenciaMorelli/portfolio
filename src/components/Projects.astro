@@ -202,10 +202,12 @@ const rest = projects.filter((p) => p !== featured);
       // The new cards come in 40ms apart while the button fades out and goes away.
       const fade = more && !reduced.matches ? more.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease-out', fill: 'forwards' }) : null;
       apply(40, Boolean(fade));
-      fade?.finished.then(() => {
-        if (more) more.hidden = true;
-        fade.cancel();
-      });
+      if (fade) {
+        setTimeout(() => {
+          if (more) more.hidden = true;
+          fade.cancel();
+        }, 240);
+      }
       // The button goes away, so keep the keyboard where the new content starts.
       cards.find((card) => Number(card.dataset.rank) === limit + 1)?.querySelector<HTMLElement>('.card__link')?.focus();
     });

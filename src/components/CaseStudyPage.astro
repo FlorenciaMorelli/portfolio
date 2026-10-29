@@ -3,6 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import Icon from './Icon.astro';
+import EditorPanel from './lenses/EditorPanel.astro';
+import DiffView from './lenses/DiffView.astro';
+import TestResults from './lenses/TestResults.astro';
 import { useTranslations, localizedPath, otherLocale, type Locale } from '../i18n/utils';
 import { getCaseStudy, caseStudyPath } from '../lib/case-studies';
 import { assetUrl } from '../lib/url';
@@ -116,10 +119,15 @@ const studioName = study.studio?.name;
             {section.cards && (
               <ol class="decisions">
                 {section.cards.map((card, i) => (
-                  <li class="decision">
+                  <li class="decision" data-scroll>
                     <span class="decision__num">{String(i + 1).padStart(2, '0')}</span>
                     <h3>{card.title[locale]}</h3>
                     <p>{card.body[locale]}</p>
+                    <div class="decision__evidence">
+                      {i === 0 && <EditorPanel from="export function watch" to="const callbacks = new WeakMap" active="let entry" />}
+                      {i === 1 && <DiffView />}
+                      {i === 2 && <TestResults />}
+                    </div>
                   </li>
                 ))}
               </ol>
@@ -520,6 +528,20 @@ const studioName = study.studio?.name;
     border: var(--border-width) solid var(--border);
     border-radius: var(--radius-xl);
   }
+  /* Evidence of each decision (Movimiento v2, ficha 5): code, a change or a test run. It wakes up
+     as the card nears the middle of the window; static, it is complete. */
+  .decision {
+    min-width: 0;
+    --scroll-range: cover 15vh cover 55%;
+  }
+  .decision__evidence {
+    min-width: 0;
+    margin-top: auto;
+    padding-top: var(--space-3);
+    opacity: calc(0.35 + 0.65 * var(--p, 1));
+    transform: translateY(calc((1 - var(--p, 1)) * 40px)) scale(calc(0.88 + 0.12 * var(--p, 1)));
+    transform-origin: 50% 0;
+  }
   .decision__num {
     font-family: var(--font-mono);
     font-size: var(--text-mono);
@@ -543,7 +565,7 @@ const studioName = study.studio?.name;
 
   @media (max-width: 1023.98px) {
     .decisions {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
     .part__block {
       grid-template-columns: 1fr;

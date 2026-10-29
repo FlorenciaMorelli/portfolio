@@ -353,12 +353,6 @@ ul {
     transform: translateY(72px) scale(0.9);
   }
 }
-@keyframes depth-hero {
-  to {
-    opacity: 0.2;
-    transform: translateY(-6vh) scale(0.9);
-  }
-}
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .js .reveal:not(.reveal--still):not(.is-entering) {
@@ -376,12 +370,6 @@ ul {
       animation-timeline: view();
       animation-range: cover 0% cover 30%;
       transform-origin: 50% 70%;
-    }
-    .js .hero__inner {
-      animation: depth-hero var(--ease) both;
-      animation-timeline: scroll(root block);
-      animation-range: 0px 80vh;
-      transform-origin: 50% 40%;
     }
   }
 }

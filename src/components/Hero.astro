@@ -249,21 +249,17 @@ const title = t.hero.title;
     margin-top: var(--space-8);
   }
 
-  /* One cursor per mode. The active one is solid; clicking one switches to its mode.
-     They duplicate the mode bar for the mouse, so they stay out of the accessibility tree. */
+  /* One cursor per mode. The idle ones use the solid idle colours (they pass AA); the active one
+     uses the full colour. Clicking one switches to its mode. They duplicate the mode bar for the
+     mouse, so they stay out of the accessibility tree. */
   .hero__cursors {
     display: none;
   }
   .hero__cursor {
     position: absolute;
-    opacity: 0.35;
     cursor: pointer;
     pointer-events: auto;
     will-change: transform;
-    transition: opacity var(--dur) var(--ease);
-  }
-  .hero__cursor:hover {
-    opacity: 0.75;
   }
   .hero__cursor-float {
     display: flex;
@@ -308,19 +304,24 @@ const title = t.hero.title;
     font-weight: 500;
     white-space: nowrap;
   }
-  .hero__cursor--analysis { left: 13.89%; top: 27.78%; color: var(--cursor-analysis); --drift-x: 0.5rem; --drift-y: -0.625rem; --drift-time: 5.2s; --drift-delay: 0s; }
-  .hero__cursor--design { left: 79.86%; top: 21.11%; color: var(--cursor-design); --drift-x: -0.625rem; --drift-y: 0.5rem; --drift-time: 6.4s; --drift-delay: -2s; }
-  .hero__cursor--development { left: 77.08%; top: 56.67%; color: var(--cursor-dev); --drift-x: -0.5rem; --drift-y: -0.5rem; --drift-time: 5.8s; --drift-delay: -4s; }
-  .hero__cursor--quality { left: 15.97%; top: 60%; color: var(--cursor-qa); --drift-x: 0.625rem; --drift-y: 0.625rem; --drift-time: 7s; --drift-delay: -1s; }
-  .hero__cursor--analysis .hero__cursor-label { background: var(--cursor-analysis); color: var(--cursor-analysis-text); }
-  .hero__cursor--design .hero__cursor-label { background: var(--cursor-design); color: var(--cursor-design-text); }
-  .hero__cursor--development .hero__cursor-label { background: var(--cursor-dev); color: var(--cursor-dev-text); }
-  .hero__cursor--quality .hero__cursor-label { background: var(--cursor-qa); color: var(--cursor-qa-text); }
-  .hero[data-mode='analysis'] .hero__cursor--analysis,
-  .hero[data-mode='design'] .hero__cursor--design,
-  .hero[data-mode='development'] .hero__cursor--development,
-  .hero[data-mode='quality'] .hero__cursor--quality {
-    opacity: 1;
+  .hero__cursor--analysis { left: 13.89%; top: 27.78%; --drift-x: 0.5rem; --drift-y: -0.625rem; --drift-time: 5.2s; --drift-delay: 0s; }
+  .hero__cursor--design { left: 79.86%; top: 21.11%; --drift-x: -0.625rem; --drift-y: 0.5rem; --drift-time: 6.4s; --drift-delay: -2s; }
+  .hero__cursor--development { left: 77.08%; top: 56.67%; --drift-x: -0.5rem; --drift-y: -0.5rem; --drift-time: 5.8s; --drift-delay: -4s; }
+  .hero__cursor--quality { left: 15.97%; top: 60%; --drift-x: 0.625rem; --drift-y: 0.625rem; --drift-time: 7s; --drift-delay: -1s; }
+  .hero__cursor--analysis { --c: var(--cursor-analysis-idle); --c-text: var(--cursor-analysis-idle-text); }
+  .hero__cursor--design { --c: var(--cursor-design-idle); --c-text: var(--cursor-design-idle-text); }
+  .hero__cursor--development { --c: var(--cursor-dev-idle); --c-text: var(--cursor-dev-idle-text); }
+  .hero__cursor--quality { --c: var(--cursor-qa-idle); --c-text: var(--cursor-qa-idle-text); }
+  .hero[data-mode='analysis'] .hero__cursor--analysis { --c: var(--cursor-analysis); --c-text: var(--cursor-analysis-text); }
+  .hero[data-mode='design'] .hero__cursor--design { --c: var(--cursor-design); --c-text: var(--cursor-design-text); }
+  .hero[data-mode='development'] .hero__cursor--development { --c: var(--cursor-dev); --c-text: var(--cursor-dev-text); }
+  .hero[data-mode='quality'] .hero__cursor--quality { --c: var(--cursor-qa); --c-text: var(--cursor-qa-text); }
+  .hero__cursor {
+    color: var(--c);
+  }
+  .hero__cursor-label {
+    background: var(--c);
+    color: var(--c-text);
   }
 
   /* Mode bar: needs JS, so it stays hidden without it (the headline stays in Design mode). */

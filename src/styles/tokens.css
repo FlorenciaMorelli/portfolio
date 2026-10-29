@@ -11,6 +11,7 @@
   --navy-900: #000033;
   --navy-850: #06063a;
   --navy-800: #0c0c3a;
+  --navy-750: #182a4f;
   --navy-700: #1e1e5a;
   --navy-600: #2c2c5c;
   --navy-500: #4a4a86;
@@ -19,8 +20,10 @@
   --lilac-200: #bbbbf8;
   --lilac-400: #b9b9d6;
   --lilac-600: #8a8ab0;
+  --lilac-700: #5c4fa0;
 
   --teal-100: #e0f0f2;
+  --teal-200: #8fe3d6;
   --teal-300: #5fd4c4;
   --teal-500: #007788;
   --teal-600: #006d7c;
@@ -171,7 +174,7 @@
   --surface: var(--gray-0);
   --surface-alt: var(--gray-50);
   --bg-band: var(--gray-50);
-  --canvas-dot: var(--gray-300);
+  --canvas-dot: var(--gray-400);
   --text: var(--navy-900);
   --text-muted: var(--gray-700);
   --text-faint: var(--gray-600);
@@ -192,6 +195,37 @@
   --cursor-dev-text: var(--gray-0);
   --cursor-qa: var(--gray-600);
   --cursor-qa-text: var(--gray-0);
+  /* Idle cursors: the cursor at 35% over the page background, solid so they pass AA.
+     Raw values, as in Figma. */
+  --cursor-analysis-idle: #99c3cc;
+  --cursor-analysis-idle-text: var(--navy-900);
+  --cursor-design-idle: #dbdbf3;
+  --cursor-design-idle-text: var(--navy-900);
+  --cursor-dev-idle: #9999ae;
+  --cursor-dev-idle-text: var(--navy-900);
+  --cursor-qa-idle: #bbbbc4;
+  --cursor-qa-idle-text: var(--navy-900);
+  /* Code: editor, diff and test output */
+  --code-bg: var(--gray-50);
+  --code-line-active: var(--gray-100);
+  --code-text: var(--navy-900);
+  --code-comment: var(--gray-600);
+  --code-keyword: var(--teal-700);
+  --code-string: var(--navy-500);
+  --code-function: var(--lilac-700);
+  --code-number: var(--gray-700);
+  --code-property: var(--teal-600);
+  --code-line-number: var(--gray-600);
+  --code-diff-add-bg: var(--teal-100);
+  --code-diff-add-text: var(--teal-700);
+  --code-diff-del-bg: var(--gray-100);
+  --code-diff-del-text: var(--gray-700);
+  /* Work calendar: 0 no work, 2 one job, 4 two jobs (1 and 3 are defined but unused) */
+  --contrib-0: var(--gray-300);
+  --contrib-1: #b2d3d8;
+  --contrib-2: #80b6be;
+  --contrib-3: #40929d;
+  --contrib-4: var(--teal-600);
   --shadow-1: 0 1px 2px var(--shadow-navy-08);
   --shadow-2: 0 8px 24px var(--shadow-navy-12);
   --shadow-3: 0 16px 40px var(--shadow-navy-16);
@@ -226,6 +260,33 @@
   --cursor-dev-text: var(--navy-900);
   --cursor-qa: var(--lilac-600);
   --cursor-qa-text: var(--navy-900);
+  --cursor-analysis-idle: #214a66;
+  --cursor-analysis-idle-text: var(--gray-0);
+  --cursor-design-idle: #414178;
+  --cursor-design-idle-text: var(--gray-0);
+  --cursor-dev-idle: #4f4f71;
+  --cursor-dev-idle-text: var(--gray-0);
+  --cursor-qa-idle: #30305f;
+  --cursor-qa-idle-text: var(--gray-0);
+  --code-bg: var(--navy-800);
+  --code-line-active: var(--navy-700);
+  --code-text: var(--gray-200);
+  --code-comment: var(--lilac-600);
+  --code-keyword: var(--lilac-200);
+  --code-string: var(--teal-300);
+  --code-function: var(--lilac-100);
+  --code-number: var(--lilac-400);
+  --code-property: var(--teal-200);
+  --code-line-number: var(--lilac-600);
+  --code-diff-add-bg: var(--navy-750);
+  --code-diff-add-text: var(--teal-300);
+  --code-diff-del-bg: var(--navy-700);
+  --code-diff-del-text: var(--lilac-400);
+  --contrib-0: var(--navy-700);
+  --contrib-1: #404073;
+  --contrib-2: #646499;
+  --contrib-3: #8f8fc8;
+  --contrib-4: var(--lilac-200);
   --shadow-1: 0 1px 2px var(--shadow-black-40);
   --shadow-2: 0 8px 24px var(--shadow-black-55);
   --shadow-3: 0 16px 40px var(--shadow-black-65);

@@ -29,6 +29,7 @@ const active = lines.findIndex((l) => l.text.includes(activeText));
         <code class="lens__ellipsis" data-step style={`--from: ${i}`}>
           {highlightLine(line.text.slice(indent)).map((token) => <span class={`tok tok--${token.kind}`}>{token.text}</span>)}
         </code>
+        {i === active && <span class="editor__caret" data-step style={`--from: ${lines.length}`}><span class="lens__caret"></span></span>}
       </li>
     ))}
   </ol>
@@ -71,6 +72,16 @@ const active = lines.findIndex((l) => l.text.includes(activeText));
     display: block;
     font: inherit;
     white-space: pre;
+  }
+  /* The caret sits at the end of the active line, inside the panel even when the code is cut. */
+  .editor__caret {
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    display: inline-flex;
+    margin-top: -0.4375rem;
+    padding-left: var(--space-1);
+    background: var(--code-line-active);
   }
   .tok--keyword { color: var(--code-keyword); }
   .tok--string { color: var(--code-string); }

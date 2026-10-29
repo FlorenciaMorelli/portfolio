@@ -137,6 +137,31 @@ test.describe('How I work', () => {
     expect(size).toMatch(/× 46$/);
   });
 
+  test('the ticket and the editor have a blinking caret, the design view and the task a mouse', async ({ page }) => {
+    await expect(page.locator('.ticket .lens__caret')).toHaveCount(1);
+    await expect(page.locator('.editor__lines .lens__caret')).toHaveCount(1);
+    await expect(page.locator('.ticket .lens__caret')).toHaveCSS('animation-name', 'lens-blink');
+    await expect(page.locator('.design-view .lens__pointer')).toHaveCount(1);
+    await expect(page.locator('.task .lens__pointer')).toHaveCount(1);
+  });
+
+  test('the task ends as Finalizado, the one the mouse clicked', async ({ page }) => {
+    await expect(page.locator('.task__chip--done')).toContainText('Finalizado');
+    await expect(page.locator('.task__chip--doing')).toContainText('En curso');
+  });
+
+  test('the mouse grows the design view button as the card wakes up', async ({ page }) => {
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const target = page.locator('.design-view__target');
+    const scale = () => target.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
+    expect(await scale()).toBeCloseTo(0.8, 1);
+    await page.locator('.facet--design').evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + r.top + r.height / 2 - window.innerHeight * 0.3);
+    });
+    await expect.poll(scale).toBeCloseTo(0.96, 1);
+  });
+
   test('a thumbnail wakes up as its card nears the middle of the window', async ({ page }) => {
     test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
     const card = page.locator('.facet--analysis');
@@ -825,6 +850,11 @@ test.describe('Reduced motion', () => {
       expect(results.violations.filter((v) => ['critical', 'serious'].includes(v.impact ?? ''))).toEqual([]);
     });
   }
+
+  test('stops the carets from blinking', async ({ page }) => {
+    await page.goto('/portfolio/');
+    await expect(page.locator('.ticket .lens__caret')).toHaveCSS('animation-name', 'none');
+  });
 
   test('shows the How I work thumbnails complete', async ({ page }) => {
     await page.goto('/portfolio/');

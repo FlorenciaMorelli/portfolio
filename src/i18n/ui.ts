@@ -221,7 +221,7 @@ export const ui: Record<Locale, Dict> = {
       },
       task: {
         title: 'Pruebas UAT satisfactorias',
-        status: ['Por hacer', 'En curso', 'Listo'],
+        status: ['Por hacer', 'En curso', 'Finalizado'],
         count: '{n} de {total}',
         unitTests: 'Pruebas unitarias en verde ({n} de {total})',
         details: 'Detalles',

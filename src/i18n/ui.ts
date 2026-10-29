@@ -14,7 +14,6 @@ interface Job {
   role: string;
   org: string;
   orgUrl?: string;
-  mode?: string;
   period: string;
   facets?: Facet[];
   tech?: string;
@@ -162,7 +161,7 @@ export const ui: Record<Locale, Dict> = {
         data: 'Bases de datos',
         tools: 'Herramientas',
       },
-      photoAlt: 'Florencia Morelli',
+      photoAlt: 'Florencia Morelli con toga y birrete, en su graduación',
       howTitle: 'Cómo trabajo',
       how: {
         analysis: 'Requerimientos, historias de usuario y criterios de aceptación.',
@@ -178,7 +177,6 @@ export const ui: Record<Locale, Dict> = {
           role: 'Cofundadora · Desarrolladora frontend y diseñadora UX/UI',
           org: 'Guia (Desarrollos Guia)',
           orgUrl: 'https://desarrollosguia.com/',
-          mode: 'Remoto',
           period: 'Sep 2026 – Actualidad',
           facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
@@ -220,7 +218,7 @@ export const ui: Record<Locale, Dict> = {
         {
           role: 'Recepcionista y administrativa',
           org: 'Diagnóstico Maipú',
-          period: 'Jul 2021 – Dic 2024',
+          period: 'May 2020 – Dic 2024',
         },
       ],
     },
@@ -244,7 +242,7 @@ export const ui: Record<Locale, Dict> = {
         figma: 'Ver en Figma',
       },
       caseStudy: 'Ver caso de estudio',
-      sourcedNote: 'Actualizado automáticamente desde GitHub.',
+      sourcedNote: 'Catálogo actualizado automáticamente desde GitHub.',
       client: 'Cliente',
       builtAt: 'Desarrollado en {studio}',
       showAll: 'Ver los {n} proyectos',
@@ -327,7 +325,7 @@ export const ui: Record<Locale, Dict> = {
         data: 'Databases',
         tools: 'Tools',
       },
-      photoAlt: 'Florencia Morelli',
+      photoAlt: 'Florencia Morelli in cap and gown at her graduation',
       howTitle: 'How I work',
       how: {
         analysis: 'Requirements, user stories and acceptance criteria.',
@@ -343,7 +341,6 @@ export const ui: Record<Locale, Dict> = {
           role: 'Co-founder · Frontend developer and UX/UI designer',
           org: 'Guia (Desarrollos Guia)',
           orgUrl: 'https://desarrollosguia.com/',
-          mode: 'Remote',
           period: 'Sep 2026 – Present',
           facets: ['analysis', 'design', 'development', 'quality'],
           tech: 'React, TypeScript, Tailwind CSS, TanStack Query, OpenAPI, Playwright, Figma',
@@ -385,7 +382,7 @@ export const ui: Record<Locale, Dict> = {
         {
           role: 'Receptionist and administrative assistant',
           org: 'Diagnóstico Maipú',
-          period: 'Jul 2021 – Dec 2024',
+          period: 'May 2020 – Dec 2024',
         },
       ],
     },
@@ -409,7 +406,7 @@ export const ui: Record<Locale, Dict> = {
         figma: 'View on Figma',
       },
       caseStudy: 'Read the case study',
-      sourcedNote: 'Updated automatically from GitHub.',
+      sourcedNote: 'Catalog updated automatically from GitHub.',
       client: 'Client',
       builtAt: 'Built at {studio}',
       showAll: 'See all {n} projects',

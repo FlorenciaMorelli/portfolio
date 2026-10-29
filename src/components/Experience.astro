@@ -17,10 +17,7 @@ const t = useTranslations(locale);
     <ol class="jobs">
       {t.experience.jobs.map((job) => (
         <li class:list={['job', 'reveal', !job.points && 'job--compact']}>
-          <p class="job__when">
-            <span>{job.period}</span>
-            {job.mode && <span>{job.mode}</span>}
-          </p>
+          <p class="job__when">{job.period}</p>
 
           <div class="job__body">
             <h3 class="job__role">{job.role}</h3>
@@ -73,7 +70,7 @@ const t = useTranslations(locale);
     list-style: none;
   }
 
-  /* Date and mode on the left, the job on the right */
+  /* Date on the left, the job on the right */
   .job {
     display: grid;
     grid-template-columns: 12.5rem minmax(0, 1fr);
@@ -88,9 +85,6 @@ const t = useTranslations(locale);
     padding-block: var(--space-5);
   }
   .job__when {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
     font-family: var(--font-mono);
     font-size: var(--text-mono);
     line-height: var(--text-mono-lh);
@@ -131,7 +125,7 @@ const t = useTranslations(locale);
     line-height: var(--text-sm-lh);
   }
   .job__org a {
-    text-decoration: underline;
+    text-decoration-line: underline;
     text-underline-offset: 0.25em;
   }
 
@@ -167,7 +161,8 @@ const t = useTranslations(locale);
     line-height: var(--text-mono-lh);
     color: var(--accent);
   }
-  .job__tech li:not(:first-child)::before {
+  /* The dot goes after each item, so a wrapped line never starts with it. */
+  .job__tech li:not(:last-child)::after {
     content: '·';
     content: '·' / '';
     margin-inline: var(--space-2);
@@ -185,8 +180,10 @@ const t = useTranslations(locale);
   .job__more :global(svg) {
     transition: transform var(--dur-fast) var(--ease);
   }
-  .job__more:hover :global(svg) {
-    transform: translateX(var(--space-1));
+  @media (prefers-reduced-motion: no-preference) {
+    .job__more:hover :global(svg) {
+      transform: translateX(var(--space-1));
+    }
   }
 
   @media (max-width: 767.98px) {

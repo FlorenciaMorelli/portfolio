@@ -4,31 +4,42 @@ Flujo de trabajo del repositorio, integración continua y despliegue.
 
 ## Flujo de ramas
 
-`feature → PR → staging → main`.
+`feature → develop → staging → main`.
 
 - `main` es producción. Es la rama protegida y la única que dispara el deploy a Pages.
-- `staging` es la rama de integración y QA. Todo pasa por acá antes de producción.
-- El trabajo se hace en ramas cortas `feature/*` o `fix/*`, que salen de `staging`.
+- `staging` es la rama de QA: ahí se revisa una entrega completa antes de producción.
+- `develop` es la rama de integración: junta las features de una entrega.
+- El trabajo se hace en ramas cortas `feature/*` o `fix/*`, que salen de `develop`.
 
 Recorrido de un cambio:
 
-1. Crear `feature/...` desde `staging`.
-2. PR de la feature hacia `staging`. CI corre (tests + build) y tiene que pasar.
-3. Merge a `staging`. Ahí se valida la integración.
-4. PR de `staging` hacia `main`. Al mergear, se publica.
+1. Crear `feature/...` desde `develop`.
+2. PR de la feature hacia `develop`, con **squash**. CI corre (tests y build) y tiene que
+   pasar.
+3. PR de `develop` hacia `staging`, con **squash**: es la entrega para revisar.
+4. PR de `staging` hacia `main`, con **«Create a merge commit»**. Al mergear, se publica.
 
-Las ramas viejas (`develop`, `release/*`, `hotfix`, `legacy-html`) quedan archivadas:
-ya no se despliega desde `develop`.
+Después de cada entrega se sincronizan las ramas:
+
+1. Con el diff de `origin/staging` contra `origin/develop` vacío, en `develop`:
+   `git merge -s ours origin/staging`.
+2. Después del merge a `main`, `staging` avanza con `git merge --ff-only origin/main`.
+3. `staging` se mergea en `develop`.
+
+Las ramas viejas (`release/*`, `hotfix`, `legacy-html`) quedan archivadas.
 
 ### Commits
 
 Convención `tipo(scope): mensaje` con tipos `feat`, `fix`, `docs`, `style`, `refactor`,
 `test`, `chore`. Mensajes en primera persona, sin pies de firma automáticos.
 
+Si al trabajar cambia `src/data/projects.generated.json` (el snapshot de proyectos), va en
+un PR `chore/` aparte.
+
 ## Integración continua
 
-`.github/workflows/ci.yml` corre en los PR hacia `staging` y `main`, y en cada push a
-`staging`:
+`.github/workflows/ci.yml` corre en los PR hacia `develop`, `staging` y `main`, y en cada
+push a `staging`:
 
 1. `npm ci`
 2. `npm test` (Vitest)

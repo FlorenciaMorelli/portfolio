@@ -81,6 +81,15 @@ a:active {
   color: var(--text);
 }
 
+/* Inline link (Enlace en línea): where a link is underlined, the line thickens on hover and press. */
+a {
+  text-decoration-thickness: 1px;
+}
+a:hover,
+a:active {
+  text-decoration-thickness: 2px;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -145,7 +154,8 @@ ul {
   line-height: var(--text-button-lh);
   font-weight: 600;
   transition: box-shadow var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 .btn--primary {
   background: var(--accent);
@@ -165,6 +175,7 @@ ul {
   background: var(--accent-strong);
   color: var(--accent-contrast);
   box-shadow: none;
+  transform: translateY(1px);
 }
 .btn--secondary:hover {
   background: var(--surface-alt);
@@ -235,6 +246,10 @@ ul {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* Only the colour changes: the pressed primary button does not move. */
+  .btn--primary:active {
+    transform: none;
   }
   *,
   *::before,

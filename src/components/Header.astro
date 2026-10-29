@@ -19,10 +19,11 @@ const home = localizedPath(locale, '');
 const anchor = (id: string) => (onHome ? `#${id}` : `${home}/#${id}`);
 const resume = assetUrl(profile.resume[locale]);
 const links = [
-  { id: 'about', label: t.nav.about },
-  { id: 'experience', label: t.nav.experience },
-  { id: 'projects', label: t.nav.projects },
-  { id: 'contact', label: t.nav.contact },
+  // Each section belongs to a lens; the marker takes its colour.
+  { id: 'about', label: t.nav.about, lens: 'analysis' },
+  { id: 'experience', label: t.nav.experience, lens: 'development' },
+  { id: 'projects', label: t.nav.projects, lens: 'design' },
+  { id: 'contact', label: t.nav.contact, lens: 'quality' },
 ];
 ---
 
@@ -37,7 +38,7 @@ const links = [
       <nav id="primary-nav" class="site-nav" data-nav aria-label={t.nav.label}>
         <ul class="site-nav__list">
           {links.map((link) => (
-            <li style={`--i: ${links.indexOf(link)}`}><a href={anchor(link.id)} data-section={link.id}>{link.label}</a></li>
+            <li style={`--i: ${links.indexOf(link)}`}><a href={anchor(link.id)} data-section={link.id} data-lens={link.lens}>{link.label}</a></li>
           ))}
         </ul>
         <span class="site-nav__marker" aria-hidden="true" data-nav-marker></span>
@@ -174,7 +175,7 @@ const links = [
     bottom: 0;
     width: 1px;
     height: 2px;
-    background: var(--accent);
+    background: var(--marker-ink, var(--accent));
     transform-origin: left;
     transform: translateX(var(--marker-x, 0)) scaleX(var(--marker-w, 0));
     opacity: 0;
@@ -400,6 +401,7 @@ const links = [
     if (!marker.hasAttribute('data-shown')) marker.setAttribute('data-instant', '');
     marker.style.setProperty('--marker-x', `${link.offsetLeft}px`);
     marker.style.setProperty('--marker-w', String(link.offsetWidth));
+    marker.style.setProperty('--marker-ink', `var(--lens-ink-${link.dataset.lens})`);
     marker.setAttribute('data-shown', '');
     requestAnimationFrame(() => marker.removeAttribute('data-instant'));
   }

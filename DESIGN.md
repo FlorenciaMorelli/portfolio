@@ -290,6 +290,12 @@ las reglas de `global.css`. Cada componente lo importa; no se arma otro:
   Firefox 159.
 - El indicador de sección del header usa el mismo observer.
 
+**Un hilo conductor: las cuatro lentes.** Cada sección de la home pertenece a una lente: Sobre mí
+a Análisis, Experiencia a Desarrollo, Proyectos a Diseño y Contacto a Calidad. Cada una tiene el
+cursor de su lente, decorativo, arriba del título (desde 1280 px), y la rayita del header toma el
+color de la lente de la sección a la vista (`--lens-ink-*`). El footer reúne los cuatro cursores.
+Los títulos y el texto no cambian de color: el de Diseño no tendría contraste AA.
+
 **Fichas**
 
 | Ficha | Lugar | Disparador |

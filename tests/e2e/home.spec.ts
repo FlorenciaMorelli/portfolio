@@ -704,6 +704,34 @@ test.describe('Navigation with reduced motion', () => {
   });
 });
 
+test.describe('Lenses by section', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('each section has the cursor of its lens, decorative and only on wide screens', async ({ page }) => {
+    const expected = { about: 'Análisis', experience: 'Desarrollo', projects: 'Diseño', contact: 'Calidad' };
+    const wide = (page.viewportSize()?.width ?? 0) >= 1280;
+    for (const [id, name] of Object.entries(expected)) {
+      const cursor = page.locator(`#${id} [data-section-cursor]`);
+      await expect(cursor).toHaveAttribute('aria-hidden', 'true');
+      await expect(cursor).toContainText(name);
+      await expect(cursor).toBeVisible({ visible: wide });
+    }
+  });
+
+  test('the header marker takes the colour of the lens of the section in view', async ({ page }) => {
+    test.skip(!(await page.locator('[data-section="about"]').isVisible()), 'the marker is desktop only');
+    const colour = async (id: string) => {
+      await page.evaluate((i) => document.getElementById(i)?.scrollIntoView({ behavior: 'instant' }), id);
+      await expect(page.locator(`[data-section="${id}"]`)).toHaveAttribute('aria-current', 'true');
+      return page.locator('[data-nav-marker]').evaluate((el) => getComputedStyle(el).backgroundColor);
+    };
+    const colours = [await colour('about'), await colour('experience'), await colour('projects')];
+    expect(new Set(colours).size).toBe(3);
+  });
+});
+
 test.describe('States', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');
@@ -871,6 +899,11 @@ test.describe('Reduced motion', () => {
     const weeks = page.locator('.cal__view:visible .cal__week');
     await expect(weeks.first()).toHaveCSS('opacity', '1');
     await expect(weeks.last()).toHaveCSS('opacity', '1');
+  });
+
+  test('shows the section cursors in place', async ({ page }) => {
+    await page.goto('/portfolio/');
+    for (const cursor of await page.locator('[data-section-cursor]:visible').all()) await expect(cursor).toHaveCSS('opacity', '1');
   });
 
   test('shows the footer label and handles in place', async ({ page }) => {

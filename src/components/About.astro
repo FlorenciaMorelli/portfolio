@@ -179,7 +179,8 @@ const [lead, ...rest] = t.about.body;
     line-height: var(--text-mono-lh);
     color: var(--text);
   }
-  .stack__items li:not(:first-child)::before {
+  /* The dot goes after each item, so a wrapped line never starts with it. */
+  .stack__items li:not(:last-child)::after {
     content: '·';
     content: '·' / '';
     margin-inline: var(--space-2);

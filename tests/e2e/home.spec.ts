@@ -66,7 +66,7 @@ test.describe('About', () => {
   test('shows the photo, the four facets and the technologies by group', async ({ page }) => {
     await page.goto('/portfolio/');
     const about = page.locator('#about');
-    const photo = about.getByRole('img', { name: 'Florencia Morelli' });
+    const photo = about.getByRole('img', { name: 'Florencia Morelli con toga y birrete, en su graduación' });
     await expect(photo).toHaveAttribute('src', /me-2026\.jpg$/);
     await expect(about.getByRole('heading', { level: 3, name: 'Cómo trabajo' })).toBeVisible();
     for (const name of ['Análisis', 'Diseño', 'Desarrollo', 'Calidad']) {
@@ -97,11 +97,10 @@ test.describe('Experience', () => {
     await page.goto('/portfolio/');
   });
 
-  test('lists four jobs with date and mode on one side and the facets of each', async ({ page }) => {
+  test('lists four jobs with the date on one side and the facets of each', async ({ page }) => {
     const jobs = page.locator('#experience .job');
     await expect(jobs).toHaveCount(4);
-    await expect(jobs.nth(0).locator('.job__when')).toContainText('Sep 2026');
-    await expect(jobs.nth(0).locator('.job__when')).toContainText('Remoto');
+    await expect(jobs.nth(0).locator('.job__when')).toHaveText('Sep 2026 – Actualidad');
     await expect(jobs.nth(0).locator('.facet-chip')).toHaveText(['Análisis', 'Diseño', 'Desarrollo', 'Calidad']);
     await expect(jobs.nth(1).locator('.facet-chip')).toHaveText(['Análisis', 'Calidad']);
     await expect(jobs.nth(2).locator('.facet-chip')).toHaveText(['Desarrollo']);
@@ -118,6 +117,7 @@ test.describe('Experience', () => {
     const job = page.locator('#experience .job').nth(3);
     await expect(job).toHaveClass(/job--compact/);
     await expect(job.getByRole('heading', { level: 3 })).toHaveText('Recepcionista y administrativa');
+    await expect(job.locator('.job__when')).toHaveText('May 2020 – Dic 2024');
     await expect(job.locator('.job__points')).toHaveCount(0);
     await expect(job.locator('.facet-chip')).toHaveCount(0);
   });
@@ -125,7 +125,8 @@ test.describe('Experience', () => {
   test('is translated in English', async ({ page }) => {
     await page.goto('/portfolio/en/');
     const jobs = page.locator('#experience .job');
-    await expect(jobs.nth(0).locator('.job__when')).toContainText('Remote');
+    await expect(jobs.nth(0).locator('.job__when')).toHaveText('Sep 2026 – Present');
+    await expect(jobs.nth(3).locator('.job__when')).toHaveText('May 2020 – Dec 2024');
     await expect(jobs.nth(0).locator('.facet-chip')).toHaveText(['Analysis', 'Design', 'Development', 'Quality']);
   });
 });
@@ -144,6 +145,7 @@ test.describe('Projects', () => {
     // Three cards next to the featured case from 1024px, two below.
     const wide = (page.viewportSize()?.width ?? 0) >= 1024;
     await expect(page.locator('[data-card]:visible')).toHaveCount(wide ? 3 : 2);
+    await expect(page.locator('.projects__note')).toHaveText('Catálogo actualizado automáticamente desde GitHub.');
   });
 
   test('«Ver los {n} proyectos» reveals the rest and then goes away', async ({ page }) => {
@@ -251,13 +253,20 @@ test.describe('Hero', () => {
 
   test('switches mode when a cursor is clicked', async ({ page }) => {
     const cursor = page.locator('[data-cursor="quality"]');
-    test.skip(!(await cursor.isVisible()), 'the cursors only show from 1024px');
+    test.skip(!(await cursor.isVisible()), 'the cursors only show from 1280px');
     await cursor.hover();
     await expect(cursor.locator('.hero__cursor-hand')).toBeVisible();
     await expect(cursor.locator('.hero__cursor-arrow')).toBeHidden();
     await cursor.click();
     await expect(page.locator('[data-hero]')).toHaveAttribute('data-mode', 'quality');
     await expect(page.getByRole('radio', { name: 'Calidad' })).toHaveAttribute('aria-checked', 'true');
+  });
+
+  test('hides the cursors below 1280px so they never cover the text', async ({ page }) => {
+    await page.setViewportSize({ width: 1180, height: 820 });
+    await expect(page.locator('.hero__cursors')).toBeHidden();
+    await page.setViewportSize({ width: 820, height: 733 });
+    await expect(page.locator('.hero__cursors')).toBeHidden();
   });
 
   test('links to Projects and Contact', async ({ page }) => {
@@ -323,7 +332,17 @@ test.describe('States', () => {
     await expect.poll(() => style(page, '.hero__actions .btn--primary', 'box-shadow')).not.toBe('none');
     await page.mouse.down();
     await expect.poll(() => style(page, '.hero__actions .btn--primary', 'box-shadow')).toBe('none');
+    // Pressed, it sinks 1px.
+    await expect.poll(() => style(page, '.hero__actions .btn--primary', 'transform')).toBe('matrix(1, 0, 0, 1, 0, 1)');
     await page.mouse.up();
+  });
+
+  test('an underlined link thickens its line on hover', async ({ page }) => {
+    const link = page.locator('.contact__links a').first();
+    await link.scrollIntoViewIfNeeded();
+    expect(await style(page, '.contact__links a', 'text-decoration-thickness')).toBe('1px');
+    await link.hover();
+    await expect.poll(() => style(page, '.contact__links a', 'text-decoration-thickness')).toBe('2px');
   });
 
   test('the secondary button fills on hover', async ({ page }) => {
@@ -380,6 +399,20 @@ test.describe('States', () => {
     const label = await page.locator('#contact .field').first().locator('span').evaluate((el) => getComputedStyle(el).color);
     const text = await page.locator('#contact .field').nth(1).locator('span').evaluate((el) => getComputedStyle(el).color);
     expect(label).not.toBe(text);
+  });
+});
+
+test.describe('Reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('the pressed primary button only changes colour', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const button = page.locator('.hero__actions .btn--primary');
+    await button.hover();
+    await page.mouse.down();
+    await expect(button).toHaveCSS('box-shadow', 'none');
+    await expect(button).toHaveCSS('transform', 'none');
+    await page.mouse.up();
   });
 });
 

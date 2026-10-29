@@ -381,13 +381,35 @@ const title = t.hero.title;
     white-space: nowrap;
   }
 
-  /* Below 1024px the layout stacks: connector on the accent line, no cursors. */
+  /* Below 1024px the layout stacks: connector on the accent line. */
   @media (max-width: 1023.98px) {
     .hero__conn--lead {
       display: none;
     }
     .hero__conn--accent {
       display: inline;
+    }
+  }
+
+  /* Tablet (Hero · 820 in Figma): headline in two lines, sizes of the hero only (not tokens). */
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .hero {
+      padding-top: calc(var(--header-h) + var(--space-16));
+    }
+    .hero__box {
+      min-height: 10.5rem;
+      padding-block: var(--space-2);
+    }
+    .hero__title {
+      font-size: 4rem;
+      line-height: 4.5rem;
+    }
+    .hero__accent {
+      font-size: 4.75rem;
+      line-height: 5rem;
+    }
+    .hero__actions {
+      margin-top: var(--space-10);
     }
   }
 
@@ -400,6 +422,9 @@ const title = t.hero.title;
       bottom: 100%;
       left: calc(var(--border-width) * -1);
     }
+  }
+  /* The cursors need the side margins: below 1280px they would cover the headline and the intro. */
+  @media (min-width: 1280px) {
     .hero__cursors {
       display: block;
       position: absolute;
@@ -559,7 +584,7 @@ const title = t.hero.title;
       reach: [26, 34, 22, 30][i % 4],
       ease: [0.07, 0.11, 0.085, 0.13][i % 4],
     }));
-    const wide = window.matchMedia('(min-width: 1024px) and (pointer: fine)');
+    const wide = window.matchMedia('(min-width: 1280px) and (pointer: fine)');
     let frame = 0;
 
     const step = () => {

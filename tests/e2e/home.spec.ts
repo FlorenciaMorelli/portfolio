@@ -203,6 +203,49 @@ test.describe('Header', () => {
     await expect(page.locator('[data-section][aria-current]')).toHaveCount(1);
   });
 
+  test('changes section when the next one crosses 40% of the window', async ({ page }) => {
+    const height = page.viewportSize()?.height ?? 720;
+    // Top of Experience just below the 40% line, then just above it.
+    const goTo = (offset: number) =>
+      page.evaluate(
+        ([o, h]) => {
+          const top = document.getElementById('experience')!.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo(0, top - h * 0.4 + o);
+        },
+        [offset, height],
+      );
+    await goTo(-20);
+    await expect(page.locator('[data-section="about"]')).toHaveAttribute('aria-current', 'true');
+    await goTo(20);
+    await expect(page.locator('[data-section="experience"]')).toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('[data-section][aria-current]')).toHaveCount(1);
+  });
+
+  test('slides one marker under the current link, as wide as the link', async ({ page }) => {
+    const marker = page.locator('[data-nav-marker]');
+    test.skip(!(await page.locator('[data-section="about"]').isVisible()), 'the marker is desktop only');
+    await expect(marker).toHaveCSS('opacity', '0');
+    await page.evaluate(() => document.getElementById('experience')?.scrollIntoView());
+    await expect(marker).toHaveAttribute('data-shown', '');
+    const link = await page.locator('[data-section="experience"]').boundingBox();
+    await expect
+      .poll(async () => {
+        const box = await marker.boundingBox();
+        return box && link ? [Math.round(box.x - link.x), Math.round(box.width - link.width)] : null;
+      })
+      .toEqual([0, 0]);
+  });
+
+  test('switches theme without animating the page colours', async ({ page }) => {
+    await openMenu(page);
+    const before = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    await page.locator('[data-theme-toggle]').first().click();
+    // Right after the click the background already has the new colour.
+    const after = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    expect(after).not.toBe(before);
+    expect(await page.evaluate(() => getComputedStyle(document.body).transitionDuration)).toBe('0s');
+  });
+
   test('opens and closes the mobile menu with the keyboard', async ({ page }) => {
     const toggle = page.locator('[data-nav-toggle]');
     test.skip(!(await toggle.isVisible()), 'the menu only exists below 1024px');
@@ -211,6 +254,9 @@ test.describe('Header', () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(nav).toBeVisible();
+    // The links come in one after another.
+    await expect(nav.locator('li').nth(3)).toHaveCSS('transition-delay', /0\.12s|120ms/);
+    await expect(nav.locator('li').first()).toHaveCSS('opacity', '1');
     await expect(page.locator('html')).toHaveClass(/menu-open/);
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -439,6 +485,13 @@ test.describe('Reduced motion', () => {
     await expectRevealsSettled(page);
     await page.goto('/portfolio/proyectos/audenpass/');
     await expectRevealsSettled(page);
+  });
+
+  test('moves the section marker without sliding', async ({ page }) => {
+    await page.goto('/portfolio/');
+    test.skip(!(await page.locator('[data-section="about"]').isVisible()), 'the marker is desktop only');
+    await page.evaluate(() => document.getElementById('projects')?.scrollIntoView());
+    await expect(page.locator('[data-nav-marker]')).toHaveCSS('transition-duration', /^1e-05s/);
   });
 
   test('keeps the scroll-linked progress at its end', async ({ page }) => {

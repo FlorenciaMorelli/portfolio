@@ -254,7 +254,7 @@ ul {
 }
 
 /* Entrance reveal (src/lib/motion.ts), only when JS is active and motion is welcome.
-   - .reveal comes in once: from transparent and 14px lower.
+   - .reveal comes in once: from transparent and 32px lower.
    - .reveal--still keeps the element in place; only its [data-reveal-item] children move.
    - [data-reveal-item] children come in one after another: --i is their index (set in the
      markup), --reveal-step the gap between them and --reveal-delay the wait before the first.
@@ -262,7 +262,7 @@ ul {
 @media (prefers-reduced-motion: no-preference) {
   .js .reveal:not(.reveal--still) {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(32px);
     transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
   }
   .js .reveal.is-visible:not(.reveal--still) {

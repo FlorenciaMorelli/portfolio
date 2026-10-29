@@ -144,3 +144,41 @@ test.describe('Stack with reduced motion', () => {
     await expect(page.locator('.deps__list li').last()).toHaveCSS('opacity', '1');
   });
 });
+
+test.describe('Decisiones técnicas', () => {
+  test('each decision shows its evidence, decorative and from the repository', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    const evidence = page.locator('.decision__evidence > .lens');
+    await expect(evidence).toHaveCount(3);
+    for (const piece of await evidence.all()) await expect(piece).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.diff')).toContainText('--space-5: 1.25rem;');
+    const stats = JSON.parse((await import('node:fs')).readFileSync('.astro/test-stats.json', 'utf8'));
+    await expect(page.locator('.results__sum')).toHaveText(`${stats.passed} / ${stats.total}`);
+    await expect(page.locator('.decision h3').first()).toBeVisible();
+  });
+
+  test('the evidence wakes up as its card nears the middle of the window', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const card = page.locator('.decision').first();
+    const evidence = card.locator('.decision__evidence');
+    await card.evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.9, behavior: 'instant' }));
+    expect(Number(await evidence.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.6);
+    await card.evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2 - window.innerHeight * 0.3, behavior: 'instant' }));
+    await expect.poll(() => evidence.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+});
+
+test.describe('Decisiones técnicas with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('shows every fragment complete', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    for (const piece of await page.locator('.decision__evidence').all()) await expect(piece).toHaveCSS('opacity', '1');
+    await expect(page.locator('.diff__add').last()).toHaveCSS('opacity', '1');
+  });
+});
+
+test('the case study has no horizontal scroll', async ({ page }) => {
+  await page.goto('/portfolio/proyectos/audenpass/');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+});

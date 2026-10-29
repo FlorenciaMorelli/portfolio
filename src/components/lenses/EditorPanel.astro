@@ -6,10 +6,17 @@ import { highlightLine, excerpt } from '../../lib/highlight';
 import motion from '../../lib/motion.ts?raw';
 import './lens.css';
 
+interface Props {
+  /** First and last line of the excerpt, and the line that gets the active highlight. */
+  from?: string;
+  to?: string;
+  active?: string;
+}
+const { from = 'const stop = watch(el', to = '    });', active: activeText = "classList.add('is-visible')" } = Astro.props;
 const FILE = 'src/lib/motion.ts';
-const lines = excerpt(motion, 'const stop = watch(el', '    });');
+const lines = excerpt(motion, from, to);
 const indent = Math.min(...lines.filter((l) => l.text.trim()).map((l) => l.text.match(/^ */)![0].length));
-const active = lines.findIndex((l) => l.text.includes("classList.add('is-visible')"));
+const active = lines.findIndex((l) => l.text.includes(activeText));
 ---
 
 <div class="lens editor" aria-hidden="true" style={`--steps: ${lines.length + 1}`}>

@@ -1,0 +1,61 @@
+---
+// Analysis lens: the site's own requirement as a ticket. Decorative (aria-hidden): the card text
+// says the same. With scroll progress the criteria get checked one by one (Reposo → Completo).
+import { useTranslations, type Locale } from '../../i18n/utils';
+import './lens.css';
+
+interface Props {
+  locale: Locale;
+}
+const t = useTranslations(Astro.props.locale);
+const { ticket } = t.lenses;
+---
+
+<div class="lens ticket" aria-hidden="true" style={`--steps: ${ticket.criteria.length}`}>
+  <p class="ticket__head">
+    <span class="ticket__key">REQ-01</span>
+    <span class="lens__label">{ticket.kind}</span>
+  </p>
+  <p class="ticket__story">{t.hero.notes.analysis}</p>
+  <p class="lens__label ticket__criteria-title">{ticket.criteriaTitle}</p>
+  <ul class="lens__checks">
+    {ticket.criteria.map((criterion, i) => (
+      <li>
+        <span class="lens__box"><span class="lens__tick" data-step style={`--from: ${i}`}></span></span>
+        <span class="lens__ellipsis">{criterion}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .ticket {
+    padding: var(--space-3) var(--space-4);
+  }
+  .ticket__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .ticket__key {
+    padding: 0.125rem var(--space-1);
+    border-radius: var(--radius-xs);
+    background: var(--cursor-analysis);
+    color: var(--cursor-analysis-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    font-weight: 500;
+  }
+  .ticket__story {
+    margin-top: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width) solid var(--border);
+    font-size: var(--text-label);
+    line-height: var(--text-label-lh);
+    color: var(--text);
+  }
+  .ticket__criteria-title {
+    margin-top: var(--space-3);
+  }
+</style>

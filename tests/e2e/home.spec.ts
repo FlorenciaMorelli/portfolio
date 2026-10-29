@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 // On small screens the theme and language controls live inside the collapsed menu.
 async function openMenu(page: Page) {
@@ -57,7 +58,9 @@ test.describe('Spanish home', () => {
       await page.evaluate(() =>
         Promise.all(document.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.finished)),
       );
-      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      // The How I work thumbnails sleep at 35% until scrolled to (decorative, aria-hidden, ficha 1):
+      // their complete state is checked with reduced motion.
+      const results = await new AxeBuilder({ page }).exclude('.facet__thumb').withTags(['wcag2a', 'wcag2aa']).analyze();
       const serious = results.violations.filter((v) =>
         ['critical', 'serious'].includes(v.impact ?? ''),
       );
@@ -93,6 +96,71 @@ test.describe('About', () => {
     const about = page.locator('#about');
     await expect(about.getByRole('heading', { level: 3, name: 'How I work' })).toBeVisible();
     await expect(about.locator('.about__text p').nth(1)).toContainText('in December 2024 I earned a Technical Degree in Systems Programming from UCES');
+  });
+});
+
+test.describe('How I work', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+  });
+
+  test('each card shows its tool as a decorative thumbnail', async ({ page }) => {
+    const thumbs = page.locator('#about .facet__thumb > .lens');
+    await expect(thumbs).toHaveCount(4);
+    for (const thumb of await thumbs.all()) await expect(thumb).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('#about .facet').first()).toContainText('Requerimientos, historias de usuario');
+  });
+
+  test('the task shows the real unit test count of the last run', async ({ page }) => {
+    const stats = JSON.parse(readFileSync('.astro/test-stats.json', 'utf8'));
+    expect(stats.failed).toBe(0);
+    await expect(page.locator('.task')).toContainText(`Pruebas unitarias en verde (${stats.passed} de ${stats.total})`);
+  });
+
+  test('the editor shows real lines of src/lib/motion.ts with their numbers', async ({ page }) => {
+    const source = readFileSync('src/lib/motion.ts', 'utf8').split('\n');
+    const rows = page.locator('.editor__lines li');
+    expect(await rows.count()).toBeGreaterThan(3);
+    for (const row of await rows.all()) {
+      const n = Number(await row.locator('.editor__n').textContent());
+      const code = (await row.locator('code').textContent()) ?? '';
+      expect(source[n - 1].trim()).toBe(code.trim());
+    }
+  });
+
+  test('the design view measures the real button', async ({ page }) => {
+    const button = page.locator('.design-view__button');
+    await button.scrollIntoViewIfNeeded();
+    // Its own size, not the zoomed-out one on the canvas.
+    const size = await button.evaluate((el: HTMLElement) => `${el.offsetWidth} × ${el.offsetHeight}`);
+    await expect(page.locator('[data-measure]')).toHaveText(size);
+    expect(size).toMatch(/× 46$/);
+  });
+
+  test('a thumbnail wakes up as its card nears the middle of the window', async ({ page }) => {
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const card = page.locator('.facet--analysis');
+    const thumb = card.locator('.facet__thumb');
+    // Below the fold: asleep.
+    expect(Number(await thumb.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.5);
+    // Its centre at the middle of the window: awake.
+    await card.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + r.top + r.height / 2 - window.innerHeight / 2 + 4);
+    });
+    await expect.poll(() => thumb.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+
+  test('hover completes a sleeping thumbnail and adds the accent border', async ({ page }) => {
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()') && matchMedia('(hover: hover)').matches)), 'needs scroll timelines and a pointer');
+    const card = page.locator('.facet--quality');
+    // Bring only its top into view, so the scroll progress is still low.
+    await card.evaluate((el) => window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.8));
+    const thumb = card.locator('.facet__thumb');
+    expect(Number(await thumb.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.6);
+    await card.hover();
+    await expect.poll(() => thumb.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+    await expect(page.locator('.task__chip--done')).toHaveCSS('opacity', '1');
   });
 });
 
@@ -529,6 +597,25 @@ test.describe('Reduced motion', () => {
     await expect(cursor.locator('.hero__cursor-float')).toHaveCSS('translate', 'none');
   });
 
+  for (const theme of ['light', 'dark']) {
+    test(`the complete thumbnails pass AA in the ${theme} theme`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
+      await page.goto('/portfolio/');
+      const results = await new AxeBuilder({ page }).include('.facets').withTags(['wcag2a', 'wcag2aa']).analyze();
+      expect(results.violations.filter((v) => ['critical', 'serious'].includes(v.impact ?? ''))).toEqual([]);
+    });
+  }
+
+  test('shows the How I work thumbnails complete', async ({ page }) => {
+    await page.goto('/portfolio/');
+    for (const thumb of await page.locator('.facet__thumb').all()) {
+      await expect(thumb).toHaveCSS('opacity', '1');
+      await expect(thumb).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+    }
+    await expect(page.locator('.task__chip--done')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.task__chip').first()).toHaveCSS('opacity', '0');
+  });
+
   test('keeps the scroll-linked progress at its end', async ({ page }) => {
     await page.goto('/portfolio/');
     expect(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--p').trim())).toBe('1');
@@ -551,6 +638,12 @@ test.describe('Without JavaScript', () => {
   test('shows every revealed block in its final state', async ({ page }) => {
     await page.goto('/portfolio/');
     await expectRevealsSettled(page);
+  });
+
+  test('shows the How I work thumbnails complete', async ({ page }) => {
+    await page.goto('/portfolio/');
+    for (const thumb of await page.locator('.facet__thumb').all()) await expect(thumb).toHaveCSS('opacity', '1');
+    await expect(page.locator('.ticket .lens__tick').last()).toHaveCSS('opacity', '1');
   });
 });
 

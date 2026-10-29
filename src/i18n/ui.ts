@@ -65,6 +65,13 @@ type Dict = {
     /** One line per facet; the facet names are in `hero.modes`. */
     how: { analysis: string; design: string; development: string; quality: string };
   };
+  /** Decorative pieces of «Cómo trabajo» (aria-hidden): a ticket, a design view and a task. */
+  lenses: {
+    ticket: { kind: string; criteriaTitle: string; criteria: string[] };
+    design: { file: string; panel: string; empty: string; layer: string; corners: string; padding: string; gap: string; text: string; fill: string };
+    /** `count`: `{n}` and `{total}`; `unitTests`: the same, from the last `npm test` run. */
+    task: { title: string; status: [string, string, string]; count: string; unitTests: string; details: string; assignee: string; labels: string; tags: string[] };
+  };
   experience: {
     title: string;
     jobs: Job[];
@@ -168,6 +175,39 @@ export const ui: Record<Locale, Dict> = {
         design: 'Sistemas de diseño y pantallas desktop y mobile en Figma.',
         development: 'Frontends conectados a APIs e integraciones entre sistemas.',
         quality: 'Pruebas, validaciones automatizadas y tests E2E.',
+      },
+    },
+    lenses: {
+      ticket: {
+        kind: 'Historia de usuario',
+        criteriaTitle: 'Criterios de aceptación',
+        criteria: [
+          'Pasan las pruebas unitarias antes de publicar',
+          'Contraste AA en todos los pares, en claro y oscuro',
+          'Navegable con teclado, con foco visible',
+          'Respeta reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · Rediseño 2026',
+        panel: 'Diseño',
+        empty: 'Sin selección',
+        layer: 'Capa',
+        corners: 'Esquinas',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Texto',
+        fill: 'Relleno',
+      },
+      task: {
+        title: 'Pruebas UAT satisfactorias',
+        status: ['Por hacer', 'En curso', 'Listo'],
+        count: '{n} de {total}',
+        unitTests: 'Pruebas unitarias en verde ({n} de {total})',
+        details: 'Detalles',
+        assignee: 'Responsable',
+        labels: 'Etiquetas',
+        tags: ['pruebas', 'accesibilidad'],
       },
     },
     experience: {
@@ -332,6 +372,39 @@ export const ui: Record<Locale, Dict> = {
         design: 'Design systems and desktop and mobile screens in Figma.',
         development: 'Frontends connected to APIs and integrations between systems.',
         quality: 'Testing, automated validations and E2E tests.',
+      },
+    },
+    lenses: {
+      ticket: {
+        kind: 'User story',
+        criteriaTitle: 'Acceptance criteria',
+        criteria: [
+          'Unit tests pass before publishing',
+          'AA contrast on every pair, in light and dark',
+          'Keyboard accessible, with visible focus',
+          'Respects reduced motion',
+        ],
+      },
+      design: {
+        file: 'Portfolio · 2026 redesign',
+        panel: 'Design',
+        empty: 'Nothing selected',
+        layer: 'Layer',
+        corners: 'Corners',
+        padding: 'Padding',
+        gap: 'Gap',
+        text: 'Text',
+        fill: 'Fill',
+      },
+      task: {
+        title: 'UAT tests passed',
+        status: ['To do', 'In progress', 'Done'],
+        count: '{n} of {total}',
+        unitTests: 'Unit tests passing ({n} of {total})',
+        details: 'Details',
+        assignee: 'Assignee',
+        labels: 'Labels',
+        tags: ['tests', 'accessibility'],
       },
     },
     experience: {

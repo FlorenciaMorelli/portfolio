@@ -347,6 +347,12 @@ ul {
     transform: translateY(-36px) scale(0.96);
   }
 }
+@keyframes depth-in {
+  from {
+    opacity: 0;
+    transform: translateY(72px) scale(0.9);
+  }
+}
 @keyframes depth-hero {
   to {
     opacity: 0.2;
@@ -355,12 +361,20 @@ ul {
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .js .reveal:not(.reveal--still):not(.is-entering),
-    .js .depth {
+    .js .reveal:not(.reveal--still):not(.is-entering) {
       transition: none;
       animation: depth var(--ease) both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
+      transform-origin: 50% 70%;
+    }
+    /* Titles (and the intro of About) only come in: once there they stay still and sharp until they
+       leave, so they can be read at the top of the window. */
+    .js .depth {
+      transition: none;
+      animation: depth-in var(--ease) both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 30%;
       transform-origin: 50% 70%;
     }
     .js .hero__inner {

@@ -303,7 +303,7 @@ miden una vez (al cargar y al cambiar el tamaño), nunca mientras se scrollea.
 **Profundidad.** Es el movimiento que recorre toda la página: el contenido no sube por la pantalla,
 viene hacia vos. Cada bloque (`.reveal`, `.depth`) crece desde un poco más chico mientras sube y
 aparece, y se aleja, más chico y más tenue, al salir. El hero retrocede igual con la primera
-pantalla de scroll. Es CSS puro atado al scroll (`view()` y `scroll()`), solo `transform` y
+pantalla de scroll. Los títulos de sección y el bloque de Sobre mí solo entran: una vez en su lugar quedan quietos y nítidos hasta que se van, para poder leerlos arriba de la pantalla. Es CSS puro atado al scroll (`view()` y `scroll()`), solo `transform` y
 `opacity`; sin soporte, sin JS o con reduced motion rige el fundido de `.reveal` o la página estática.
 
 **Hero por modos.** Con el modo, el titular cede su lugar a la pieza de trabajo de esa lente: el

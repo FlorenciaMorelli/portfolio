@@ -301,7 +301,7 @@ ul {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .js [data-scroll] {
-      animation: scroll-progress linear both;
+      animation: scroll-progress ease-in-out both;
       animation-timeline: view();
       animation-range: var(--scroll-range, cover 15vh cover 50%);
     }

@@ -122,6 +122,10 @@ type Dict = {
     email: string;
     message: string;
     send: string;
+    /** States of the send button, announced by a live region. `error` uses {email}. */
+    sending: string;
+    sent: string;
+    error: string;
   };
   footer: { rights: string };
   theme: { toLight: string; toDark: string };
@@ -337,6 +341,9 @@ export const ui: Record<Locale, Dict> = {
       email: 'Email',
       message: 'Mensaje',
       send: 'Enviar',
+      sending: 'Enviando',
+      sent: 'Enviado',
+      error: 'No se pudo enviar. Probá de nuevo o escribime a {email}.',
     },
     footer: {
       rights: 'Todos los derechos reservados.',
@@ -552,6 +559,9 @@ export const ui: Record<Locale, Dict> = {
       email: 'Email',
       message: 'Message',
       send: 'Send',
+      sending: 'Sending',
+      sent: 'Sent',
+      error: "It couldn't be sent. Try again or email me at {email}.",
     },
     footer: {
       rights: 'All rights reserved.',

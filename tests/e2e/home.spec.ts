@@ -547,6 +547,54 @@ test.describe('Contact and footer', () => {
 });
 
 // Interactive states from the Components page: hover, active, focus and disabled.
+test.describe('Contact form', () => {
+  // Never sends anything to formsubmit: the background request is answered here.
+  const answer = (page: Page, body: object, status = 200, delay = 600) =>
+    page.route('https://formsubmit.co/ajax/**', async (route) => {
+      await new Promise((r) => setTimeout(r, delay));
+      await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+    });
+
+  const fill = async (page: Page) => {
+    const form = page.locator('[data-contact-form]');
+    await form.getByLabel('Nombre').fill('Prueba');
+    await form.getByLabel('Email').fill('prueba@example.com');
+    await form.getByLabel('Mensaje').fill('Mensaje de prueba');
+    return form;
+  };
+
+  test('shows Enviando and then Enviado, and announces both', async ({ page }) => {
+    await answer(page, { success: 'true' });
+    await page.goto('/portfolio/');
+    const form = await fill(page);
+    const button = form.locator('button[type="submit"]');
+    await button.click();
+    await expect(form).toHaveAttribute('data-state', 'sending');
+    await expect(button).toHaveAttribute('aria-busy', 'true');
+    await expect(button).toContainText('Enviando');
+    await expect(form.locator('[data-status-text]')).toHaveText('Enviando');
+    await expect(form).toHaveAttribute('data-state', 'sent');
+    await expect(button).toContainText('Enviado');
+    await expect(form.locator('[data-status-text]')).toHaveText('Enviado');
+    await expect(form.locator('.contact__send-check')).toHaveCSS('opacity', '1');
+    await expect(form.getByLabel('Nombre')).toHaveValue('');
+  });
+
+  test('shows the error with an icon, a strong border and the email', async ({ page }) => {
+    await answer(page, { success: 'false' }, 500, 0);
+    await page.goto('/portfolio/');
+    const form = await fill(page);
+    await form.locator('button[type="submit"]').click();
+    await expect(form).toHaveAttribute('data-state', 'error');
+    const error = form.locator('.contact__status-error');
+    await expect(error).toBeVisible();
+    await expect(error).toContainText('No se pudo enviar. Probá de nuevo o escribime a');
+    await expect(error.getByRole('link')).toHaveAttribute('href', /^mailto:/);
+    await expect(error).toHaveCSS('border-top-width', '2px');
+    await expect(form.locator('[data-status]')).toHaveAttribute('aria-live', 'polite');
+  });
+});
+
 test.describe('States', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');
@@ -723,6 +771,21 @@ test.describe('Reduced motion', () => {
     await expect(page.locator('[data-card]:visible').first()).toHaveCSS('animation-name', 'none');
   });
 
+  test('sends the form without the pulse', async ({ page }) => {
+    await page.route('https://formsubmit.co/ajax/**', async (route) => {
+      await new Promise((r) => setTimeout(r, 800));
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":"true"}' });
+    });
+    await page.goto('/portfolio/');
+    const form = page.locator('[data-contact-form]');
+    await form.getByLabel('Nombre').fill('Prueba');
+    await form.getByLabel('Email').fill('prueba@example.com');
+    await form.getByLabel('Mensaje').fill('Mensaje de prueba');
+    await form.locator('button[type="submit"]').click();
+    await expect(form).toHaveAttribute('data-state', 'sending');
+    await expect(form.locator('.contact__send-dots span').first()).toHaveCSS('animation-name', 'none');
+  });
+
   test('keeps the scroll-linked progress at its end', async ({ page }) => {
     await page.goto('/portfolio/');
     expect(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue('--p').trim())).toBe('1');
@@ -745,6 +808,13 @@ test.describe('Without JavaScript', () => {
   test('shows every revealed block in its final state', async ({ page }) => {
     await page.goto('/portfolio/');
     await expectRevealsSettled(page);
+  });
+
+  test('keeps the plain form post', async ({ page }) => {
+    await page.goto('/portfolio/');
+    const form = page.locator('[data-contact-form]');
+    await expect(form).toHaveAttribute('action', /^https:\/\/formsubmit\.co\/[^/]+@/);
+    await expect(form).toHaveAttribute('method', 'POST');
   });
 
   test('shows the featured case note', async ({ page }) => {

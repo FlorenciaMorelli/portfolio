@@ -77,7 +77,8 @@ export type IconName =
   | 'check-check'
   | 'clipboard-list'
   | 'mail'
-  | 'linkedin-outline';
+  | 'linkedin-outline'
+  | 'circle-alert';
 
 /** A screenshot with its alt text in both languages. Paths live under `public/`. */
 export interface Shot {

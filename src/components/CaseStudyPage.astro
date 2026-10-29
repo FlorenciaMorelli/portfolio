@@ -158,8 +158,25 @@ const studioName = study.studio?.name;
         </section>
       ) : (
         <section id={section.id} class="part reveal">
-          <div class="container part__block">
+          <div
+            class:list={['container part__block', section.list && 'part__block--criteria']}
+            data-scroll={section.list ? '' : undefined}
+            style={section.list ? `--steps: ${section.list[locale].length}` : undefined}
+          >
             <h2 class="part__title part__title--small">{section.title[locale]}</h2>
+            {section.list && (
+              <p class="criteria" aria-hidden="true">
+                <span class="criteria__count">
+                  <span class="criteria__n">
+                    {Array.from({ length: section.list[locale].length + 1 }, (_, n) => (
+                      <span data-step style={`--from: ${n - 1}; --to: ${n === section.list![locale].length ? 99 : n}`}>{n}</span>
+                    ))}
+                  </span>
+                  <span>{t.caseStudy.criteria.count.replace('{total}', String(section.list[locale].length)).replace('{n}', '').trim()}</span>
+                </span>
+                {t.caseStudy.criteria.label}
+              </p>
+            )}
             <div class="part__content">
               {section.tags && (
                 <ul class="chips">
@@ -175,9 +192,9 @@ const studioName = study.studio?.name;
 
               {section.list && (
                 <ul class="checks">
-                  {section.list[locale].map((item) => (
+                  {section.list[locale].map((item, i) => (
                     <li>
-                      <Icon name="check" size={18} />
+                      <span class="checks__mark" data-step style={`--from: ${i}`}><Icon name="check" size={18} /></span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -371,6 +388,54 @@ const studioName = study.studio?.name;
     color: var(--accent);
   }
 
+  /* Qué incluye (Movimiento v2, ficha 4): each item is a criterion met. With the scroll the
+     checks appear one after another (opacity and scale .6 to 1) and the counter follows them:
+     from 0 when the block's top crosses 80% of the window to 1 when its bottom crosses 50%.
+     Static: every check and «n de n». */
+  .part__block--criteria {
+    --scroll-range: cover 20vh contain 50vh;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'title content'
+      'count content';
+    align-items: start;
+  }
+  .part__block--criteria > .part__title { grid-area: title; }
+  .part__block--criteria > .criteria { grid-area: count; }
+  .part__block--criteria > .part__content { grid-area: content; }
+  .criteria {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-muted);
+  }
+  .criteria__count {
+    display: inline-flex;
+    padding: 0.125rem var(--space-2);
+    border-radius: var(--radius-xs);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    line-height: var(--text-mono-sm-lh);
+    gap: 1ch;
+    white-space: nowrap;
+  }
+  .criteria__n {
+    display: inline-grid;
+  }
+  .criteria__n > * {
+    grid-area: 1 / 1;
+    text-align: right;
+  }
+  .checks__mark {
+    display: inline-flex;
+    transform: scale(calc(0.6 + 0.4 * var(--step-in)));
+  }
+
   /* Wide parts (screens, decisions) have the big heading and an intro on the right */
   .part__head {
     display: flex;
@@ -443,6 +508,12 @@ const studioName = study.studio?.name;
     .part__block {
       grid-template-columns: 1fr;
       gap: var(--space-4);
+    }
+    .part__block--criteria {
+      grid-template-areas: 'title' 'count' 'content';
+    }
+    .criteria {
+      margin-top: 0;
     }
   }
   @media (max-width: 767.98px) {

@@ -112,6 +112,8 @@ type Dict = {
     studio: string;
     highlights: string;
     more: string;
+    /** Counter of «Qué incluye» (decorative): `count` uses {n} and {total}. */
+    criteria: { count: string; label: string };
   };
   contact: {
     title: string;
@@ -325,6 +327,7 @@ export const ui: Record<Locale, Dict> = {
       studio: 'Conocé Guia',
       highlights: 'En números',
       more: 'Ver todos los proyectos',
+      criteria: { count: '{n} de {total}', label: 'criterios cumplidos' },
     },
     contact: {
       title: 'Hablemos.',
@@ -539,6 +542,7 @@ export const ui: Record<Locale, Dict> = {
       studio: 'About Guia',
       highlights: 'By the numbers',
       more: 'See all projects',
+      criteria: { count: '{n} of {total}', label: 'criteria met' },
     },
     contact: {
       title: "Let's talk.",

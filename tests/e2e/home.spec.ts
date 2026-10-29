@@ -867,6 +867,21 @@ test.describe('Depth', () => {
   });
 });
 
+test.describe('Titles at rest', () => {
+  test('a section title comes in once and then stays still and sharp until it leaves', async ({ page }) => {
+    await page.goto('/portfolio/');
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    const heading = page.locator('#experience .section-heading');
+    expect(Number(await heading.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.1);
+    // From well below the middle of the window up to its top edge, under the header: always at rest.
+    for (const fraction of [0.45, 0.3, 0.2, 0.12]) {
+      await heading.evaluate((el, f) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - window.innerHeight * f, behavior: 'instant' }), fraction);
+      await expect.poll(() => heading.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+      await expect(heading).toHaveCSS('transform', /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+    }
+  });
+});
+
 test.describe('Depth with reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
   test('has no scroll animation', async ({ page }) => {

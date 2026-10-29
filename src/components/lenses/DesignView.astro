@@ -37,6 +37,8 @@ const rows: { label: string; value: string; swatch?: boolean; step: number }[] =
         <span class="design-view__handle design-view__handle--br"></span>
         <span class="design-view__measure" data-measure></span>
       </span>
+      <span class="lens__pointer" data-pointer><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z"/></svg></span>
+
     </span>
   </div>
   <div class="design-view__panel">
@@ -70,8 +72,17 @@ const rows: { label: string; value: string; swatch?: boolean; step: number }[] =
   }
   /* The canvas is zoomed out, as in Figma; the measure is still the button's real size. */
   .design-view__target {
+    /* The mouse drags the corner handle: from half the scroll progress the button grows to 1.2x. */
+    --grow: clamp(0, calc((var(--progress, var(--p, 1)) - 0.45) * 2.2), 1);
     position: relative;
-    transform: scale(0.8);
+    transform: scale(calc(0.8 * (1 + 0.2 * var(--grow))));
+  }
+  .design-view__target > :global(.lens__pointer) {
+    right: -0.75rem;
+    bottom: -0.75rem;
+    opacity: clamp(0, calc((var(--progress, var(--p, 1)) - 0.2) * 5), 1);
+    transform: translate(calc((1 - var(--grow)) * -28px), calc((1 - var(--grow)) * -22px)) scale(calc(1 / (0.8 * (1 + 0.2 * var(--grow)))));
+    transform-origin: 0 0;
   }
   .design-view__button {
     pointer-events: none;

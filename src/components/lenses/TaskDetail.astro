@@ -1,7 +1,7 @@
 ---
 // Quality lens: a QA task whose first criterion is the real unit test count of the last run
 // (written at build time, src/lib/test-stats.ts). Decorative (aria-hidden). Steps: Por hacer with
-// nothing checked, En curso as the criteria get checked, Listo with all of them.
+// nothing checked, En curso as the criteria get checked, Finalizado with all of them (a mouse clicks the chip).
 import { useTranslations, type Locale } from '../../i18n/utils';
 import { testStats } from '../../lib/test-stats';
 import './lens.css';
@@ -26,6 +26,7 @@ const [todo, doing, done] = task.status;
   </p>
   <p class="task__title">{task.title}</p>
   <p class="task__status">
+    <span class="lens__pointer" data-pointer><svg viewBox="0 0 18 18" width="18" height="18"><path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z"/></svg></span>
     <span class="task__chip" data-step style="--to: 0">{todo}</span>
     <span class="task__chip task__chip--doing" data-step style={`--from: 0; --to: ${total - 1}`}>{doing}</span>
     <span class="task__chip task__chip--done" data-step style={`--from: ${total - 1}`}>✓ {done}</span>
@@ -78,9 +79,20 @@ const [todo, doing, done] = task.status;
   }
   /* The three states sit on top of each other; the progress shows one */
   .task__status {
+    position: relative;
     display: grid;
     justify-items: start;
     margin-top: var(--space-2);
+    /* The mouse comes in, clicks «En curso» (a small press) and the chip becomes «Finalizado». */
+    --move: clamp(0, calc(var(--progress, var(--p, 1)) / 0.6), 1);
+    --press: clamp(0, calc(1 - max(var(--progress, var(--p, 1)) - 0.7, 0.7 - var(--progress, var(--p, 1))) * 12), 1);
+  }
+  .task__status > :global(.lens__pointer) {
+    left: 2.25rem;
+    top: 0.5rem;
+    opacity: clamp(0, calc(var(--progress, var(--p, 1)) * 6), 1);
+    transform: translate(calc((1 - var(--move)) * 48px), calc((1 - var(--move)) * 30px)) scale(calc(1 - 0.2 * var(--press)));
+    transform-origin: 0 0;
   }
   .task__chip {
     grid-area: 1 / 1;

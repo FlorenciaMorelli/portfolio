@@ -85,3 +85,42 @@
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg);
 }
+
+/* Text caret (pleca) that blinks. Without motion it stays on. */
+.lens__caret {
+  display: inline-block;
+  flex: none;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lens__caret {
+    animation: lens-blink 1.05s steps(1) infinite;
+  }
+}
+@keyframes lens-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Mouse pointer of the animated pieces (decorative) */
+.lens__pointer {
+  position: absolute;
+  z-index: 2;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--text);
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px var(--shadow-navy-16));
+}
+.lens__pointer svg {
+  display: block;
+  fill: var(--surface);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}

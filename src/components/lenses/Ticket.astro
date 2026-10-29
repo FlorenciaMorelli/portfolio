@@ -16,7 +16,7 @@ const { ticket } = t.lenses;
     <span class="ticket__key">REQ-01</span>
     <span class="lens__label">{ticket.kind}</span>
   </p>
-  <p class="ticket__story">{t.hero.notes.analysis}</p>
+  <p class="ticket__story">{t.hero.notes.analysis}<span class="lens__caret"></span></p>
   <p class="lens__label ticket__criteria-title">{ticket.criteriaTitle}</p>
   <ul class="lens__checks">
     {ticket.criteria.map((criterion, i) => (

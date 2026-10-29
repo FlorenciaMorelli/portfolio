@@ -25,7 +25,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
-  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+/* Changing the theme does not animate colours (only the toggle's own icons move). */
+.theme-switching *:not(.theme-toggle__icon) {
+  transition: none !important;
 }
 
 h1,

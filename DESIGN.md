@@ -290,11 +290,15 @@ las reglas de `global.css`. Cada componente lo importa; no se arma otro:
   Firefox 159.
 - El indicador de sección del header usa el mismo observer.
 
-**Un hilo conductor: las cuatro lentes.** Cada sección de la home pertenece a una lente: Sobre mí
-a Análisis, Experiencia a Desarrollo, Proyectos a Diseño y Contacto a Calidad. Cada una tiene el
-cursor de su lente, decorativo, arriba del título (desde 1280 px), y la rayita del header toma el
-color de la lente de la sección a la vista (`--lens-ink-*`). El footer reúne los cuatro cursores.
-Los títulos y el texto no cambian de color: el de Diseño no tendría contraste AA.
+**Un hilo conductor: las cuatro lentes.** Los cuatro cursores del hero salen del hero y recorren la
+página (desde 1280 px y con movimiento). Cada uno pertenece a una lente y a una sección: Análisis a
+Sobre mí, Desarrollo a Experiencia, Diseño a Proyectos y Calidad a Contacto. Al salir, el rótulo pasa
+del nombre de la lente al de la sección; flotan en los márgenes y, cuando el título de su sección
+se acerca, el cursor va al título y hace clic: el título queda seleccionado, con una caja y cuatro
+manijas del color de la lente, como en el lienzo. Después se va con el título. La rayita del header
+toma el color de la lente de la sección a la vista (`--lens-ink-*`). El footer reúne los cuatro.
+Los títulos y el texto no cambian de color: el de Diseño no tendría contraste AA. Las posiciones se
+miden una vez (al cargar y al cambiar el tamaño), nunca mientras se scrollea.
 
 **Profundidad.** Es el movimiento que recorre toda la página: el contenido no sube por la pantalla,
 viene hacia vos. Cada bloque (`.reveal`, `.depth`) crece desde un poco más chico mientras sube y

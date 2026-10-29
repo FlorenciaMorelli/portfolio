@@ -17,6 +17,13 @@ const modes: { id: Mode; icon: IconName; label: string }[] = [
   { id: 'quality', icon: 'check-check', label: t.hero.modes.quality },
 ];
 const initial: Mode = 'design';
+// The section each lens belongs to: its cursor travels there and its label takes the name.
+const sectionNames: Record<Mode, string> = {
+  analysis: t.nav.about,
+  development: t.nav.experience,
+  design: t.nav.projects,
+  quality: t.nav.contact,
+};
 
 // Annotation shown for each mode. The design mode is measured in the browser; the
 // values below are what the page shows without JavaScript (desktop sizes).
@@ -69,7 +76,7 @@ const title = t.hero.title;
 
   <div class="hero__cursors" aria-hidden="true">
     {modes.map((m) => (
-      <div class={`hero__cursor hero__cursor--${m.id}`} data-cursor={m.id}>
+      <div class={`hero__cursor hero__cursor--${m.id}`} data-cursor={m.id} data-away-label={sectionNames[m.id]}>
         <span class="hero__cursor-float">
           <svg class="hero__cursor-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3.03 3.52a.5.5 0 0 1 .49-.49l12 4.88a.5.5 0 0 1-.05.7l-4.59 1.19a1.5 1.5 0 0 0-1.08 1.08l-1.18 4.6a.5.5 0 0 1-.7.05z" />
@@ -298,6 +305,22 @@ const title = t.hero.title;
     to {
       translate: var(--drift-x) var(--drift-y);
     }
+  }
+  /* Travelling (src/lib/journey.ts): fixed to the window, in the colour of its lens, and out of
+     the way of the mouse. The clicking cursor presses down a little. */
+  .hero__cursor.is-journey {
+    position: fixed;
+    z-index: 3;
+  }
+  .hero__cursor.is-away {
+    pointer-events: none;
+  }
+  .hero__cursors .hero__cursor--analysis.is-away { --c: var(--cursor-analysis); --c-text: var(--cursor-analysis-text); }
+  .hero__cursors .hero__cursor--design.is-away { --c: var(--cursor-design); --c-text: var(--cursor-design-text); }
+  .hero__cursors .hero__cursor--development.is-away { --c: var(--cursor-dev); --c-text: var(--cursor-dev-text); }
+  .hero__cursors .hero__cursor--quality.is-away { --c: var(--cursor-qa); --c-text: var(--cursor-qa-text); }
+  .hero__cursor.is-click .hero__cursor-float {
+    scale: 0.86;
   }
   .hero__cursor-label {
     padding: 0 var(--space-2);
@@ -530,6 +553,7 @@ const title = t.hero.title;
 
 <script>
   import { followPointer } from '../lib/cursors';
+  import { startJourney } from '../lib/journey';
 
   type Mode = 'analysis' | 'design' | 'development' | 'quality';
   const order: Mode[] = ['analysis', 'design', 'development', 'quality'];
@@ -625,7 +649,9 @@ const title = t.hero.title;
 
     // The cursors lean toward the mouse (src/lib/cursors.ts). Clicking one switches to its mode.
     const cursorEls = [...hero.querySelectorAll<HTMLElement>('[data-cursor]')];
-    followPointer(hero, cursorEls);
+    const follow = followPointer(hero, cursorEls);
+    // Then they leave the hero and travel the page (src/lib/journey.ts).
+    startJourney(hero, cursorEls, follow);
     cursorEls.forEach((el) => el.addEventListener('click', () => select(el.dataset.cursor as Mode)));
   }
 </script>

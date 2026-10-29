@@ -3,12 +3,14 @@ interface Props {
   title: string;
   /** Short line on the right of the title (below it on small screens). */
   intro?: string;
+  /** Lens the section belongs to: the hero cursor of that lens travels here and clicks the title. */
+  lens?: string;
 }
-const { title, intro } = Astro.props;
+const { title, intro, lens } = Astro.props;
 ---
 
 <div class="section-heading depth">
-  <h2 class="section-heading__title">{title}</h2>
+  <h2 class="section-heading__title" data-lens-title={lens}>{title}</h2>
   {intro && <p class="section-heading__intro">{intro}</p>}
 </div>
 

@@ -128,7 +128,12 @@ ul {
 }
 
 .section {
+  position: relative;
   padding-block: var(--space-24);
+}
+/* The content box is the reference for the section's decorative cursor. */
+.section > .container {
+  position: relative;
 }
 
 /* Keep anchored sections clear of the sticky header */

@@ -187,6 +187,11 @@
   --border-strong: var(--gray-400);
   --brand: var(--teal-500);
   --focus: var(--teal-600);
+  /* Colour of a lens for thin lines and marks over the page background (the section marker) */
+  --lens-ink-analysis: var(--teal-600);
+  --lens-ink-design: var(--lilac-700);
+  --lens-ink-development: var(--navy-900);
+  --lens-ink-quality: var(--gray-600);
   --cursor-analysis: var(--teal-500);
   --cursor-analysis-text: var(--gray-0);
   --cursor-design: var(--lilac-200);
@@ -252,6 +257,10 @@
   --border-strong: var(--navy-500);
   --brand: var(--lilac-200);
   --focus: var(--lilac-200);
+  --lens-ink-analysis: var(--teal-300);
+  --lens-ink-design: var(--lilac-200);
+  --lens-ink-development: var(--gray-200);
+  --lens-ink-quality: var(--lilac-600);
   --cursor-analysis: var(--teal-300);
   --cursor-analysis-text: var(--navy-900);
   --cursor-design: var(--lilac-200);

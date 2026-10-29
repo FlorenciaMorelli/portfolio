@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 import SectionHeading from './SectionHeading.astro';
 import WorkCalendar from './WorkCalendar.astro';
+import SectionCursor from './SectionCursor.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import { caseStudyPath } from '../lib/case-studies';
 
@@ -12,8 +13,9 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<section id="experience" class="section experience">
+<section id="experience" class="section experience" data-lens="development">
   <div class="container">
+    <SectionCursor locale={locale} lens="development" left="14rem" />
     <SectionHeading title={t.experience.title} />
     <WorkCalendar locale={locale} />
     <ol class="jobs">

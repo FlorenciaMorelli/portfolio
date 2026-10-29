@@ -230,6 +230,11 @@ const client = {
       --cell: var(--cell-max);
       padding: var(--space-4);
     }
+    /* The card is small and the window tall: the calendar is complete well before the card is in
+       the middle of the window. */
+    .cal {
+      --scroll-range: cover 10vh contain 12vh;
+    }
     :global(.js) .cal__years,
     .cal__view--year {
       display: none;
@@ -268,17 +273,15 @@ const client = {
         .replace('{y}', String(d.getUTCFullYear()));
     };
 
-    // Hover or tap a day: an accent ring and a card with the job of that day. Decorative: it
-    // takes no focus and is not announced.
+    // Hover (mouse) or tap (touch) a day: an accent ring and a card with the job of that day.
+    // Decorative: it takes no focus and is not announced.
     let current: HTMLElement | null = null;
     const hide = () => {
       current?.classList.remove('is-hover');
       current = null;
       tip.removeAttribute('data-shown');
     };
-    body.addEventListener('pointerover', (event) => {
-      const day = (event.target as HTMLElement).closest<HTMLElement>('.cal__day[data-d]');
-      if (!day || day === current) return;
+    const show = (day: HTMLElement, above: boolean) => {
       current?.classList.remove('is-hover');
       current = day;
       day.classList.add('is-hover');
@@ -286,15 +289,46 @@ const client = {
       const lines = jobs.map((job) => `<strong>${data.jobs[job]}</strong>`).join('');
       const milestone = day.dataset.d === data.milestone.day ? `<span>${data.milestone.label}</span>` : '';
       tip.innerHTML = `<span>${format(day.dataset.d!)}</span>${lines}${milestone}`;
-      // Measured on hover only: next to the day, kept inside the calendar.
+      // Measured when a day is shown, never while scrolling: next to the day, kept inside the
+      // calendar. With a finger it goes above, so the finger does not cover it.
       const box = body.getBoundingClientRect();
       const cell = day.getBoundingClientRect();
       const x = Math.min(cell.left - box.left + 14, body.clientWidth - tip.offsetWidth);
-      const y = cell.top - box.top + 14;
+      const y = above ? cell.top - box.top - tip.offsetHeight - 10 : cell.top - box.top + 14;
       tip.style.setProperty('--tip-x', `${Math.max(0, x)}px`);
-      tip.style.setProperty('--tip-y', `${y}px`);
+      // Above the finger it may rise over the top of the grid; below the pointer it starts at the grid.
+      tip.style.setProperty('--tip-y', `${above ? y : Math.max(0, y)}px`);
       tip.setAttribute('data-shown', '');
+    };
+
+    body.addEventListener('pointerover', (event) => {
+      if (event.pointerType === 'touch') return;
+      const day = (event.target as HTMLElement).closest<HTMLElement>('.cal__day[data-d]');
+      if (day && day !== current) show(day, false);
     });
-    body.addEventListener('pointerleave', hide);
+    body.addEventListener('pointerleave', (event) => event.pointerType !== 'touch' && hide());
+
+    // A finger is wider than a 9px square: the tap picks the day under it from the position of
+    // the point in the grid (columns are weeks, rows are days), so it does not have to be exact.
+    const dayAt = (x: number, y: number) => {
+      const weeks = [...body.querySelectorAll<HTMLElement>('.cal__view .cal__weeks')].find((el) => el.offsetParent);
+      const first = weeks?.querySelector<HTMLElement>('.cal__week');
+      const cell = first?.querySelector<HTMLElement>('.cal__day');
+      if (!weeks || !first || !cell) return null;
+      const area = weeks.getBoundingClientRect();
+      const gap = parseFloat(getComputedStyle(weeks).columnGap) || 0;
+      const col = Math.floor((x - area.left) / (first.getBoundingClientRect().width + gap));
+      const row = Math.floor((y - area.top) / (cell.getBoundingClientRect().height + gap));
+      return weeks.children[col]?.children[row] as HTMLElement | undefined ?? null;
+    };
+    body.addEventListener('pointerup', (event) => {
+      if (event.pointerType !== 'touch') return;
+      const day = dayAt(event.clientX, event.clientY);
+      if (!day?.dataset.d || day === current) return hide();
+      show(day, true);
+    });
+    // Tapping elsewhere, or scrolling, puts the card away.
+    document.addEventListener('pointerdown', (event) => !body.contains(event.target as Node) && hide(), { passive: true });
+    window.addEventListener('scroll', () => current && hide(), { passive: true });
   }
 </script>

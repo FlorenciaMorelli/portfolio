@@ -3,7 +3,7 @@
 // measure label and handles, one cursor per lens at the corners (hidden on small screens) and
 // the dot grid. Label, handles and cursors are decorative (aria-hidden).
 import Icon from './Icon.astro';
-import { useTranslations, type Locale } from '../i18n/utils';
+import { useTranslations, localizedPath, type Locale } from '../i18n/utils';
 import profile from '../data/profile.json';
 import cv from '../data/cv.json';
 
@@ -13,6 +13,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+const home = localizedPath(locale, '');
 const cursors = [
   { id: 'analysis', label: t.hero.modes.analysis },
   { id: 'design', label: t.hero.modes.design },
@@ -43,10 +44,10 @@ const cursors = [
         ))}
       </div>
 
-      <div class="site-footer__brand">
+      <a class="site-footer__brand" href={home}>
         <span class="site-footer__mark" aria-hidden="true">FM</span>
         <span class="site-footer__name">Florencia Morelli</span>
-      </div>
+      </a>
       <div class="site-footer__text">
         <p class="site-footer__rights">© {year} · {t.footer.rights}</p>
         <p class="site-footer__place">{cv.contact.location[locale]}</p>
@@ -189,6 +190,11 @@ const cursors = [
     align-items: center;
     gap: var(--space-3);
     flex: none;
+    border-radius: var(--radius-sm);
+  }
+  /* The logo goes to the start page, as in the header. */
+  .site-footer__brand:hover {
+    color: var(--text);
   }
   .site-footer__mark {
     display: grid;

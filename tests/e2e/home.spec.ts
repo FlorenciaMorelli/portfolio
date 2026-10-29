@@ -280,6 +280,30 @@ test.describe('Work calendar', () => {
     }
   });
 
+  test('a tap on a day shows its job above the finger, a tap elsewhere puts it away', async ({ page }) => {
+    test.skip(wide(page), 'touch on small screens');
+    const day = page.locator('.cal__view:visible .cal__day[data-d="2026-09-28"]');
+    await day.scrollIntoViewIfNeeded();
+    const box = await day.boundingBox();
+    // The tap lands next to the square (they are 9px wide): the day is found from the position in the grid.
+    await page.touchscreen.tap(box!.x + box!.width / 2 + 3, box!.y + box!.height / 2 + 3);
+    const tip = page.locator('[data-tip]');
+    await expect(tip).toHaveAttribute('data-shown', '');
+    await expect(tip).toContainText('lun 28 sep 2026');
+    await expect(tip).toContainText('Primer commit de Audenpass');
+    const tipBox = await tip.boundingBox();
+    expect(tipBox!.y + tipBox!.height).toBeLessThanOrEqual(box!.y + 2);
+    await page.touchscreen.tap(8, 8);
+    await expect(tip).not.toHaveAttribute('data-shown', '');
+  });
+
+  test('is complete once the card is in the upper half of a tall window', async ({ page }) => {
+    test.skip(wide(page), 'mobile view');
+    test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
+    await page.locator('[data-calendar]').evaluate((el) => window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.3, behavior: 'instant' }));
+    await expect.poll(() => page.locator('.cal__view:visible .cal__week').last().evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+  });
+
   test('shows the last six months on small screens', async ({ page }) => {
     test.skip(wide(page), 'mobile view');
     await expect(page.locator('.cal__six')).toHaveText('Últimos 6 meses');
@@ -658,6 +682,8 @@ test.describe('Contact and footer', () => {
     await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/FlorenciaMorelli');
     await expect(footer.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
     await expect(footer.getByRole('link', { name: 'Volver arriba' })).toHaveAttribute('href', '#top');
+    // The logo takes you to the start page, as in the header.
+    await expect(footer.getByRole('link', { name: 'Florencia Morelli' })).toHaveAttribute('href', /\/portfolio\/?$/);
     await expect(footer).not.toContainText('Astro');
     await expect(footer).toContainText('Buenos Aires, Argentina');
   });

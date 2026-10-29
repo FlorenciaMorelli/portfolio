@@ -589,8 +589,10 @@ const studioName = study.studio?.name;
       grid-template-columns: 1fr;
       gap: var(--space-3);
     }
-    .pair__mobile {
-      max-width: 12.25rem;
+    /* As in Figma: the phone goes below the desktop screenshot, centred and smaller. */
+    .pair .pair__mobile {
+      max-width: 10.5rem;
+      justify-self: center;
     }
     .stats ul {
       grid-template-columns: repeat(2, minmax(0, 1fr));

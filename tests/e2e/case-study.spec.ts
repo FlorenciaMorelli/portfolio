@@ -182,3 +182,21 @@ test('the case study has no horizontal scroll', async ({ page }) => {
   await page.goto('/portfolio/proyectos/audenpass/');
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 });
+
+test.describe('Cover on small screens', () => {
+  test('the phone goes centred under the desktop screenshot, smaller', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    test.skip((page.viewportSize()?.width ?? 1000) >= 768, 'mobile view');
+    const [d, m] = await Promise.all([page.locator('.pair--cover .pair__desktop').boundingBox(), page.locator('.pair--cover .pair__mobile').boundingBox()]);
+    expect(m!.y).toBeGreaterThan(d!.y + d!.height - 2);
+    expect(m!.width).toBeLessThan(d!.width * 0.6);
+    // Centred in the width of the desktop screenshot.
+    expect(Math.abs(m!.x + m!.width / 2 - (d!.x + d!.width / 2))).toBeLessThanOrEqual(2);
+  });
+
+  test('the footer logo goes to the start page', async ({ page }) => {
+    await page.goto('/portfolio/proyectos/audenpass/');
+    await page.locator('footer').getByRole('link', { name: 'Florencia Morelli' }).click();
+    await expect(page).toHaveURL(/\/portfolio\/?$/);
+  });
+});

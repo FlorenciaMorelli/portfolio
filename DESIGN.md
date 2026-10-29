@@ -12,9 +12,8 @@ código, la fuente de verdad es `src/styles/tokens.css`. Este documento dice có
 corresponden.
 
 **Estado:** implementado. La portada OG y el CV generados leen sus colores y fuentes de
-`tokens.css` y `global.css`, así que cambian junto con el sistema. La segunda etapa
-(movimiento por scroll, elementos de código y footer nuevo) se implementa en los PR
-`feature/movimiento-*`.
+`tokens.css` y `global.css`, así que cambian junto con el sistema. También está implementada
+la segunda etapa: el movimiento por scroll, los elementos de código y el footer nuevo.
 
 ## Principios
 

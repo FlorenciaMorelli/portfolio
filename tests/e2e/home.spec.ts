@@ -241,6 +241,20 @@ test.describe('Work calendar', () => {
     await expect(tip).toHaveCSS('opacity', '1');
   });
 
+  test('fits inside its card on any screen, without being cut', async ({ page }) => {
+    for (const width of [320, 360, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.waitForTimeout(100);
+      const fit = await page.evaluate(() => {
+        const card = document.querySelector('[data-calendar]')!.getBoundingClientRect();
+        const grid = [...document.querySelectorAll('.cal__view .cal__weeks')].find((el) => (el as HTMLElement).offsetParent)!.getBoundingClientRect();
+        return { cardRight: card.right, gridRight: grid.right, page: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+      });
+      expect(fit.gridRight, `${width}px`).toBeLessThanOrEqual(fit.cardRight);
+      expect(fit.page, `${width}px`).toBeLessThanOrEqual(0);
+    }
+  });
+
   test('shows the last six months on small screens', async ({ page }) => {
     test.skip(wide(page), 'mobile view');
     await expect(page.locator('.cal__six')).toHaveText('Últimos 6 meses');

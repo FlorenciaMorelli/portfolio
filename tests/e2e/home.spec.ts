@@ -879,11 +879,9 @@ test.describe('Depth', () => {
     test.skip(!(await page.evaluate(() => CSS.supports('animation-timeline: view()'))), 'needs scroll timelines');
   });
 
-  test('the hero recedes as the page scrolls and the blocks come toward you', async ({ page }) => {
-    const hero = page.locator('.hero__inner');
-    expect(Number(await hero.evaluate((el) => getComputedStyle(el).opacity))).toBe(1);
-    await page.evaluate(() => window.scrollTo({ top: 700, behavior: 'instant' }));
-    await expect.poll(() => hero.evaluate((el) => Number(getComputedStyle(el).opacity))).toBeLessThan(0.5);
+  test('the hero stays still as the page scrolls and the blocks come toward you', async ({ page }) => {
+    // Animating the hero while scrolling made the browser drop the view transition to a case.
+    await expect(page.locator('.hero__inner')).toHaveCSS('animation-name', 'none');
     // A block that is still below the window has not come yet.
     const job = page.locator('#experience .job').last();
     expect(Number(await job.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(0.1);
@@ -912,7 +910,6 @@ test.describe('Depth with reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
   test('has no scroll animation', async ({ page }) => {
     await page.goto('/portfolio/');
-    await expect(page.locator('.hero__inner')).toHaveCSS('animation-name', 'none');
     await expect(page.locator('#experience .job').first()).toHaveCSS('animation-name', 'none');
   });
 });

@@ -1,6 +1,5 @@
 ---
 import Icon from './Icon.astro';
-import SectionCursor from './SectionCursor.astro';
 import Ticket from './lenses/Ticket.astro';
 import DesignView from './lenses/DesignView.astro';
 import EditorPanel from './lenses/EditorPanel.astro';
@@ -30,9 +29,8 @@ const [lead, ...rest] = t.about.body;
 
 <section id="about" class="section about" data-lens="analysis">
   <div class="container">
-    <SectionCursor locale={locale} lens="analysis" left="32rem" />
     <div class="about__intro depth">
-      <h2 class="about__title">{t.about.title}</h2>
+      <h2 class="about__title" data-lens-title="analysis">{t.about.title}</h2>
       <img
         class="about__photo"
         src={photo}

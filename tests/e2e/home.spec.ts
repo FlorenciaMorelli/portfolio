@@ -707,6 +707,62 @@ test.describe('Navigation with reduced motion', () => {
   });
 });
 
+test.describe('Cursors travelling the page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/portfolio/');
+    test.skip(!(await page.locator('[data-cursor="analysis"]').isVisible()), 'the cursors only show from 1280px');
+  });
+
+  test('they start in the hero with their lens name and leave it with the name of their section', async ({ page }) => {
+    const cursor = page.locator('[data-cursor="analysis"]');
+    await expect(cursor.locator('.hero__cursor-label')).toHaveText('Análisis');
+    await expect(cursor).not.toHaveClass(/is-away/);
+    await page.evaluate(() => window.scrollTo({ top: 500, behavior: 'instant' }));
+    await expect(cursor).toHaveClass(/is-away/);
+    await expect(cursor.locator('.hero__cursor-label')).toHaveText('Sobre mí');
+    await expect(page.locator('[data-cursor="design"] .hero__cursor-label')).toHaveText('Proyectos');
+    await expect(page.locator('[data-cursor="development"] .hero__cursor-label')).toHaveText('Experiencia');
+    await expect(page.locator('[data-cursor="quality"] .hero__cursor-label')).toHaveText('Contacto');
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await expect(cursor.locator('.hero__cursor-label')).toHaveText('Análisis');
+  });
+
+  test('each one goes to the title of its section and clicks it', async ({ page }) => {
+    const pairs = [['analysis', 'Sobre mí'], ['development', 'Experiencia'], ['design', 'Proyectos'], ['quality', 'Hablemos.']];
+    for (const [lens, text] of pairs) {
+      const title = page.locator(`[data-lens-title="${lens}"]`);
+      await title.evaluate((el) => window.scrollTo({ top: (el as HTMLElement).getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.4, behavior: 'instant' }));
+      await expect(title).toHaveText(text);
+      await expect(title).toHaveAttribute('data-selected', '');
+      const cursor = page.locator(`[data-cursor="${lens}"]`);
+      await expect(cursor).toHaveClass(/is-click/);
+      const [c, t] = await Promise.all([cursor.boundingBox(), title.boundingBox()]);
+      // The tip of the arrow is inside the title.
+      expect(c!.x).toBeGreaterThan(t!.x - 4);
+      expect(c!.x).toBeLessThan(t!.x + t!.width);
+      expect(c!.y).toBeGreaterThan(t!.y - 6);
+      expect(c!.y).toBeLessThan(t!.y + t!.height);
+    }
+  });
+
+  test('they are decorative and never take the mouse once they have left', async ({ page }) => {
+    await expect(page.locator('.hero__cursors')).toHaveAttribute('aria-hidden', 'true');
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'instant' }));
+    await expect(page.locator('[data-cursor="design"]')).toHaveCSS('pointer-events', 'none');
+  });
+});
+
+test.describe('Cursors travelling with reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('stay in the hero', async ({ page }) => {
+    await page.goto('/portfolio/');
+    test.skip(!(await page.locator('[data-cursor="analysis"]').isVisible()), 'the cursors only show from 1280px');
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'instant' }));
+    await expect(page.locator('[data-cursor="analysis"]')).not.toHaveClass(/is-journey|is-away/);
+    await expect(page.locator('[data-cursor="analysis"] .hero__cursor-label')).toHaveText('Análisis');
+  });
+});
+
 test.describe('Depth', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');
@@ -739,17 +795,6 @@ test.describe('Depth with reduced motion', () => {
 test.describe('Lenses by section', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/portfolio/');
-  });
-
-  test('each section has the cursor of its lens, decorative and only on wide screens', async ({ page }) => {
-    const expected = { about: 'Análisis', experience: 'Desarrollo', projects: 'Diseño', contact: 'Calidad' };
-    const wide = (page.viewportSize()?.width ?? 0) >= 1280;
-    for (const [id, name] of Object.entries(expected)) {
-      const cursor = page.locator(`#${id} [data-section-cursor]`);
-      await expect(cursor).toHaveAttribute('aria-hidden', 'true');
-      await expect(cursor).toContainText(name);
-      await expect(cursor).toBeVisible({ visible: wide });
-    }
   });
 
   test('the header marker takes the colour of the lens of the section in view', async ({ page }) => {
@@ -931,11 +976,6 @@ test.describe('Reduced motion', () => {
     const weeks = page.locator('.cal__view:visible .cal__week');
     await expect(weeks.first()).toHaveCSS('opacity', '1');
     await expect(weeks.last()).toHaveCSS('opacity', '1');
-  });
-
-  test('shows the section cursors in place', async ({ page }) => {
-    await page.goto('/portfolio/');
-    for (const cursor of await page.locator('[data-section-cursor]:visible').all()) await expect(cursor).toHaveCSS('opacity', '1');
   });
 
   test('shows the footer label and handles in place', async ({ page }) => {

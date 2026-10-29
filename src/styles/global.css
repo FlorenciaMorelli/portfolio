@@ -455,3 +455,44 @@ ul {
 .icon-btn--accent[aria-disabled='true'] {
   border-color: transparent;
 }
+
+/* A title the cursor of its lens has clicked (src/lib/journey.ts): selected, as on the design
+   canvas, with a box and four handles in the colour of the lens. Decorative. */
+[data-lens-title] {
+  position: relative;
+  width: fit-content;
+}
+[data-lens-title]::before,
+[data-lens-title]::after {
+  content: '';
+  position: absolute;
+  inset: -0.375rem -0.75rem;
+  pointer-events: none;
+  opacity: 0;
+}
+[data-lens-title]::before {
+  border: var(--border-width) solid var(--ink, var(--accent));
+}
+[data-lens-title]::after {
+  --h: 0.375rem;
+  background:
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) left top / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) right top / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) left bottom / var(--h) var(--h) no-repeat,
+    linear-gradient(var(--ink, var(--accent)), var(--ink, var(--accent))) right bottom / var(--h) var(--h) no-repeat;
+  inset: calc(-0.375rem - var(--h) / 2) calc(-0.75rem - var(--h) / 2);
+}
+[data-lens-title='analysis'] { --ink: var(--lens-ink-analysis); }
+[data-lens-title='design'] { --ink: var(--lens-ink-design); }
+[data-lens-title='development'] { --ink: var(--lens-ink-development); }
+[data-lens-title='quality'] { --ink: var(--lens-ink-quality); }
+[data-lens-title][data-selected]::before,
+[data-lens-title][data-selected]::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-lens-title]::before,
+  [data-lens-title]::after {
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+}

@@ -6,12 +6,13 @@
 const REACH = [11, 12, 10, 12];
 const DELAY = [120, 200, 260, 160];
 
-export function followPointer(area: HTMLElement, elements: HTMLElement[]): void {
+export function followPointer(area: HTMLElement, elements: HTMLElement[]): { setEnabled(on: boolean): void } {
   const cursors = elements.map((el, i) => ({ el, x: 0, y: 0, tx: 0, ty: 0, cx: 0, cy: 0, reach: REACH[i % 4], delay: DELAY[i % 4] }));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const wide = window.matchMedia('(min-width: 1280px) and (pointer: fine)');
   let frame = 0;
   let last = 0;
+  let enabled = true;
   // Resting centres of the cursors in page coordinates.
   let measuredAt = '';
   const measure = () => {
@@ -44,7 +45,7 @@ export function followPointer(area: HTMLElement, elements: HTMLElement[]): void 
   };
   const settle = () => {
     cursors.forEach((c) => ((c.tx = 0), (c.ty = 0)));
-    if (reduced.matches || !wide.matches) {
+    if (reduced.matches || !wide.matches || !enabled) {
       cursors.forEach((c) => ((c.x = 0), (c.y = 0), c.el.style.removeProperty('transform')));
     } else run();
   };
@@ -52,7 +53,7 @@ export function followPointer(area: HTMLElement, elements: HTMLElement[]): void 
   window.addEventListener(
     'pointermove',
     (e) => {
-      if (reduced.matches || !wide.matches) return;
+      if (reduced.matches || !wide.matches || !enabled) return;
       measure();
       for (const c of cursors) {
         const dx = e.pageX - c.cx;
@@ -69,4 +70,13 @@ export function followPointer(area: HTMLElement, elements: HTMLElement[]): void 
   area.addEventListener('pointerleave', settle);
   reduced.addEventListener('change', settle);
   wide.addEventListener('change', settle);
+  return {
+    /** Off while the cursors travel the page: they stop leaning and go back to their place. */
+    setEnabled(on: boolean) {
+      if (on === enabled) return;
+      enabled = on;
+      measuredAt = '';
+      settle();
+    },
+  };
 }

@@ -1,6 +1,5 @@
 ---
 import Icon from './Icon.astro';
-import SectionCursor from './SectionCursor.astro';
 import { useTranslations, type Locale } from '../i18n/utils';
 import profile from '../data/profile.json';
 import type { IconName } from '../lib/types';
@@ -28,9 +27,8 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
 
 <section id="contact" class="section contact" data-lens="quality">
   <div class="container contact__inner">
-    <SectionCursor locale={locale} lens="quality" left="22rem" />
     <div class="contact__intro">
-      <h2 class="contact__title">{t.contact.title}</h2>
+      <h2 class="contact__title" data-lens-title="quality">{t.contact.title}</h2>
       <p class="contact__lead">{t.contact.intro}</p>
 
       <ul class="contact__links">

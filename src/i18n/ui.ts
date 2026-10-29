@@ -68,6 +68,8 @@ type Dict = {
   /** Decorative pieces of «Cómo trabajo» (aria-hidden): a ticket, a design view and a task. */
   lenses: {
     ticket: { kind: string; criteriaTitle: string; criteria: string[] };
+    /** The QA task of the hero (decorative): its criteria are about the headline; `{title}` is the headline. */
+    scene: { criteria: [string, string, string, string] };
     design: { file: string; panel: string; empty: string; layer: string; corners: string; padding: string; gap: string; text: string; fill: string };
     /** `count`: `{n}` and `{total}`; `unitTests`: the same, from the last `npm test` run. */
     task: { title: string; status: [string, string, string]; count: string; unitTests: string; details: string; assignee: string; labels: string; tags: string[] };
@@ -198,6 +200,14 @@ export const ui: Record<Locale, Dict> = {
       },
     },
     lenses: {
+      scene: {
+        criteria: [
+          'El titular dice «{title}»',
+          'Un lector de pantalla lo lee completo',
+          'Contraste AA en claro y oscuro',
+          'Respeta reduced motion',
+        ],
+      },
       ticket: {
         kind: 'Historia de usuario',
         criteriaTitle: 'Criterios de aceptación',
@@ -416,6 +426,14 @@ export const ui: Record<Locale, Dict> = {
       },
     },
     lenses: {
+      scene: {
+        criteria: [
+          'The headline reads “{title}”',
+          'A screen reader reads it in full',
+          'AA contrast in light and dark',
+          'Respects reduced motion',
+        ],
+      },
       ticket: {
         kind: 'User story',
         criteriaTitle: 'Acceptance criteria',

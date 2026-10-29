@@ -39,11 +39,30 @@ export function highlightLine(line: string): Token[] {
   return tokens;
 }
 
+/** Splits tokens at a character offset, keeping each one's kind (for a caret in the middle of a line). */
+export function splitAt(tokens: Token[], index: number): [Token[], Token[]] {
+  const before: Token[] = [];
+  const after: Token[] = [];
+  let seen = 0;
+  for (const token of tokens) {
+    const end = seen + token.text.length;
+    if (end <= index) before.push(token);
+    else if (seen >= index) after.push(token);
+    else {
+      before.push({ kind: token.kind, text: token.text.slice(0, index - seen) });
+      after.push({ kind: token.kind, text: token.text.slice(index - seen) });
+    }
+    seen = end;
+  }
+  return [before, after];
+}
+
 /** The lines from the first one containing `from` to the first one after it containing `to`, with their numbers. */
-export function excerpt(source: string, from: string, to: string): { n: number; text: string }[] {
+export function excerpt(source: string, from: string, to: string, before = 0): { n: number; text: string }[] {
   const lines = source.split('\n');
-  const start = lines.findIndex((l) => l.includes(from));
-  const end = lines.findIndex((l, i) => i > start && l.includes(to));
-  if (start < 0 || end < 0) throw new Error(`Excerpt not found: ${from} … ${to}`);
+  const found = lines.findIndex((l) => l.includes(from));
+  const start = found - before;
+  const end = lines.findIndex((l, i) => i > found && l.includes(to));
+  if (found < 0 || end < 0) throw new Error(`Excerpt not found: ${from} … ${to}`);
   return lines.slice(start, end + 1).map((text, i) => ({ n: start + i + 1, text }));
 }

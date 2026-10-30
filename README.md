@@ -77,6 +77,21 @@ clave que el slug del proyecto; la tarjeta suma el link sola. Las capturas van e
 Los repos privados nunca se importan, aunque tengan el topic `portfolio`: un proyecto
 privado se carga a mano en `manual-projects.json`, sin link al repositorio.
 
+## Formulario de contacto
+
+El sitio es estático, así que el envío lo hace un Worker de Cloudflare (plan gratuito) que está en `worker/`: valida el mensaje, acepta pedidos solo de mi sitio y lo manda a mi mail con Resend. La dirección del Worker está en `contactEndpoint` de `src/data/profile.json`.
+
+Para publicarlo (una vez, y cada vez que cambie `worker/`), desde esa carpeta:
+
+```bash
+cd worker
+npx wrangler login
+npx wrangler secret put RESEND_API_KEY
+npx wrangler deploy
+```
+
+La clave de Resend es un secreto del Worker: nunca va en el repositorio.
+
 ## Idiomas
 
 Español en `/` e inglés en `/en/`. Los textos están en `src/i18n/`.

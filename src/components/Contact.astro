@@ -10,9 +10,9 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 
-const action = `https://formsubmit.co/${profile.email}`;
-// With JS the form is sent in the background, so the button can show its states.
-const ajax = `https://formsubmit.co/ajax/${profile.email}`;
+// My Worker (worker/index.mjs) sends the message to my inbox. With JS the form is sent in the
+// background, so the button can show its states; without it, it is a plain post that comes back here.
+const endpoint = profile.contactEndpoint;
 const [errorBefore, errorAfter] = t.contact.error.split('{email}');
 const redirect = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
@@ -44,13 +44,11 @@ const links: { icon: IconName; label: string; text: string; href: string; extern
       </ul>
     </div>
 
-    <form class="contact__form reveal" action={action} method="POST" data-contact-form data-ajax={ajax} data-state="idle">
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_next" value={redirect} />
-      <input type="hidden" name="_subject" value="Portfolio - nuevo mensaje" />
+    <form class="contact__form reveal" action={endpoint} method="POST" data-contact-form data-ajax={endpoint} data-state="idle">
+      <input type="hidden" name="next" value={redirect} />
       <input
         type="text"
-        name="_honey"
+        name="website"
         class="visually-hidden"
         tabindex="-1"
         autocomplete="off"

@@ -1,0 +1,9 @@
+name = "portfolio-contacto"
+main = "index.mjs"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Where the messages go: the only address Resend lets me send to without my own domain.
+TO_EMAIL = "florenciamorelliit@gmail.com"
+# Only these sites can ask for a message to be sent.
+ALLOWED_ORIGINS = "https://florenciamorelli.github.io,http://localhost:4321,http://localhost:4325"

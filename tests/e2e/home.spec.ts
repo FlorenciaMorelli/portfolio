@@ -663,7 +663,7 @@ test.describe('Contact and footer', () => {
     await expect(contact.getByRole('link', { name: 'florenciamorelliIT@gmail.com' })).toHaveAttribute('href', 'mailto:florenciamorelliIT@gmail.com');
     await expect(contact.getByRole('link', { name: 'linkedin.com/in/florenciamorelli' })).toHaveAttribute('href', /linkedin\.com\/in\/florenciamorelli/);
     await expect(contact.getByRole('link', { name: 'github.com/FlorenciaMorelli' })).toHaveAttribute('href', 'https://github.com/FlorenciaMorelli');
-    await expect(contact.locator('form')).toHaveAttribute('action', 'https://formsubmit.co/florenciamorelliIT@gmail.com');
+    await expect(contact.locator('form')).toHaveAttribute('action', /^https:\/\/portfolio-contacto\.[^/]+\.workers\.dev$/);
   });
 
   test('labels every field and keeps the form fields required', async ({ page }) => {
@@ -697,9 +697,9 @@ test.describe('Contact and footer', () => {
 
 // Interactive states from the Components page: hover, active, focus and disabled.
 test.describe('Contact form', () => {
-  // Never sends anything to formsubmit: the background request is answered here.
+  // Never sends anything to the Worker: the background request is answered here.
   const answer = (page: Page, body: object, status = 200, delay = 600) =>
-    page.route('https://formsubmit.co/ajax/**', async (route) => {
+    page.route('https://*.workers.dev/**', async (route) => {
       await new Promise((r) => setTimeout(r, delay));
       await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
     });
@@ -1119,7 +1119,7 @@ test.describe('Reduced motion', () => {
   });
 
   test('sends the form without the pulse', async ({ page }) => {
-    await page.route('https://formsubmit.co/ajax/**', async (route) => {
+    await page.route('https://*.workers.dev/**', async (route) => {
       await new Promise((r) => setTimeout(r, 800));
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":"true"}' });
     });
@@ -1160,7 +1160,7 @@ test.describe('Without JavaScript', () => {
   test('keeps the plain form post', async ({ page }) => {
     await page.goto('/portfolio/');
     const form = page.locator('[data-contact-form]');
-    await expect(form).toHaveAttribute('action', /^https:\/\/formsubmit\.co\/[^/]+@/);
+    await expect(form).toHaveAttribute('action', /^https:\/\/portfolio-contacto\.[^/]+\.workers\.dev$/);
     await expect(form).toHaveAttribute('method', 'POST');
   });
 
